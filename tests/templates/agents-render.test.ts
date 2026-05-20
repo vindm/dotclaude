@@ -22,3 +22,14 @@ describe('code-reviewer.md agent', () => {
     expect(out).not.toContain('{{');
   });
 });
+
+describe('interaction-audit.md agent', () => {
+  const tpl = readFileSync(
+    resolve(__dirname, '../../templates/agents/interaction-audit.md'),
+    'utf8',
+  );
+  it('renders without raw placeholders', () => {
+    const out = renderTemplate(tpl, {});
+    expect(out).not.toContain('{{');
+  });
+});

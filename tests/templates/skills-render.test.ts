@@ -45,4 +45,18 @@ describe('skill artifact', () => {
     });
     expect(existsSync(resolve(tmpRepo, '.claude/skills/journey-audit/SKILL.md'))).toBe(true);
   });
+
+  it('copies element-reuse-check skill', async () => {
+    await renderArtifact({
+      type: 'skill',
+      name: 'element-reuse-check',
+      targetRepo: tmpRepo,
+      dotclaudeRoot,
+      ctx: {},
+    });
+    const skillFile = resolve(tmpRepo, '.claude/skills/element-reuse-check/SKILL.md');
+    expect(existsSync(skillFile)).toBe(true);
+    const content = readFileSync(skillFile, 'utf8');
+    expect(content).not.toContain('{{');
+  });
 });

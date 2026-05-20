@@ -23,3 +23,25 @@ describe('audit-routing.md rule template', () => {
     expect(out).not.toContain('{{');
   });
 });
+
+describe('visual-verification.md rule template', () => {
+  const tpl = readFileSync(
+    resolve(__dirname, '../../templates/rules/visual-verification.md'),
+    'utf8',
+  );
+  it('renders without unsubstituted placeholders', () => {
+    const out = renderTemplate(tpl, {});
+    expect(out).not.toContain('{{');
+  });
+});
+
+describe('database-query-discipline.md rule template', () => {
+  const tpl = readFileSync(
+    resolve(__dirname, '../../templates/rules/database-query-discipline.md'),
+    'utf8',
+  );
+  it('renders without unsubstituted placeholders', () => {
+    const out = renderTemplate(tpl, {});
+    expect(out).not.toContain('{{');
+  });
+});
