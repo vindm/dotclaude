@@ -64,11 +64,25 @@ Each is a Mustache-templated `.sh` script. Edit-time enforcement; zero token cos
 
 ### Rules (`templates/rules/`)
 
-4 cross-cutting policy rules: file discipline, audit routing, visual verification, database query discipline. Each is a short markdown file the agent reads as context.
+6 cross-cutting policy rules the agent reads as context:
+
+- `file-discipline` — file-size ceiling + decomposition triggers
+- `audit-routing` — which agent runs for which audit question + the canonical pipeline order
+- `design-north-star` — Apple iOS 26 + Telegram as design benchmark; anti-pattern catalog
+- `visual-verification` — "see what you built" discipline before claiming done
+- `database-query-discipline` — CLI > LLM-tool for reads; RLS silent-no-op trap
+- `forbidden-phrases.txt` — authoritative AI-slop deny-list (enforced by the `check-forbidden-phrases` hook)
 
 ### Skills (`templates/skills/`)
 
-3 skill templates: decompose-file (guided refactoring when a file approaches the ceiling), journey-audit (prior-surface mapping before designing a new screen), element-reuse-check (Gate A verdict matrix before authoring a new UI element).
+6 skill templates, loaded by file path or topic:
+
+- `decompose-file` — guided refactoring when a file approaches the size ceiling
+- `journey-audit` — prior-surface mapping before designing a new screen or flow
+- `element-reuse-check` — Gate A verdict matrix before authoring a new UI element
+- `persona-lens` — Gate B: day-30 / partner / stranger tests on every visible copy element
+- `quality-bar` — S-tier rubric + demo test + 5 composition pitfalls + benchmark anchors
+- `migration-create` — DB migration discipline: reversibility, parallel paths, type regeneration
 
 ### Agents (`templates/agents/`)
 
