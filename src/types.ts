@@ -27,3 +27,8 @@ export interface DotclaudeConfig {
 }
 
 export type ArtifactType = 'hook' | 'rule' | 'skill' | 'agent';
+
+export interface ArtifactRef {
+  type: ArtifactType;
+  name: string;
+}
