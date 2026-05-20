@@ -1,0 +1,20 @@
+name: minimal
+description: Sole-dev SPA. The smallest useful guardrail set. Start here.
+hooks:
+  - check-file-size
+  - check-forbidden-phrases
+rules: []
+skills: []
+agents: []
+defaults:
+  fileSize:
+    ceiling: 1000
+    warn: 950
+  forbiddenPhrases:
+    phrases:
+      - "As an AI language model"
+      - "I'd be happy to help"
+      - "Certainly! Here is"
+    scopes:
+      - "src/**/*.ts"
+      - "src/**/*.tsx"
