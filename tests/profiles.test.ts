@@ -27,4 +27,12 @@ describe('loadProfile', () => {
     expect(profile.defaults.forbiddenPhrases?.phrases).toBeInstanceOf(Array);
     expect(profile.defaults.forbiddenPhrases?.phrases.length).toBeGreaterThan(0);
   });
+
+  it('loads web-saas profile', () => {
+    const profile = loadProfile('web-saas', profilesDir);
+    expect(profile.name).toBe('web-saas');
+    expect(profile.hooks.length).toBeGreaterThanOrEqual(9);
+    expect(profile.defaults.fileSize.ceiling).toBe(800);
+    expect(profile.defaults.database).toBe('postgres');
+  });
 });

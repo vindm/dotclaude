@@ -1,0 +1,39 @@
+name: web-saas
+description: TypeScript + React + GraphQL + Vite + Cloudflare. SaaS-product-shaped.
+hooks:
+  - check-file-size
+  - check-forbidden-phrases
+  - check-import-boundary
+  - check-design-tokens
+  - git-context-sessionstart
+  - auto-lint-posttool
+  - check-no-todo-comments
+  - check-secret-leak
+  - check-no-console-log
+rules:
+  - file-discipline
+  - audit-routing
+  - visual-verification
+  - database-query-discipline
+skills:
+  - decompose-file
+  - journey-audit
+agents:
+  - pre-flight
+  - interaction-audit
+  - code-reviewer
+defaults:
+  fileSize:
+    ceiling: 800
+    warn: 700
+  forbiddenPhrases:
+    phrases:
+      - "As an AI language model"
+      - "I'd be happy to help"
+      - "Certainly! Here is"
+    scopes:
+      - "*/src/**/*.ts"
+      - "*/src/**/*.tsx"
+  designTokens:
+    sourcePath: src/theme/tokens.ts
+  database: postgres
