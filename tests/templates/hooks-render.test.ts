@@ -87,3 +87,22 @@ describe('auto-lint-posttool.sh template', () => {
     expect(out).not.toContain('{{');
   });
 });
+
+describe('check-import-boundary.sh template', () => {
+  const tpl = readFileSync(
+    resolve(__dirname, '../../templates/hooks/check-import-boundary.sh'),
+    'utf8',
+  );
+  it('substitutes boundary rules', () => {
+    const out = renderTemplate(tpl, {
+      importBoundary: {
+        rules: [
+          { from: 'features/auth', to: 'features/billing', message: 'auth cannot reach billing' },
+        ],
+      },
+    });
+    expect(out).toContain('features/auth');
+    expect(out).toContain('features/billing');
+    expect(out).toContain('auth cannot reach billing');
+  });
+});
