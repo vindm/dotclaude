@@ -43,4 +43,12 @@ describe('loadProfile', () => {
     expect(profile.defaults.visualVerification?.tool).toBe('simctl');
     expect(profile.defaults.fileSize.ceiling).toBe(1000);
   });
+
+  it('loads api-only profile', () => {
+    const profile = loadProfile('api-only', profilesDir);
+    expect(profile.name).toBe('api-only');
+    expect(profile.hooks).not.toContain('check-design-tokens');
+    expect(profile.defaults.fileSize.ceiling).toBe(1200);
+    expect(profile.defaults.database).toBe('postgres');
+  });
 });
