@@ -7,3 +7,8 @@ dist/
 coverage/
 .vscode/
 .idea/
+
+# Local test artifacts from running `dotclaude init` against this repo itself.
+# Never commit these — they'd shadow the templates/ source of truth.
+.claude/
+dotclaude.yml

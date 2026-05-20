@@ -1,0 +1,22 @@
+name: Anonymization guard
+
+# Mirrors scripts/check-anonymization.sh in CI so the deny-list is enforced
+# on every PR even if someone bypasses the local pre-push hook.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run anonymization guard
+        run: bash scripts/check-anonymization.sh
