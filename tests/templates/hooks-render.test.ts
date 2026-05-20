@@ -106,3 +106,20 @@ describe('check-import-boundary.sh template', () => {
     expect(out).toContain('auth cannot reach billing');
   });
 });
+
+describe('check-design-tokens.sh template', () => {
+  const tpl = readFileSync(
+    resolve(__dirname, '../../templates/hooks/check-design-tokens.sh'),
+    'utf8',
+  );
+  it('uses default theme path when none configured', () => {
+    const out = renderTemplate(tpl, {});
+    expect(out).toContain('src/theme/');
+    expect(out).not.toContain('{{');
+  });
+  it('substitutes configured theme path', () => {
+    const out = renderTemplate(tpl, { designTokens: { theme: 'lib/theme/' } });
+    expect(out).toContain('lib/theme/');
+    expect(out).not.toContain('{{');
+  });
+});
