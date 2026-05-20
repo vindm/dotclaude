@@ -25,3 +25,5 @@ export interface DotclaudeConfig {
   customSkills?: string[];
   customAgents?: string[];
 }
+
+export type ArtifactType = 'hook' | 'rule' | 'skill' | 'agent';
