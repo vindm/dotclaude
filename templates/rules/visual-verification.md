@@ -2,40 +2,36 @@
 
 After UI edits, **see what you built** before reporting done.
 
-## The discipline
+1. **Pick the device.** `ps aux | grep "expo run"` — `--device <UDID>` = physical iPhone, `--simulator` = sim. Hot reload only lands on Metro's target.
+   - **Simulator:** `xcrun simctl io <udid> screenshot /tmp/sim-now.png` (CLI, default — no image bytes return until you `Read` the file). MCP `mcp__maestro__take_screenshot` only when you need Maestro-managed device state coupling.
+   - **Physical iPhone (iOS 17+):** Maestro doesn't support — use your project's WDA-based helper scripts:
+     - Screenshot: a `device-screenshot` script writing to a path, then `Read`.
+     - Tap: a `device-tap` script using a predicate (e.g. `label == 'Photos'`).
+     - Type: a `device-type` script (focused field).
+     - One-time per boot: a `start-tunneld` + `start-wda` sequence (sudo, Trust prompt).
+2. Evaluate against approved design + Apple iOS 26 / Telegram bar (see your `design-north-star` rule).
+3. If not — edit, wait for hot reload, screenshot again. Iterate.
+4. Include the final screenshot path when reporting.
 
-1. Identify the target device (browser, simulator, physical device).
-2. Capture a screenshot — store the path; don't burn token budget reading the image until you need to compare.
-3. Compare against the approved design and the nearest first-party reference (Apple HIG for iOS, Material You for Android, your design system reference app for web).
-4. If it doesn't match — edit, wait for hot reload, capture again. Iterate.
-5. Include the final screenshot path when reporting the work.
+Never present UI work you haven't visually verified. "Tests pass" / "compiles" / "should work" are NOT substitutes — say so explicitly if a capture isn't possible and ask the user to verify.
 
-## What this rule rejects
+## CLI > MCP for screen inspection (default path)
 
-"Tests pass" / "compiles cleanly" / "should work" are NOT substitutes for visual verification.
+`mcp__maestro__inspect_screen` returns the entire view hierarchy as JSON — chat / map / setup-flow screens routinely return 5–20k tokens of nested `Text`/`View`/`Image` nodes. Bound output via CLI before reading.
 
-If capture is genuinely impossible (no device available, no headless rendering path), say so explicitly. Ask the user to verify. Don't claim done.
+**Sim hierarchy → CLI:**
+- `maestro --device <udid> hierarchy --compact | head -200` — CSV format (`element_num,depth,attributes,parent_num`), 3–5× cheaper than JSON; top of tree usually enough to find the element you're after.
+- `maestro --device <udid> hierarchy --compact | grep -A 2 "<accessibility-id-or-text>"` — locate one specific element.
+- `maestro --device <udid> hierarchy > /tmp/h.json` then `Read` only the slice you need — full tree without conversation cost.
+- (`--device` / `--udid` is a top-level flag, *before* the subcommand — `maestro hierarchy --device …` will fail.)
+- MCP `mcp__maestro__inspect_screen` only when you genuinely need every node + JSON shape (rare — usually you're hunting one element).
 
-## Why this matters
+**Sim screenshot → CLI:**
+- `xcrun simctl io <udid> screenshot /tmp/sim-now.png` returns a path, not bytes. Claude burns image tokens only when you `Read /tmp/sim-now.png` — so you can capture-then-skip-read cheaply when you only need to confirm "did the screen change at all".
+- MCP `mcp__maestro__take_screenshot` always returns the image inline — costs image tokens every call.
 
-Compilers don't catch:
-- Off-by-1px padding that breaks rhythm
-- Wrong shade of accent color (token-correct but theme-incorrect)
-- Animation that lands at the wrong easing
-- Text overflow in long-string locales (German, Russian)
-- Touch target too small (44pt minimum on iOS, 48dp on Android)
+**Token-discipline rule:** before any screen inspection, ask "do I need the *whole* hierarchy, or one specific element?" If the latter (almost always), CLI + `grep` / `head` is the default. The MCP tool has no ceiling and will dump everything.
 
-Tests catch logic. Eyes catch design.
+## RN console.log doesn't reach iOS unified logging
 
-## Anti-pattern: token-grep audits without seeing the screen
-
-Auditing "no raw hex literals" via grep is fast and cheap (use the `check-design-tokens` hook). But it can't tell you the *composition* is right. Run both: the regex check AND the screenshot check.
-
-## Anti-pattern: console-log debugging that never reaches the device
-
-On mobile platforms, the host's unified-logging stream (e.g., `os_log` on iOS) does NOT capture framework-level `console.log` from JavaScript runtimes. If you're tailing the wrong log source, silent misses cost hours. Identify the right stream (the JS runtime's stdout, typically your bundler's terminal) before assuming the log line "didn't fire."
-
-## See also
-
-- The `check-design-tokens` hook enforces token discipline at edit time
-- The `check-file-size` hook keeps component files small enough to audit confidently
+`console.log` from React Native code goes to **Metro's stdout**, not `os_log` / iOS unified logging. `xcrun simctl spawn <udid> log show … | grep` silently misses every JS-side log. To read RN logs: tail the Metro terminal window directly, or `npx react-native log-ios`. Use iOS unified logging only for native (Swift / Obj-C) signals — crashes, delegate-queue traps, ARSession events.
