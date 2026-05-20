@@ -36,7 +36,23 @@ async function main() {
     const noInteractive = flags['no-interactive'] === true;
 
     if (!noInteractive) {
-      throw new Error('Interactive mode not implemented yet (Task 9). Pass --no-interactive.');
+      const { runInteractivePrompts } = await import('../prompts.js');
+      const answers = await runInteractivePrompts(DOTCLAUDE_ROOT);
+      await runInit({
+        profileName: answers.profileName,
+        projectName: answers.projectName,
+        targetRepo,
+        dotclaudeRoot: DOTCLAUDE_ROOT,
+        force,
+        overrideDefaults: {
+          fileSize: { ceiling: answers.fileSizeCeiling, warn: answers.fileSizeCeiling - 50 },
+          forbiddenPhrases:
+            answers.forbiddenPhrases.length > 0
+              ? { phrases: answers.forbiddenPhrases, scopes: ['src/**/*.ts', 'src/**/*.tsx'] }
+              : undefined,
+        },
+      });
+      return;
     }
 
     await runInit({ profileName, projectName, targetRepo, dotclaudeRoot: DOTCLAUDE_ROOT, force });
