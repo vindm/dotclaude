@@ -140,3 +140,15 @@ describe('regen-generated-artifacts.sh template', () => {
     expect(out).not.toContain('{{');
   });
 });
+
+describe('check-bash-safety.sh template', () => {
+  const tpl = readFileSync(
+    resolve(__dirname, '../../templates/hooks/check-bash-safety.sh'),
+    'utf8',
+  );
+  it('renders without unsubstituted placeholders', () => {
+    const out = renderTemplate(tpl, {});
+    expect(out).not.toContain('{{');
+    expect(out).not.toContain('}}');
+  });
+});
