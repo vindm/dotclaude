@@ -22,12 +22,12 @@ claude plugin install dotclaude@dotclaude
 | Slash command | What it sets up |
 |---|---|
 | 🎨 `/dotclaude:design` | UI / IA / a11y / visual-quality audit agents + rules (the showpiece) |
-| `/dotclaude:coding` | File-size discipline, code review, voice / forbidden phrases |
-| `/dotclaude:planning` | Pre-impl validation, audit routing |
-| `/dotclaude:testing` | Test architecture + coverage strategy |
-| `/dotclaude:data` | DB integrity, query discipline, migrations |
-| `/dotclaude:ai-workflow` | LLM cost monitoring + eval discipline |
-| `/dotclaude:init` | Meta — runs the relevant subset of above |
+| 🧹 `/dotclaude:coding` | File-size discipline, code review, voice / forbidden phrases |
+| 📐 `/dotclaude:planning` | Pre-impl validation, audit routing |
+| 🧪 `/dotclaude:testing` | Test architecture + coverage strategy |
+| 🗃️ `/dotclaude:data` | DB integrity, query discipline, migrations |
+| 🤖 `/dotclaude:ai-workflow` | LLM cost monitoring + eval discipline |
+| 🪄 `/dotclaude:init` | Meta — runs the relevant subset of above |
 
 ---
 
