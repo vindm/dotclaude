@@ -25,3 +25,39 @@ describe('check-file-size.sh template', () => {
     expect(out).not.toContain('}}');
   });
 });
+
+describe('check-forbidden-phrases.sh template', () => {
+  const tpl = readFileSync(
+    resolve(__dirname, '../../templates/hooks/check-forbidden-phrases.sh'),
+    'utf8',
+  );
+
+  it('substitutes forbidden phrases list', () => {
+    const out = renderTemplate(tpl, {
+      forbiddenPhrases: {
+        phrases: ['As an AI', 'Let me help you'],
+        scopes: ['lib/**/*.ts'],
+      },
+    });
+    expect(out).toContain('As an AI');
+    expect(out).toContain('Let me help you');
+    expect(out).toContain('lib/**/*.ts');
+  });
+
+  it('handles empty phrases gracefully', () => {
+    const out = renderTemplate(tpl, {
+      forbiddenPhrases: { phrases: [], scopes: ['src/**/*.ts'] },
+    });
+    expect(out).not.toContain('{{');
+    expect(out).not.toContain('}}');
+    expect(out).toContain('src/**/*.ts');
+  });
+
+  it('handles empty scopes gracefully', () => {
+    const out = renderTemplate(tpl, {
+      forbiddenPhrases: { phrases: ['foo'], scopes: [] },
+    });
+    expect(out).not.toContain('{{');
+    expect(out).not.toContain('}}');
+  });
+});
