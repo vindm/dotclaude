@@ -1,5 +1,6 @@
 {
   "name": "dotclaude",
+  "description": "The design-discipline marketplace for Claude Code. Ships the dotclaude plugin — UX audit agents, IA / a11y / visual-quality skills, code-review and data-integrity guardrails — that Claude Code uses to author project-specific .claude/ kits.",
   "owner": {
     "name": "vindm",
     "url": "https://github.com/vindm"
