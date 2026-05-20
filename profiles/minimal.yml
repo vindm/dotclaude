@@ -16,5 +16,5 @@ defaults:
       - "I'd be happy to help"
       - "Certainly! Here is"
     scopes:
-      - "src/**/*.ts"
-      - "src/**/*.tsx"
+      - "*/src/**/*.ts"
+      - "*/src/**/*.tsx"
