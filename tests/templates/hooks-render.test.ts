@@ -199,3 +199,24 @@ describe('check-no-console-log.sh template', () => {
     expect(out).not.toContain('{{');
   });
 });
+
+describe('check-prebuild-required.sh template', () => {
+  const tpl = readFileSync(
+    resolve(__dirname, '../../templates/hooks/check-prebuild-required.sh'),
+    'utf8',
+  );
+  it('substitutes trigger paths and custom command', () => {
+    const out = renderTemplate(tpl, {
+      prebuild: { triggerPaths: ['ios/', 'modules/'], command: 'npx expo prebuild' },
+    });
+    expect(out).toContain('ios/');
+    expect(out).toContain('modules/');
+    expect(out).toContain('npx expo prebuild');
+    expect(out).not.toContain('{{');
+  });
+  it('uses default prebuild command when none configured', () => {
+    const out = renderTemplate(tpl, { prebuild: { triggerPaths: ['ios/'] } });
+    expect(out).toContain('npm run prebuild');
+    expect(out).not.toContain('{{');
+  });
+});
