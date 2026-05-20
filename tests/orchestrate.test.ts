@@ -86,4 +86,21 @@ describe('renderProfile (minimal)', () => {
     // Owner execute bit set (0o100 in mode)
     expect(stat.mode & 0o100).toBeTruthy();
   });
+
+  it('does not crash when profile has empty rules/skills/agents', async () => {
+    // minimal profile has hooks but empty rules/skills/agents arrays.
+    // The grouped loop should iterate zero times for those types without error.
+    await expect(
+      renderProfile({
+        profileName: 'minimal',
+        targetRepo: tmpRepo,
+        dotclaudeRoot,
+        projectName: 'acme',
+      }),
+    ).resolves.toBeUndefined();
+    // And NO non-hook directories should be created (renderArtifact only mkdirs when it actually renders).
+    expect(existsSync(resolve(tmpRepo, '.claude/rules'))).toBe(false);
+    expect(existsSync(resolve(tmpRepo, '.claude/skills'))).toBe(false);
+    expect(existsSync(resolve(tmpRepo, '.claude/agents'))).toBe(false);
+  });
 });

@@ -1,9 +1,8 @@
-import { mkdirSync, readFileSync, writeFileSync, chmodSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { loadProfile } from './profiles.js';
-import { renderTemplate } from './render.js';
+import { renderArtifact } from './renderArtifact.js';
 import { writeConfig } from './config.js';
-import type { ProfileDefaults } from './types.js';
+import type { ProfileDefaults, ArtifactType } from './types.js';
 
 export interface RenderProfileArgs {
   profileName: string;
@@ -18,28 +17,24 @@ export async function renderProfile(args: RenderProfileArgs): Promise<void> {
 
   const profile = loadProfile(profileName, resolve(dotclaudeRoot, 'profiles'));
   const defaults: ProfileDefaults = { ...profile.defaults, ...overrideDefaults };
+  const ctx = defaults as unknown as Record<string, unknown>;
 
-  // Render hooks
-  const hooksDir = resolve(targetRepo, '.claude/hooks');
-  mkdirSync(hooksDir, { recursive: true });
-  for (const hook of profile.hooks) {
-    try {
-      const srcPath = resolve(dotclaudeRoot, 'templates/hooks', `${hook}.sh`);
-      const tpl = readFileSync(srcPath, 'utf8');
-      const rendered = renderTemplate(tpl, defaults as unknown as Record<string, unknown>);
-      const outPath = resolve(hooksDir, `${hook}.sh`);
-      writeFileSync(outPath, rendered, 'utf8');
-      chmodSync(outPath, 0o755);
-    } catch (err) {
-      console.warn(`⚠️  Skipped hook "${hook}": ${(err as Error).message}`);
-      continue;
+  const groups: Array<{ type: ArtifactType; names: string[] }> = [
+    { type: 'hook', names: profile.hooks },
+    { type: 'rule', names: profile.rules },
+    { type: 'skill', names: profile.skills },
+    { type: 'agent', names: profile.agents },
+  ];
+
+  for (const group of groups) {
+    for (const name of group.names) {
+      try {
+        await renderArtifact({ type: group.type, name, targetRepo, dotclaudeRoot, ctx });
+      } catch (err) {
+        console.warn(`⚠️  Skipped ${group.type} "${name}": ${(err as Error).message}`);
+      }
     }
   }
 
-  // Write dotclaude.yml
-  writeConfig(targetRepo, {
-    profile: profileName,
-    projectName,
-    defaults,
-  });
+  writeConfig(targetRepo, { profile: profileName, projectName, defaults });
 }
