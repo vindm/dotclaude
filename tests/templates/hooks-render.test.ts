@@ -181,3 +181,21 @@ describe('check-secret-leak.sh template', () => {
     expect(out).not.toContain('}}');
   });
 });
+
+describe('check-no-console-log.sh template', () => {
+  const tpl = readFileSync(
+    resolve(__dirname, '../../templates/hooks/check-no-console-log.sh'),
+    'utf8',
+  );
+  it('uses default allowed paths when none configured', () => {
+    const out = renderTemplate(tpl, {});
+    expect(out).toContain('scripts/');
+    expect(out).toContain('tests/');
+    expect(out).not.toContain('{{');
+  });
+  it('uses configured allowed paths', () => {
+    const out = renderTemplate(tpl, { consoleLog: { allowPaths: ['custom/dev/'] } });
+    expect(out).toContain('custom/dev/');
+    expect(out).not.toContain('{{');
+  });
+});
