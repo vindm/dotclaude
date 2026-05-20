@@ -1,0 +1,40 @@
+name: mobile-rn
+description: React Native + Expo + iOS. Mobile-first with stricter design discipline.
+hooks:
+  - check-file-size
+  - check-forbidden-phrases
+  - check-import-boundary
+  - check-design-tokens
+  - git-context-sessionstart
+  - auto-lint-posttool
+  - check-no-todo-comments
+  - check-secret-leak
+  - check-no-console-log
+  - check-prebuild-required
+rules:
+  - file-discipline
+  - audit-routing
+  - visual-verification
+skills:
+  - decompose-file
+  - journey-audit
+  - element-reuse-check
+agents:
+  - pre-flight
+  - interaction-audit
+  - code-reviewer
+defaults:
+  fileSize:
+    ceiling: 1000
+    warn: 950
+  forbiddenPhrases:
+    phrases:
+      - "As an AI language model"
+      - "I'd be happy to help"
+    scopes:
+      - "*/app/**/*.tsx"
+      - "*/lib/**/*.ts"
+  designTokens:
+    sourcePath: lib/theme/tokens.ts
+  visualVerification:
+    tool: simctl

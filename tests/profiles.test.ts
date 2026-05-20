@@ -35,4 +35,12 @@ describe('loadProfile', () => {
     expect(profile.defaults.fileSize.ceiling).toBe(800);
     expect(profile.defaults.database).toBe('postgres');
   });
+
+  it('loads mobile-rn profile', () => {
+    const profile = loadProfile('mobile-rn', profilesDir);
+    expect(profile.name).toBe('mobile-rn');
+    expect(profile.hooks).toContain('check-prebuild-required');
+    expect(profile.defaults.visualVerification?.tool).toBe('simctl');
+    expect(profile.defaults.fileSize.ceiling).toBe(1000);
+  });
 });
