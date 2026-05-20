@@ -72,7 +72,29 @@ Each is a Mustache-templated `.sh` script. Edit-time enforcement; zero token cos
 
 ### Agents (`templates/agents/`)
 
-3 agent templates: pre-flight (pre-implementation validation), code-reviewer (post-implementation review), interaction-audit (semantic integrity — does chrome promise what the handler does?).
+14 agent templates, grouped by role:
+
+**Validation agents** (run after implementation, before merge):
+- `code-reviewer` — post-implementation review
+- `pre-flight` — pre-implementation cross-module risk validation
+- `interaction-audit` — semantic integrity (does chrome promise what the handler does?)
+- `a11y-audit` — VoiceOver / Dynamic Type / contrast / tap targets
+- `data-auditor` — DB / pipeline data quality
+- `tests-architect` — test coverage gaps
+- `design-token-auditor` — raw hex / non-token color sweep (haiku, cheap)
+- `ux-reviewer` — per-screen visual polish against the design north star
+
+**Audit agents** (cross-cutting / multi-screen):
+- `pages-audit` — cross-tab consistency on the primary surface
+- `flow-auditor` — whole-arc audit (sign-up → wizard → first-driver-open)
+- `skill-auditor` — skill docs vs code drift (haiku)
+
+**Strategy / design agents**:
+- `product-designer` — IA / flow / multi-screen architecture; spec doc IS the deliverable
+- `product-compass` — vision-vs-drift guardian
+
+**AI-workflow agents**:
+- `eval-cost-watcher` — projects LLM-token cost of an AI-workflow change before the regression-eval runs
 
 ### War stories (`docs/war-stories/`)
 
