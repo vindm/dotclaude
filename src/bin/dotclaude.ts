@@ -56,6 +56,12 @@ async function main() {
     }
 
     await runInit({ profileName, projectName, targetRepo, dotclaudeRoot: DOTCLAUDE_ROOT, force });
+  } else if (command === 'list') {
+    const { runList } = await import('../commands/list.js');
+    await runList(DOTCLAUDE_ROOT);
+  } else if (command === 'status') {
+    const { runStatus } = await import('../commands/status.js');
+    await runStatus(process.cwd());
   } else if (command === 'help' || command === '--help' || command === '-h') {
     console.log('dotclaude — Claude Code workflow pack generator');
     console.log('');
@@ -63,7 +69,10 @@ async function main() {
     console.log('  npx dotclaude init [--profile=X] [--project=Y] [--no-interactive] [--force]');
     console.log('');
     console.log('Commands:');
-    console.log('  init    Initialize .claude/ in the current directory');
+    console.log('  init      Initialize .claude/ in the current directory');
+    console.log('  list      List available profiles and templates');
+    console.log('  status    Show current dotclaude config for this repo');
+    console.log('  help      Show this help');
     process.exit(0);
   } else {
     console.error(`Unknown command: ${command}`);
