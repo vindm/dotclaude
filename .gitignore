@@ -1,14 +1,10 @@
-node_modules/
-dist/
 *.log
 .DS_Store
 .env
 .env.local
-coverage/
 .vscode/
 .idea/
 
-# Local test artifacts from running `dotclaude init` against this repo itself.
-# Never commit these — they'd shadow the templates/ source of truth.
+# Local test artifacts from running `/dotclaude:init` against this repo itself
 .claude/
-dotclaude.yml
+.claude-staging/

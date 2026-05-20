@@ -1,0 +1,11 @@
+{
+  "name": "dotclaude",
+  "description": "Generates a customized .claude/ directory for any project. Reads your codebase, interviews you about the project's failure modes and goals, then authors project-specific skills, agents, rules, and hooks tailored to your actual stack — not generic templates.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Dima Vinokurov"
+  },
+  "homepage": "https://github.com/vindm/dotclaude",
+  "repository": "https://github.com/vindm/dotclaude",
+  "license": "MIT"
+}
