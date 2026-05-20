@@ -23,12 +23,17 @@ export async function renderProfile(args: RenderProfileArgs): Promise<void> {
   const hooksDir = resolve(targetRepo, '.claude/hooks');
   mkdirSync(hooksDir, { recursive: true });
   for (const hook of profile.hooks) {
-    const srcPath = resolve(dotclaudeRoot, 'templates/hooks', `${hook}.sh`);
-    const tpl = readFileSync(srcPath, 'utf8');
-    const rendered = renderTemplate(tpl, defaults as unknown as Record<string, unknown>);
-    const outPath = resolve(hooksDir, `${hook}.sh`);
-    writeFileSync(outPath, rendered, 'utf8');
-    chmodSync(outPath, 0o755);
+    try {
+      const srcPath = resolve(dotclaudeRoot, 'templates/hooks', `${hook}.sh`);
+      const tpl = readFileSync(srcPath, 'utf8');
+      const rendered = renderTemplate(tpl, defaults as unknown as Record<string, unknown>);
+      const outPath = resolve(hooksDir, `${hook}.sh`);
+      writeFileSync(outPath, rendered, 'utf8');
+      chmodSync(outPath, 0o755);
+    } catch (err) {
+      console.warn(`⚠️  Skipped hook "${hook}": ${(err as Error).message}`);
+      continue;
+    }
   }
 
   // Write dotclaude.yml
