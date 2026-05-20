@@ -2,6 +2,16 @@
 
 Teaching material for Claude Code. When you bootstrap a `.claude/` directory, this doc teaches you HOW to author a reuse-gate skill that catches the "borrowed copy / component on the wrong surface type" class of bug at design time, not at user-testing time.
 
+## DUAL LOAD — this skill runs at BOTH design time AND audit time
+
+This skill is **dual-loaded**: it fires inside `product-designer` (design time, Section 0a of every spec) AND inside `ux-audit` / `interaction-audit` / `flow-continuity-review` / `flow-audit` (audit time, when any borrowed string / component is detected on the captured surface).
+
+The dual-load is what catches **implementation drift from spec**. Spec said "fresh string authored for daily-driver context" — implementation reached for the nearest existing string at `lib/copy/narration.ts:60` to save time. The design-time gate caught nothing because at design time the proposal was new authorship. The audit-time gate catches the silent substitution: the implemented surface uses an existing string, and the verdict matrix flags the first-touch → daily-driver reuse as REJECT.
+
+Without dual-load, the audit grades the result without checking provenance — the bug ships, and the only signal is a user noticing "the app keeps re-introducing itself."
+
+Agents dispatching this skill MUST load it at the appropriate moment. Designer agents — Section 0a of the spec template. Reviewer agents — first action when any user-visible string or component is encountered on the audited surface (grep for the string source, classify both contexts via `journey-mapping`, apply the verdict matrix).
+
 ## When to ship one (applicability gate)
 
 Ship an element-reuse skill when:

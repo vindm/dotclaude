@@ -80,7 +80,7 @@ WCAG 2.2 AA:
 - Large text (18pt+ or 14pt+ bold): 3:1 minimum.
 - UI components and graphical objects: 3:1 minimum.
 
-The agent computes the contrast ratio between foreground and background colors. It should pull colors from the **semantic tokens** the project uses (theme files) rather than visually estimating from pixels.
+**Contrast MUST be computed from TOKEN values, not screenshot-estimated.** This is core methodology, not an optional refinement. Screenshot color sampling is unreliable: anti-aliasing, sub-pixel rendering, JPEG compression, blur backdrops, and per-display gamma curves all distort the apparent foreground/background pair. A 4.5:1 token pair can sample to 3.8:1 in a screenshot — the audit then false-flags compliant chrome; conversely a 4.2:1 token pair can sample to 4.6:1 over an off-white anti-aliased edge — the audit misses real failures. The correct path: read the project's semantic tokens (`DESIGN_SYSTEM_TOKENS_PATH` from the design-system reference skill), pick the actual foreground + background tokens for the surface, and compute ratios mathematically against them. Pixel sampling is a *fallback* when tokens are unavailable, not the default.
 
 For projects with dark + light modes, the agent audits BOTH modes. Failures in either are blocking.
 

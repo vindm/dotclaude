@@ -2,6 +2,14 @@
 
 Teaching material for Claude Code. When you bootstrap a `.claude/` directory, this doc teaches you HOW to author a journey-mapping skill for projects with multi-step user flows. The skill is the precondition every other design / audit agent depends on: before designing a screen, before grading a flow, *know where the user came from.*
 
+## DUAL LOAD — this skill runs at BOTH design time AND audit time
+
+This skill is **dual-loaded**: it fires inside `product-designer` (design time, Section 0 of every spec) AND inside `ux-audit` / `interaction-audit` / `flow-continuity-review` / `flow-audit` (audit time, before grading any captured surface).
+
+This dual-load is **structural drift prevention**. A spec passing journey-audit at design time tells you the *intended* surface-type classification; rerunning the skill at audit time against the *implemented* surface catches the case where impl drifted from spec. Without dual-load, an audit grades against the implementation's *de facto* surface type, which may not match the spec's *de jure* one — the bug class hides in plain sight.
+
+Concretely: the agent dispatching this skill MUST be configured to load it at the appropriate moment. For designers — Section 0 of the spec template. For reviewers — first action before grading, before journey classification, before any per-screen verdict. Skill frontmatter's `paths:` glob makes auto-load happen on the file edits; explicit invocation in agent dispatch flow makes the audit-time rerun happen.
+
 ## When to ship one (applicability gate)
 
 Ship a journey-mapping skill when:

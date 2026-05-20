@@ -98,11 +98,26 @@ Each finding gets a severity (Crit / High / Med / Low) and a fix recommendation.
 Dated audit doc with:
 - Scope statement (from Phase 1)
 - Arc map (summary of the flow doc)
-- Findings table (per finding: surface, class, severity, description, fix recommendation)
+- Findings table (per finding: surface, class, severity, description, fix recommendation, **Owner / Fix-by handoff column**)
 - Resolution of prior audit's open items (which fixed, which remain, which are new)
 - Routing recommendations (some findings route to other agents — IA gaps to design, UI polish to ux-audit, copy fixes to direct edit)
 
 The agent **does not fix anything.** Audit + document only. Hand-off to specialist agents.
+
+### The "audit, don't fix" handoff column convention
+
+Every findings-table row carries an explicit **Owner / Fix-by** column naming which agent (or direct-edit path) the finding routes to. This is the structural enforcement of the "audit, don't fix" discipline — without an explicit handoff column, the temptation to start applying fixes inline corrupts the audit artifact's purpose (the audit is the *persistent record*; fixes belong in commits + the prior-audit resolution table).
+
+Recommended findings-table structure:
+
+| ID | Surface | Gap class | Severity | Description | Fix recommendation | Owner / Fix-by |
+|---|---|---|---|---|---|---|
+| G-001 | <surface> | IA boundary | Crit | <description> | <one-line> | `product-designer` |
+| G-002 | <surface> | Copy register | High | <description> | <one-line> | direct edit |
+| G-003 | <surface> | UI inconsistency | Med | <description> | <one-line> | `ux-audit` |
+| G-004 | <surface> | Motion drift | Med | <description> | <one-line> | direct edit |
+
+The Owner column makes the routing explicit — the next-action reader (engineer, designer, project owner) knows where each finding goes. Without it, findings get "noted and moved on from"; with it, every row has a target landing zone.
 
 ## How to derive THIS project's specifics
 

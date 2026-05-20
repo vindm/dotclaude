@@ -134,6 +134,18 @@ The final rubric (typically `.claude/skills/quality-bar/SKILL.md` or `.claude/ru
 5. **Fast vs careful rule** — concrete examples for each mode from the project's actual work shapes.
 6. **"Claim of done" preconditions** — the checklist the user / Claude runs before writing "shipped" / "done" / "ready." This typically includes: capture / lint / test / pitfall-scan / benchmark-named.
 
+### Claim-of-done preconditions — the canonical 5-item checklist
+
+The rubric's claim-of-done preconditions are binding. **Five items minimum, every UI surface, every claim of "shipped" / "done":**
+
+1. **Fresh screenshot of every affected surface is present.** "Compiles" / "tests pass" / "I read the code" are NOT substitutes. The screenshot is the visual contract. Exception: pure copy-string diffs — the diff IS the artifact. If capture is impossible for non-string work, say so explicitly and ask the user to verify.
+2. **Lint passes 0 errors.** No exceptions. The lint config is the project's contract on what the codebase looks like; if the change can't pass it, the change isn't done.
+3. **Tests green** (the project's primary test command — `npm test` / `pnpm test` / `yarn test` / `pytest` / `cargo test` / etc.). Failures block claim-of-done.
+4. **5-pitfall composition scan complete.** Duplication / orphan / tone-mismatch / hierarchy / residue — each checked on every affected screen. Verdict per pitfall: found / clean. Without explicit scan, the claim is "I think it looks fine" instead of "I checked the 5 known pitfalls."
+5. **Tier 1 + Tier 2 benchmark named** for every graded surface. "S-tier" or "looks good" without a reference is unenforceable. *"Sits comfortably next to Linear's project view"* or *"Apple Settings-row parity on density and tap targets"* is what claim-of-done sounds like.
+
+If any item is unchecked, the claim is "in progress," not "done." This checklist is what separates "I think this works" from "I've verified this works."
+
 The rubric is best as a skill (auto-loaded on UI work) rather than a rule (passive). When Claude proposes UI work, the rubric should be active so the assessment is built into the proposal.
 
 ## When to auto-load the rubric

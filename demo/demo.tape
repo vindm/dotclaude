@@ -4,8 +4,8 @@
 Output demo/demo.gif
 
 Set Shell "bash"
-Set FontSize 15
-Set Width 920
+Set FontSize 13
+Set Width 900
 Set Height 580
 Set Theme "Catppuccin Mocha"
 Set TypingSpeed 40ms
@@ -30,5 +30,5 @@ Sleep 300ms
 Enter
 
 # Wait for the simulated /dotclaude:design flow to complete
-# (the script has internal sleeps totaling ~30s)
-Sleep 33s
+# (the script has internal sleeps totaling ~20s, plus authoring + excerpt)
+Sleep 23s

@@ -2,6 +2,14 @@
 
 Teaching material for Claude Code. When you bootstrap a `.claude/` directory, this doc teaches you HOW to author a persona-lens skill — three outside-eyes tests that run on every copy element to catch the "still apologizing on day 30" / "performing helpfulness" / "introducing the assistant the user has known for a month" class of voice violations.
 
+## DUAL LOAD — this skill runs at BOTH design time AND audit time
+
+This skill is **dual-loaded**: it fires inside `product-designer` (design time, Section 0b of every spec — every proposed copy element passes the triad) AND inside `ux-audit` / `interaction-audit` / `flow-continuity-review` / `flow-audit` (audit time, against every visible copy element on the captured surface).
+
+**The audit-time rerun catches implementation drift from spec.** This is the load-bearing rationale: a spec where every string passed all three tests at design time can still ship with strings that *fail* — an engineer substituted a "Continue" for "Next" in the heat of implementation; a translation file was extended with copy that mirrors-by-pattern-matching from an adjacent first-touch surface; a generated string from an LLM-shaped pipeline produced a customer-service register that wasn't in the spec. Without the audit-time rerun, those substitutions ship invisible.
+
+The discipline: the agent dispatching this skill MUST load it at BOTH moments. Designer agents — Section 0b of the spec template (proposed strings). Reviewer agents — first action when any visible copy element is found on the audited surface (verify the string in source, apply day-30 / partner / stranger tests, REWRITE verdict is binding regardless of spec status).
+
 ## When to ship one (applicability gate)
 
 Ship a persona-testing skill when:

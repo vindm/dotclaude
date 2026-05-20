@@ -116,37 +116,51 @@ This is the substrate the interview adapts to. Skip questions whose answer is al
 
 ## Phase 2 — Interview
 
-Open `interview.md` (same directory). 4-6 questions. Adaptive — skip what's obvious from Phase 1. The most important questions:
+Open `interview.md` (same directory). The interview is structured as **10 phases (A–J) driving 53 configuration knobs** — the calibration target inherited from `docs/design-stack-analysis.md`. Adaptive: ~25 knobs auto-populate from Phase 1's scan; the interview drives the remaining ~28 via ~17-18 sub-questions batchable into 5-6 super-questions per turn.
 
-- **Design benchmarks** — Tier 1 (chrome) + Tier 2 (domain). Without these the kit has no anchors.
-- **Voice / tone** — does the product have a character? Brand-specific forbidden phrases?
-- **Past design bugs** — the war stories that informed the original methodology.
-- **Quality bar** — "shipped well" definition for THIS project.
+The most important questions (the ones to fight for if the user resists):
+
+- **Q-B1 / Q-B2 / Q-B3** — Tier 1 (chrome) + Tier 2 (domain, with dimension) + anti-references. Without named benchmarks, every authored agent grades on vibes.
+- **Q-C1 → Q-C4** — voice + assistant character + brand voice reference + forbidden phrases. Gates whether `persona-testing` + `forbidden-phrases` ship.
+- **Q-D1 / Q-D2** — multi-screen arcs + multi-section primary surface. Gates whether `flow-audit` / `flow-continuity-review` / `iterative-polish-autoloop` / `pages-audit` apply.
+- **Q-I1** — git-mined commit confirmation. Transforms generic textbook anti-patterns into project-specific ones.
+- **Q-E3** — demo audience + quality posture. Defines what "shipped well" means.
 
 ## Phase 3 — Read the principles
 
 Read these from `../../principles/` SELECTIVELY based on what the project actually has:
 
 **Always read** (universal design discipline):
-- `design-benchmarking.md` — picks Tier 1 + Tier 2 references
+- `design-benchmarking.md` — picks Tier 1 + Tier 2 references + per-surface chrome reference table convention
 - `visual-verification.md` — see-what-you-built discipline
-- `quality-rubric.md` — S/A/B/C/D anchored on the user's benchmarks
-- `audit-routing.md` — which audit fires for which question
+- `quality-rubric.md` — S/A/B/C/D anchored on the user's benchmarks + claim-of-done preconditions (5-item checklist)
+- `audit-routing.md` — which audit fires for which question + cheapest-tier-wins discipline
+- `design-system-reference-skill.md` — design-system entry-point skill the project ships (always read; the broad reference for tokens / primitives / motion / status / gotchas)
+
+**Read if project is in design / spec / IA phase** (new features incoming):
+- `product-designer.md` — senior-IC IA / flow / multi-screen designer agent
 
 **Read if project has multi-screen UI** (most non-trivial UIs):
 - `ux-audit.md` — single-screen audit
 - `a11y-audit.md` — accessibility
 - `interaction-audit.md` — semantic chrome-vs-handler
 - `design-token-audit.md` — token discipline sweep
-- `journey-mapping.md` — prior-surface mapping before any new screen design
-- `element-reuse.md` — Gate A reuse verdict
-- `persona-testing.md` — outside-eyes lens on copy
+- `journey-mapping.md` — prior-surface mapping before any new screen design (DUAL LOAD — design + audit time)
+- `element-reuse.md` — Gate A reuse verdict (DUAL LOAD — design + audit time)
+- `persona-testing.md` — outside-eyes lens on copy (DUAL LOAD — design + audit time)
 
 **Read if project has multi-section primary surface** (tabs / dashboard sections / docs sidebar):
 - `pages-audit.md` — cross-section consistency
 
 **Read if project has multi-screen arcs** (onboarding, wizard, checkout):
-- `flow-audit.md` — whole-arc audit
+- `flow-audit.md` — whole-arc audit (deep, infrequent — produces canonical flow doc + dated gap report)
+- `flow-continuity-review.md` — lightweight series grader (frequent, takes pre-captured manifest, grades 6 flow-level dimensions)
+
+**Read if user wants iterative polish to award-tier** (capture harness + reviewer + fixture reset all present):
+- `iterative-polish-autoloop.md` — continuous polish loop with 3-layer scrutiny (reviewer / composition scan / backend-truth probe)
+
+**Read if project has a CLAUDE.md / vision doc** (drift detection wanted):
+- `product-direction-validator.md` — vision-alignment guardian / drift detector / agent coordinator
 
 **Read if project has product voice** (any user-facing copy):
 - `forbidden-phrases.md` — voice discipline
@@ -155,23 +169,26 @@ Read these from `../../principles/` SELECTIVELY based on what the project actual
 
 Based on what applied + the interview answers, author these in `.claude-staging/`. Each artifact must cite the user's actual code paths, name THEIR benchmarks, reference THEIR past bugs.
 
+**Calibration target**: the **53-knob configuration** captured by the interview (per `docs/design-stack-analysis.md`). Every authored artifact's frontmatter + body must thread the relevant knobs. The interview's purpose is exactly this calibration; if an authored artifact still reads like a template, the interview didn't drive enough knobs through.
+
 ### Agents (in `.claude-staging/agents/`)
 
 - **`ux-reviewer.md`** — single-screen visual audit
   - Frontmatter: `description: <copy from principle, tuned with user's Tier 1 + Tier 2 names>`
   - Body: screenshot procedure for THEIR device target (iOS sim? Playwright? screenshot script?), grading rubric anchored to THEIR named benchmarks (e.g. "S = looks like Linear or Stripe" if those are their picks), composition pitfalls grounded in screenshots they showed in interview
+  - Include the `IN_PRODUCT_ASSISTANT_CHARACTER` daily-driver trap check if Q-C2 said yes
   - Reference `quality-bar` skill
 
 - **`a11y-audit.md`** — accessibility (only if UI is user-facing-end-user, not internal-only)
   - 4+1 dimensions adapted to THEIR platform (VoiceOver for iOS, screen reader for web, equivalent for desktop)
   - Hit-target sizes per platform (44pt iOS, 48dp Android, 44×44px web touch)
-  - Contrast computed against THEIR design tokens
+  - **Contrast computed from THEIR TOKEN values, not screenshot-estimated** (per principle's core methodology)
   - Dynamic Type / rem-scaling per platform
 
 - **`interaction-audit.md`** — semantic chrome integrity
   - The affordance-vs-behavior table
   - Pattern catalog (dead chrome / redundant affordance / optical-group disconnect)
-  - Project-specific examples from THEIR codebase if found in Phase 1 git log
+  - Project-specific examples from THEIR codebase if found in Phase 1 git log (Q-I1 confirmations)
 
 - **`design-token-auditor.md`** — token discipline regex sweep
   - Targets: THEIR design system source file (which you found in Phase 1)
@@ -181,34 +198,64 @@ Based on what applied + the interview answers, author these in `.claude-staging/
 
 - **`flow-auditor.md`** (if multi-screen arcs) — whole-arc audit
   - 8-class gap rubric from `flow-audit.md` principle
-  - Arc inventory: list THEIR known arcs (signup, onboarding, checkout, etc.) — derive from the routes/screens you found in Phase 1
+  - Arc inventory: list THEIR known arcs (signup, onboarding, checkout, etc.) — derive from Q-D1 + Phase 1 routes
+  - **Owner / Fix-by handoff column convention** in findings table
 
 - **`pages-audit.md`** (if multi-section primary surface) — cross-section consistency
   - Shared-component grep first, pixel measurement last
-  - List THEIR primary sections (read from Phase 1 routes/tabs)
+  - List THEIR primary sections (read from Q-D2 + Phase 1 routes/tabs)
+
+- **`product-designer.md`** (if user wants design phase support — Q-J1 + general posture)
+  - Per `product-designer.md` principle — 8-step procedure
+  - Reference THEIR spec doc convention (Q-H1), capability map path if any (Q-J1), prototype gates if any (Q-J1)
+  - Self-audit checklist verbatim
+
+- **`flow-ux-reviewer.md`** (if multi-screen arcs + capture harness)
+  - Per `flow-continuity-review.md` principle — manifest-driven series grader
+  - 6 flow-level dimensions
+  - Bridge reference apps from Q-B2
+
+- **`product-compass.md`** (if vision docs exist — Q-J1)
+  - Per `product-direction-validator.md` principle — Vision Health verdict + drift detection + agent coordination
 
 ### Skills (in `.claude-staging/skills/`)
 
-- **`journey-audit/SKILL.md`** — prior-surface mapping skill (auto-loads when designing new screens)
-- **`element-reuse-check/SKILL.md`** — Gate A reuse verdict matrix
-- **`persona-lens/SKILL.md`** — Gate B day-30 / partner / stranger lens (adapt persona names to fit the project; for B2C use day-30/partner/stranger; for CLI tool maybe first-run/power-user/regression-debugger)
-- **`quality-bar/SKILL.md`** — S-tier rubric + composition pitfalls + demo test, anchored to THEIR benchmarks
+- **`design-system/SKILL.md`** — design-system entry-point skill per `design-system-reference-skill.md` principle (11 sections — north-star / native primitives / tokens / styling API / semantic colors / surface hierarchy / motion / shadows / status / quality tiers / library gotchas + i18n)
+- **`journey-audit/SKILL.md`** — prior-surface mapping skill (DUAL LOAD — fires at design AND audit time)
+- **`element-reuse-check/SKILL.md`** — Gate A reuse verdict matrix (DUAL LOAD)
+- **`persona-lens/SKILL.md`** — Gate B day-30 / partner / stranger lens (DUAL LOAD; adapt triad: for B2C use day-30/partner/stranger; for CLI tool maybe first-run/power-user/regression-debugger; for docs-site skimmer/focused/reference)
+- **`quality-bar/SKILL.md`** — S-tier rubric + composition pitfalls + demo test + claim-of-done preconditions (5-item checklist), anchored to THEIR benchmarks
+- **`ruthless-ux-autoloop/SKILL.md`** (if user wants iterative polish) — per `iterative-polish-autoloop.md` principle — 3-layer scrutiny + iteration cap + safety invariants
 
 ### Rules (in `.claude-staging/rules/`)
 
-- **`design-north-star.md`** — explicitly names THEIR Tier 1 + Tier 2 benchmarks; quotes specific anti-patterns the user mentioned in interview
-- **`audit-routing.md`** — the pipeline order + when-to-dispatch table, scoped to the agents you just authored
+- **`design-north-star.md`** — explicitly names THEIR Tier 1 + Tier 2 benchmarks; quotes specific anti-patterns the user mentioned in interview; **per-surface chrome reference table** (the row-per-surface convention from `design-benchmarking.md`)
+- **`audit-routing.md`** — the pipeline order + when-to-dispatch table, scoped to the agents you just authored; **cheapest-tier-wins discipline** explicit (hook < rule < skill < agent in token cost)
 - **`visual-verification.md`** — see-what-you-built discipline, with THEIR device-screenshot commands
-- **`forbidden-phrases.txt`** — if the project has voice; populate with the universal AI-slop list + the brand-specific phrases the user provided in interview
+- **`forbidden-phrases.txt`** — if the project has voice; populate with the universal AI-slop list + the brand-specific phrases the user provided in interview (Q-C4)
 
 ### Hooks (in `.claude-staging/hooks/` — render from `../../hook-templates/`)
 
 - **`check-design-tokens.sh`** — substitute `THEME_PATH` with the user's actual theme source file path
 - **`check-forbidden-phrases.sh`** (if rules/forbidden-phrases.txt is shipped) — substitute scopes with the user's actual user-copy paths
+- **`check-no-legacy-blur.sh`** (if iOS / Expo + has modern glass primitive) — block legacy blur API imports
+- **`check-platform-icons.sh`** (if iOS + native tabs use SF Symbols) — block native-tab icons without system-symbol prop
+
+### Companion artifacts to ship alongside the major artifacts
+
+When you ship a major artifact, also ship its companion(s):
+
+- **`product-designer.md` agent** ships with the **self-audit checklist** verbatim in the agent body — not as a reference. The checklist is the gate.
+- **`iterative-polish-autoloop.md` skill** ships with the **iteration-cap rule** (hard cap N, soft cap N-4) + the **safety invariants list** (do-not-edit migrations / fixtures / harness YAML).
+- **`flow-ux-reviewer.md` agent** ships with the **manifest schema** definition — `{step, name, path, context}` shape stated explicitly so the capture skill produces compatible output.
+- **`design-system/SKILL.md`** ships with the **post-edit command rule** (*"After editing `<tokens>`, run `<command>`"*) — without it, generated tokens drift from source.
+- **`product-compass.md` agent** ships with the **agent coordination table** (situation → recommended-agent), not just prose.
 
 ## Depth checklist (MANDATORY per authored agent)
 
 Every agent / skill / rule you author in Phase 4 MUST contain ALL of these 10 structural elements, or the artifact is shallow and the user will reject it. This checklist is the difference between a "v0.1 sketch" and a "battle-tested kit." Treat it as binding.
+
+**Calibration target**: the **53-knob configuration** from the interview (see `docs/design-stack-analysis.md` for the full knob map; the interview drives them). Each authored artifact's depth signature is achieved by threading the relevant subset of knobs into its body — not by adding length. A 250-LOC agent body with 12 project-specific knob references beats a 400-LOC body of generic methodology.
 
 1. **Named benchmarks** — specific Tier 1 + Tier 2 apps from the interview, with WHY each is the benchmark. "Apple-like" or "modern apps" is NOT a benchmark. "Linear for keyboard speed" or "Apple iOS 26 Settings + Telegram for chrome" is.
 

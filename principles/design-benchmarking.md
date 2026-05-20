@@ -111,6 +111,24 @@ The final rule (typically `.claude/rules/design-benchmarking.md` or `.claude/rul
 
 3. **The Tier 2 table** — per-surface-category references + what to steal.
 
+3.5. **Per-surface chrome reference table** — the row-per-surface convention. Every project that takes design seriously names which reference informs each chrome surface type. The shape is binding (every project should produce this table); the content is project-specific. Template:
+
+| Surface | Tier 1 reference | Tier 2 anchor |
+|---|---|---|
+| Tab bar / primary nav | <ref> | — |
+| Cards / list rows | <ref> | — |
+| Sheets / modals | <ref> | <ref for content density> |
+| Modal alerts / confirms | <ref> | — |
+| Empty states | <ref> | <domain ref for what-to-teach> |
+| Motion / transitions | <ref> | — |
+| Color discipline | <ref> | — |
+| Typography hierarchy | <ref> | — |
+| Iconography | <ref> | — |
+| Form inputs / controls | <ref> | — |
+| Loading / skeleton states | <ref> | — |
+
+The cells are filled with specific apps named in the interview (Q-B1 + Q-B2). Empty cells are explicit "no Tier 2 reference for this surface" — not omissions. When a reviewer grades a chrome surface, they look up the row, name the reference, and grade against it. Without this table, "Apple-tier chrome" stays an aspiration; with it, every surface has an enforceable bar.
+
 4. **Anti-patterns table** — specific design moves the rule REJECTS based on the benchmark posture. Examples:
    - "Custom RN-rendered chrome trying to fake iOS — use native primitives."
    - "Multiple competing accent colors — restraint is part of the reference."

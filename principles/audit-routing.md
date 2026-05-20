@@ -134,6 +134,27 @@ The cheapest finding is one prevented by an edit-time hook. Before dispatching a
 
 If a class of finding is fully prevented by a hook, dispatching an audit agent to find more of it is wasted spend. The rule should explicitly route "did you fix the hook?" before "did you run the audit?"
 
+### Cheapest-tier-wins discipline — first-class routing principle
+
+"Hooks prevent classes of finding entirely" is **a first-class principle in this rule**, not an aside. The whole audit-routing decision tree is shaped by the cost-of-detection ladder:
+
+| Tier | Mechanism | Cost | Catches |
+|---|---|---|---|
+| 0 | **Hook** (edit-time, deterministic) | ~0 tokens, milliseconds | Mechanical patterns (raw hex / forbidden phrases / file-size / platform-icon API) |
+| 1 | **Rule** (always-loaded reference) | Tokens-in-context only, no extra dispatch | Conventions the agent already knows (north-star reference, routing) |
+| 2 | **Skill** (auto-loaded by path/topic) | ~2-5k tokens per dispatch | Methodology + reference data the agent loads situationally (journey-mapping, persona-testing) |
+| 3 | **Agent** (explicit dispatch) | ~20-50k+ tokens per run, expensive model | Reasoning-heavy work (visual polish grading, semantic chrome integrity, arc continuity) |
+
+**The discipline**: when a class of finding can be prevented at a cheaper tier, push it there. Conversely, before dispatching an expensive agent, ask: "is this what hooks / rules / skills already cover?" — and if yes, fix the cheaper-tier first.
+
+Concrete applications:
+
+- **Don't dispatch `design-token-audit` to find raw hex if `check-token-only.sh` already blocks it on edit.** If raw hex is slipping past, the hook is broken — fix the hook (cheaper). Then run the agent only to sweep accumulated drift before the hook landed.
+- **Don't dispatch `ux-audit` to find "the welcome message on daily home" if `forbidden-phrases.txt` + the hook would have caught it.** First check the phrase is on the deny-list; if not, add it; if yes but the override was used inappropriately, address the override.
+- **Don't dispatch `flow-audit` to find IA gaps that `product-designer`'s self-audit (run at design time) would catch.** If specs are drifting, fix the designer's gate discipline; the flow-auditor's whole-arc audit is too expensive for "the designer skipped Section 0a."
+
+This shapes the dispatching mental model: ask which tier should catch the finding, and operate at THAT tier — not the highest one available. The audit-routing rule's existence is itself a Tier 1 mechanism preventing Tier 3 wastes.
+
 ## Cross-references
 
 - `code-review.md` / `pre-flight.md` — non-UI audit agents. The routing table should include them.
