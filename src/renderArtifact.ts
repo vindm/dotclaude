@@ -28,10 +28,34 @@ interface TypeConfig {
 }
 
 const TYPE_CONFIG: Record<ArtifactType, TypeConfig> = {
-  hook: { srcDir: 'templates/hooks', targetSubdir: '.claude/hooks', ext: '.sh', executable: true, isDirectory: false },
-  rule: { srcDir: 'templates/rules', targetSubdir: '.claude/rules', ext: '.md', executable: false, isDirectory: false },
-  agent: { srcDir: 'templates/agents', targetSubdir: '.claude/agents', ext: '.md', executable: false, isDirectory: false },
-  skill: { srcDir: 'templates/skills', targetSubdir: '.claude/skills', ext: '', executable: false, isDirectory: true },
+  hook: {
+    srcDir: 'templates/hooks',
+    targetSubdir: '.claude/hooks',
+    ext: '.sh',
+    executable: true,
+    isDirectory: false,
+  },
+  rule: {
+    srcDir: 'templates/rules',
+    targetSubdir: '.claude/rules',
+    ext: '.md',
+    executable: false,
+    isDirectory: false,
+  },
+  agent: {
+    srcDir: 'templates/agents',
+    targetSubdir: '.claude/agents',
+    ext: '.md',
+    executable: false,
+    isDirectory: false,
+  },
+  skill: {
+    srcDir: 'templates/skills',
+    targetSubdir: '.claude/skills',
+    ext: '',
+    executable: false,
+    isDirectory: true,
+  },
 };
 
 export async function renderArtifact(args: RenderArtifactArgs): Promise<void> {
