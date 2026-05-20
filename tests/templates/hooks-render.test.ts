@@ -152,3 +152,20 @@ describe('check-bash-safety.sh template', () => {
     expect(out).not.toContain('}}');
   });
 });
+
+describe('check-no-todo-comments.sh template', () => {
+  const tpl = readFileSync(
+    resolve(__dirname, '../../templates/hooks/check-no-todo-comments.sh'),
+    'utf8',
+  );
+  it('warns (exit 0) by default', () => {
+    const out = renderTemplate(tpl, {});
+    expect(out).toContain('exit 0');
+    expect(out).not.toContain('{{');
+  });
+  it('blocks (exit 2) when todoBlock is true', () => {
+    const out = renderTemplate(tpl, { todoBlock: true });
+    expect(out).toContain('exit 2');
+    expect(out).not.toContain('{{');
+  });
+});
