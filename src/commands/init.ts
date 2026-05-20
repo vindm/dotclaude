@@ -32,5 +32,5 @@ export async function runInit(args: InitArgs): Promise<void> {
 
   console.log(`✓ Initialized profile "${profileName}" in ${targetRepo}`);
   console.log(`✓ Wrote .claude/ and dotclaude.yml`);
-  console.log(`\nNext: review .claude/CLAUDE.md, customize as needed, commit.`);
+  console.log(`\nNext: review .claude/, customize as needed, commit.`);
 }
