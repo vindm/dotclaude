@@ -123,3 +123,20 @@ describe('check-design-tokens.sh template', () => {
     expect(out).not.toContain('{{');
   });
 });
+
+describe('regen-generated-artifacts.sh template', () => {
+  const tpl = readFileSync(
+    resolve(__dirname, '../../templates/hooks/regen-generated-artifacts.sh'),
+    'utf8',
+  );
+  it('substitutes configured regen command', () => {
+    const out = renderTemplate(tpl, { regenCommand: 'yarn db:types' });
+    expect(out).toContain('yarn db:types');
+    expect(out).not.toContain('{{');
+  });
+  it('renders to empty COMMAND when none configured (graceful no-op)', () => {
+    const out = renderTemplate(tpl, {});
+    expect(out).toContain('COMMAND=""');
+    expect(out).not.toContain('{{');
+  });
+});
