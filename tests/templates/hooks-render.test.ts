@@ -70,3 +70,20 @@ describe('git-context-sessionstart.sh template', () => {
     expect(out).not.toContain('}}');
   });
 });
+
+describe('auto-lint-posttool.sh template', () => {
+  const tpl = readFileSync(
+    resolve(__dirname, '../../templates/hooks/auto-lint-posttool.sh'),
+    'utf8',
+  );
+  it('uses default lint command when none configured', () => {
+    const out = renderTemplate(tpl, {});
+    expect(out).toContain('npx eslint --fix');
+    expect(out).not.toContain('{{');
+  });
+  it('substitutes configured lint command', () => {
+    const out = renderTemplate(tpl, { lint: { command: 'yarn lint --fix' } });
+    expect(out).toContain('yarn lint --fix');
+    expect(out).not.toContain('{{');
+  });
+});
