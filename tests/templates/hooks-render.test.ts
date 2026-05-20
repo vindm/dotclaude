@@ -8,10 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 describe('check-file-size.sh template', () => {
-  const tpl = readFileSync(
-    resolve(__dirname, '../../templates/hooks/check-file-size.sh'),
-    'utf8',
-  );
+  const tpl = readFileSync(resolve(__dirname, '../../templates/hooks/check-file-size.sh'), 'utf8');
 
   it('substitutes ceiling and warn values', () => {
     const out = renderTemplate(tpl, { fileSize: { ceiling: 1500, warn: 1400 } });

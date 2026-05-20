@@ -22,7 +22,10 @@ export async function runInteractivePrompts(dotclaudeRoot: string): Promise<Inte
         name: 'profileName',
         message: 'Profile?',
         choices: profileChoices,
-        initial: Math.max(0, profileChoices.findIndex((c) => c.value === 'minimal')),
+        initial: Math.max(
+          0,
+          profileChoices.findIndex((c) => c.value === 'minimal'),
+        ),
       },
       {
         type: 'text',
