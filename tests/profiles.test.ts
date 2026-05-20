@@ -51,4 +51,11 @@ describe('loadProfile', () => {
     expect(profile.defaults.fileSize.ceiling).toBe(1200);
     expect(profile.defaults.database).toBe('postgres');
   });
+
+  it('loads full-stack profile', () => {
+    const profile = loadProfile('full-stack', profilesDir);
+    expect(profile.name).toBe('full-stack');
+    expect(profile.hooks.length).toBeGreaterThanOrEqual(11);
+    expect(profile.rules.length).toBeGreaterThanOrEqual(4);
+  });
 });

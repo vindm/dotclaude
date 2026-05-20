@@ -1,0 +1,44 @@
+name: full-stack
+description: Web + RN + API in one repo. Maximum guardrail coverage.
+hooks:
+  - check-file-size
+  - check-forbidden-phrases
+  - check-import-boundary
+  - check-design-tokens
+  - git-context-sessionstart
+  - auto-lint-posttool
+  - regen-generated-artifacts
+  - check-no-todo-comments
+  - check-secret-leak
+  - check-no-console-log
+  - check-prebuild-required
+rules:
+  - file-discipline
+  - audit-routing
+  - visual-verification
+  - database-query-discipline
+skills:
+  - decompose-file
+  - journey-audit
+  - element-reuse-check
+agents:
+  - pre-flight
+  - interaction-audit
+  - code-reviewer
+defaults:
+  fileSize:
+    ceiling: 1000
+    warn: 950
+  forbiddenPhrases:
+    phrases:
+      - "As an AI language model"
+      - "I'd be happy to help"
+      - "Certainly! Here is"
+    scopes:
+      - "*/src/**/*.ts"
+      - "*/src/**/*.tsx"
+      - "*/app/**/*.tsx"
+      - "*/lib/**/*.ts"
+  designTokens:
+    sourcePath: lib/theme/tokens.ts
+  database: postgres
