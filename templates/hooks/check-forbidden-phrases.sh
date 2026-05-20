@@ -25,7 +25,7 @@ fi
 
 violations=()
 {{#forbiddenPhrases.phrases}}
-if grep -n "{{.}}" "$file_path" 2>/dev/null | grep -v 'allow-forbidden' > /tmp/.dc-forbidden.$$; then
+if grep -nF "{{.}}" "$file_path" 2>/dev/null | grep -v 'allow-forbidden' > /tmp/.dc-forbidden.$$; then
   while IFS= read -r line; do
     violations+=("  $file_path:$line")
   done < /tmp/.dc-forbidden.$$
