@@ -897,7 +897,7 @@ The shape is universal. The number of rows scales with project complexity — a 
 | **user** | (top of `MEMORY.md`) | Permanent, auto-loaded | Never promotes | "User's email is X" |
 | **feedback** | `feedback_*.md` | Auto-promoted to a rule when it fires 3+ times | `.claude/rules/*.md` | "Never `git stash --include-untracked` on populated WIP" |
 | **project** | `project_*.md` | Manual archive when superseded by ship / pivot | `docs/archive/memory/` | "Stage 4 GREEN on Demo" |
-| **reference** | (other names) | Permanent unless invalidated | `docs/<topic>.md` if grows | "Bali wedge ICP is multi-floor" |
+| **reference** | (other names) | Permanent unless invalidated | `docs/<topic>.md` if grows | "wedge ICP target is multi-floor" |
 
 Feedback memory is the highest-leverage type. It captures lessons-learned that future-Claude should respect — *"don't do X again"* / *"the trap when Y is Z"*. Each feedback entry should ideally graduate to a rule when it's fired enough times.
 
@@ -1487,7 +1487,7 @@ Mode 2 is the rigorous test. Bootstrap should produce ~80% parity to the existin
 
 - Bootstrap completes in ≤ 35 min wall clock.
 - All 7 layers produce *some* artifact (no layer entirely empty).
-- The user (Dima or a recruited Bali friend) can answer every question without external research.
+- The user (the developer or a recruited external contributor) can answer every question without external research.
 - The authored `CLAUDE.md` reads like a *real* project guide, not a template.
 - After 30–60 min of using the output: at least 3 specific moments where the authored stack helped (e.g. "design-token-auditor caught a stray hex"; "task classification routed me correctly"; "docs/brainstorms/<my-first-brainstorm>.md slot matched my intent").
 

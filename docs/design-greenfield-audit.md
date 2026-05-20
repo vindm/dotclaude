@@ -25,7 +25,7 @@ Each sub-section: 5-column table. Categories — **A** = project-specific VALUE 
 
 | # | Element | Verbatim text / pattern | Cat | Knob name | Greenfield strategy |
 |---|---|---|---|---|---|
-| 1 | Product framing | "auditing OpenGYM — a React Native fitness app" | A | `PROJECT_DESCRIPTOR` | Ask in interview Q-D5 |
+| 1 | Product framing | "auditing ProductName — a React Native fitness app" | A | `PROJECT_DESCRIPTOR` | Ask in interview Q-D5 |
 | 2 | Tier 1 chrome reference | "Apple iOS 26 + Telegram on iOS 26" | A | `TIER_1_BENCHMARKS` | Ask in interview Q-B1 (default by platform) |
 | 3 | Tier 2 domain references | "WHOOP/Strava/Oura/Linear/Superhuman" | A | `TIER_2_BENCHMARKS_WITH_DIMENSION` | Ask in interview Q-B2 (per-surface-category) |
 | 4 | Primary platform | "iOS simulator OR the user's physical iPhone" | A | `PRIMARY_SURFACE_PLATFORM` | Ask in interview Q-A1 |
@@ -54,7 +54,7 @@ Each sub-section: 5-column table. Categories — **A** = project-specific VALUE 
 
 | # | Element | Verbatim | Cat | Knob | Greenfield strategy |
 |---|---|---|---|---|---|
-| 1 | Product framing | "doing heuristic evaluation of OpenGYM screens" | A | `PROJECT_DESCRIPTOR` | reuse |
+| 1 | Product framing | "doing heuristic evaluation of ProductName screens" | A | `PROJECT_DESCRIPTOR` | reuse |
 | 2 | Past dead-chrome example | "Continue button on a vertical-pick step where card-tap already advances synchronously" | A | `PAST_DEAD_CHROME_EXAMPLES` | Skip entirely greenfield; backfill after first audit cycle |
 | 3 | Past redundant-affordance example | "a card with chevron AND a separate Continue button both pushing to the same next route" | A | `PAST_REDUNDANT_AFFORDANCE_EXAMPLES` | Skip greenfield |
 | 4 | Past optical-disconnect example | "name-suggestion chips placed BELOW the gym-type chip group on the name screen" | A | `PAST_OPTICAL_DISCONNECT_EXAMPLES` | Skip greenfield |
@@ -75,7 +75,7 @@ Each sub-section: 5-column table. Categories — **A** = project-specific VALUE 
 
 | # | Element | Verbatim | Cat | Knob | Greenfield strategy |
 |---|---|---|---|---|---|
-| 1 | Product framing | "OpenGYM owner & member screens" | A | `PROJECT_DESCRIPTOR` | reuse |
+| 1 | Product framing | "ProductName owner & member screens" | A | `PROJECT_DESCRIPTOR` | reuse |
 | 2 | Compliance target | "iOS-26 + WCAG 2.2 AA bar" | A | `A11Y_COMPLIANCE_TARGET` | Ask Q-G1 |
 | 3 | Label API | "`accessibilityLabel`" | A | `LABEL_API` | Inferred from `PRIMARY_SURFACE_PLATFORM` |
 | 4 | Hit-target minimum | "Apple HIG: 44×44 pt minimum" | A | `HIT_TARGET_MINIMUM_PT` | Inferred from platform |
@@ -98,19 +98,19 @@ Each sub-section: 5-column table. Categories — **A** = project-specific VALUE 
 
 | # | Element | Verbatim | Cat | Knob | Greenfield strategy |
 |---|---|---|---|---|---|
-| 1 | Product framing | "OpenGYM" | A | `PROJECT_DESCRIPTOR` | reuse |
+| 1 | Product framing | "ProductName" | A | `PROJECT_DESCRIPTOR` | reuse |
 | 2 | Example arc names | "sign-up → wizard → first daily-driver open; or fresh-gym → walk-tag → equipment placed → ready-for-members" | A | `ARC_INVENTORY` | Ask Q-D1 (default empty in greenfield) |
 | 3 | Flow doc path | "`docs/flows/<arc-slug>.md`" | A | `FLOW_DOC_PATH_CONVENTION` | Ask Q-H1 + scaffold via `/dotclaude:setup-flow-docs` |
 | 4 | Audit doc path | "`docs/audits/YYYY-MM-DD-<arc-slug>-audit.md`" | A | `AUDIT_REPORT_PATH_CONVENTION` | Ask Q-H1 + scaffold |
 | 5 | Routing-to-other-agents framing | "Hand off fixes to product-designer (IA gaps), ux-reviewer (UI polish), or direct implementation" | B | `AUDIT_AGENT_INVENTORY` | Derive from kit composition |
-| 6 | Memory binding refs | "`feedback-daily-vs-onboarding-copy`, `feedback-execution-without-judgment`, `project-rex-intro-onboarding-only`" | C | `BINDING_MEMORIES_FOR_FORBIDDEN_PATTERNS` | Scaffold via `/dotclaude:setup-binding-memories` (template + opt-in) |
+| 6 | Memory binding refs | "`feedback-daily-vs-onboarding-copy`, `feedback-execution-without-judgment`, `project-assistant-intro-onboarding-only`" | C | `BINDING_MEMORIES_FOR_FORBIDDEN_PATTERNS` | Scaffold via `/dotclaude:setup-binding-memories` (template + opt-in) |
 | 7 | Prototype gates path | "`.claude/rules/prototype-gates.md` (which gate this arc serves)" | C | `PROTOTYPE_GATES_PATH` | Scaffold via `/dotclaude:setup-strategy-lens` (opt-in) |
 | 8 | Gate names | "self-dogfood / friend-onboarded / self-onboarding / Gate-0" | A | `PROTOTYPE_GATE_NAMES` | Scaffold default templates per project type |
 | 9 | Seed commands | "`yarn e2e:seed`" | A | `SEED_FIXTURE_MECHANISM` | Ask Q-D4 |
 | 10 | Supabase MCP usage | "use Supabase MCP to inspect what the state would look like" | A | `DATA_SHAPE_PROBE_INTERFACE` | Default: "none" greenfield |
 | 11 | Capability-delta requirement | "Spec MUST name the capability ID(s) it changes (e.g. `O.3 [partial] → [shipped]`, `M.4 new`)" | C | `CAPABILITY_MAP_PATH` | Scaffold via `/dotclaude:setup-capability-map` (opt-in) |
-| 12 | Class-1 trigger phrases | "'Hi', 'I'm Rex', 'Welcome', 'Let me introduce', 'Let's get started', 'Let's begin', 'Get started', 'Meet Rex'" | A | `BRAND_FORBIDDEN_PHRASES` | Ask Q-C4 |
-| 13 | Class-1 example surface | "The 'Hi — I'm Rex on daily home' class" | A | `CLASS_1_EXAMPLE_BUG` | Skip greenfield; backfill |
+| 12 | Class-1 trigger phrases | "'Hi', 'I'm Assistant', 'Welcome', 'Let me introduce', 'Let's get started', 'Let's begin', 'Get started', 'Meet Assistant'" | A | `BRAND_FORBIDDEN_PHRASES` | Ask Q-C4 |
+| 13 | Class-1 example surface | "The 'Hi — I'm Assistant on daily home' class" | A | `CLASS_1_EXAMPLE_BUG` | Skip greenfield; backfill |
 | 14 | "8 gap classes" enumeration | "Context-mismatch / Dead-end / Missing bridge / Tone drift / Missing state variant / Visual inconsistency / IA boundary / Copy register" | B | `GAP_CLASS_TAXONOMY` | Universal default; document in principle |
 | 15 | "Apple iCloud + Telegram phone-number" bridge refs | "Apple iCloud onboarding and Telegram phone-number flow are the references for elegant bridges" | A | `BRIDGE_REFERENCE_APPS` | Subset of `TIER_1_BENCHMARKS` |
 | 16 | Sentence-case framing | "Sentence case on most surfaces, then sudden Title Case on a button" | A | `COPY_CASE_CONVENTION` | Ask Q-C5 (default sentence) |
@@ -118,7 +118,7 @@ Each sub-section: 5-column table. Categories — **A** = project-specific VALUE 
 | 18 | Translation file paths | "`lib/verticals/gym/owner/translations/`, `lib/wizard/translations.ts`" | A | `TRANSLATION_FILE_LOCATIONS` | Ask Q-D3 (default empty greenfield) |
 | 19 | Narration file paths | "`lib/verticals/gym/owner/translations/narration.ts`" | A | `NARRATION_FILE_LOCATIONS` | Ask Q-D3 |
 | 20 | Per-tab data owner | "Floor owns the map, People owns the roster, Status references both via counts" | A | `IA_OWNERSHIP_TABLE` | Skip greenfield; build after Section IA-design |
-| 21 | Branding capitalization examples | "OpenGYM vs opengym" | A | `BRAND_CAPITALIZATION` | Ask Q-D5 |
+| 21 | Branding capitalization examples | "ProductName vs productname" | A | `BRAND_CAPITALIZATION` | Ask Q-D5 |
 | 22 | Severity taxonomy | "Crit / High / Med / Low" | A | `SEVERITY_TAXONOMY` | Default; per-agent |
 | 23 | Resolution columns | "A resolved, B remaining, C new" | B | `AUDIT_RESOLUTION_DELTA_SCHEMA` | Universal default |
 | 24 | Gap ID prefix | "G-001 / G-002 …" | A | `AUDIT_ID_PREFIX_PER_AGENT` | Default |
@@ -128,21 +128,21 @@ Each sub-section: 5-column table. Categories — **A** = project-specific VALUE 
 | 28 | Verbatim-copy rule | "Visible copy verbatim — NOT paraphrased. Pull from translations files / inline strings" | B | `COPY_INVENTORY_RULE` | Universal |
 | 29 | App-state-navigation skill | "use Maestro to seed via `yarn e2e:seed` or use Supabase MCP" | C | `APP_STATE_NAVIGATION_SKILL_EXISTS` | Scaffold opt-in |
 | 30 | Refusal output verbatim | "Recommending <agent-name> with brief: <one sentence>. No further work from me on this topic." | B | `AGENT_REFUSAL_TEMPLATE` | Universal |
-| 31 | Specific assistant character name | "Rex" | A | `IN_PRODUCT_ASSISTANT_CHARACTER` | Ask Q-C2 |
+| 31 | Specific assistant character name | "Assistant" | A | `IN_PRODUCT_ASSISTANT_CHARACTER` | Ask Q-C2 |
 | 32 | Bucket-key example | "`bucket.l0.allDay`" | A | `NARRATION_KEY_NAMING_CONVENTION` | Skip greenfield; project develops its own |
 
 ### 1.5 — `agents/flow-ux-reviewer.md` (14 non-generic elements)
 
 | # | Element | Verbatim | Cat | Knob | Greenfield strategy |
 |---|---|---|---|---|---|
-| 1 | In-product character | "Rex tone consistency" | A | `IN_PRODUCT_ASSISTANT_CHARACTER` | Q-C2 |
+| 1 | In-product character | "Assistant tone consistency" | A | `IN_PRODUCT_ASSISTANT_CHARACTER` | Q-C2 |
 | 2 | Tier 1 reference | "Apple iOS 26 + Telegram on iOS 26" | A | `TIER_1_BENCHMARKS` | Q-B1 |
 | 3 | Tier 2 references | "WHOOP/Strava/Oura/Linear/Superhuman" | A | `TIER_2_BENCHMARKS_WITH_DIMENSION` | Q-B2 |
 | 4 | Manifest schema | "PNGs named `NN-screen-name.png` … manifest JSON describes each screenshot's `step`, `name`, `path`, and `context`" | B | `MANIFEST_SCHEMA` | Universal default; document in principle |
 | 5 | Audit dir path | "`.claude/audits/<flow-name>/<run-id>/report.md`" | A | `FLOW_AUDIT_DIR_CONVENTION` | Ask Q-H1; scaffold |
 | 6 | 6 flow-level dimensions | "tone consistency / CTA weight progression / loading-state treatment / disclosure pacing / color/tonality drift / progress legibility" | B | `FLOW_CONTINUITY_DIMENSIONS` | Universal default |
 | 7 | Bridge references | "Apple iCloud onboarding and Telegram's phone-number flow" | A | `BRIDGE_REFERENCE_APPS` | Q-B2b |
-| 8 | Persona check at flow level | "Does Rex's voice stay the partner-companion register from screen 1 to N?" | A | `PRODUCT_HAS_VOICE` + `IN_PRODUCT_ASSISTANT_CHARACTER` | Q-C1/C2 |
+| 8 | Persona check at flow level | "Does Assistant's voice stay the partner-companion register from screen 1 to N?" | A | `PRODUCT_HAS_VOICE` + `IN_PRODUCT_ASSISTANT_CHARACTER` | Q-C1/C2 |
 | 9 | "Don't interact with the app" framing | "You're grading captured screenshots. Don't launch Maestro" | B | `FLOW_REVIEWER_INTERACTION_BOUNDARY` | Universal |
 | 10 | 6-dim state-clarity (gen surfaces) | "truth alignment, motion proof, stage legibility, partial disclosure, failure affordance, terminal state" | B | `STATE_CLARITY_DIMENSIONS` | Universal default for projects that have generative surfaces; opt-in Q-D6 |
 | 11 | Read-prior-runs pattern | "Look in the same `.claude/audits/<flow-name>/` directory for prior `manifest.json` + `report.md`" | B | `REGRESSION_DELTA_PATTERN` | Universal |
@@ -190,7 +190,7 @@ Each sub-section: 5-column table. Categories — **A** = project-specific VALUE 
 | 5 | Sweep paths | "`app/`, `components/`, `lib/`" | A | `SOURCE_CODE_PATHS` | Default by framework |
 | 6 | Pattern set (RN-flavored) | "`StyleSheet.create` blocks with inline color literals / `style={{ ... color: ... }}` with literals / Tailwind arbitrary values like `bg-[#abc]`" | A | `RAW_COLOR_PATTERNS_BY_STYLING_SYSTEM` | Derive from `STYLING_SYSTEM_IN_USE` |
 | 7 | Excluded paths | "`lib/theme/tokens.ts`, `lib/theme/patterns.ts`, generated files, `node_modules/`, `__snapshots__/`, `ios/`, `modules/*/ios/`" | A | `EXEMPT_PATHS` | Default by framework; greenfield = generic exemptions only |
-| 8 | S0-tier examples | "Owner-facing chrome (sheets, buttons, headers, tab labels, Rex bubbles, NavTabs). These break Apple-or-Telegram parity." | A | `S0_TIER_SURFACE_EXAMPLES` | Default by platform |
+| 8 | S0-tier examples | "Owner-facing chrome (sheets, buttons, headers, tab labels, Assistant bubbles, NavTabs). These break Apple-or-Telegram parity." | A | `S0_TIER_SURFACE_EXAMPLES` | Default by platform |
 | 9 | S1 examples | "Visible content surfaces (cards, list rows, equipment hero)" | A | `S1_TIER_SURFACE_EXAMPLES` | Default |
 | 10 | S2 examples | "Internal-only screens (dev tools, audit dashboards, feature flags)" | A | `S2_TIER_SURFACE_EXAMPLES` | Default |
 | 11 | Model tier | "`claude-haiku-4-5-20251001`" | A | `MODEL_TIER_LIGHTWEIGHT` | Q-K1 |
@@ -199,7 +199,7 @@ Each sub-section: 5-column table. Categories — **A** = project-specific VALUE 
 
 | # | Element | Verbatim | Cat | Knob | Greenfield strategy |
 |---|---|---|---|---|---|
-| 1 | Product framing | "at OpenGYM" | A | `PROJECT_DESCRIPTOR` | reuse |
+| 1 | Product framing | "at ProductName" | A | `PROJECT_DESCRIPTOR` | reuse |
 | 2 | Vertical naming | "gym vertical" | A | `PRODUCT_VERTICAL_LABEL` | Q-D5 |
 | 3 | North-star ref | "Apple iOS 26 + Telegram on iOS 26" | A | `TIER_1_BENCHMARKS` | Q-B1 |
 | 4 | Active brainstorm path | "active `docs/brainstorms/<topic>-brainstorm.md`" | C | `BRAINSTORM_DOC_PATH_CONVENTION` | Scaffold via `/dotclaude:setup-brainstorm-docs` |
@@ -208,7 +208,7 @@ Each sub-section: 5-column table. Categories — **A** = project-specific VALUE 
 | 7 | Capability ID format | "`O.3 [partial] → [shipped]`, `M.4 new`" | C | `CAPABILITY_ID_NAMING` | Template ships with scaffold |
 | 8 | Strategy lens ref | "`.claude/rules/prototype-gates.md`" | C | `PROTOTYPE_GATES_PATH` | Scaffold via `/dotclaude:setup-strategy-lens` |
 | 9 | Engine-area CLAUDE.md refs | "Relevant `lib/<area>/CLAUDE.md` files" | C | `AREA_CLAUDE_MD_INVENTORY` | Optional scaffold (advanced) |
-| 10 | Topic-specific skill list | "chat / Rex → `chat-system` skill; owner setup → `owner-onboarding` skill; …" | C | `TOPIC_SPECIFIC_SKILLS_INVENTORY` | Project-grown over time; greenfield = empty |
+| 10 | Topic-specific skill list | "chat / Assistant → `chat-system` skill; owner setup → `owner-onboarding` skill; …" | C | `TOPIC_SPECIFIC_SKILLS_INVENTORY` | Project-grown over time; greenfield = empty |
 | 11 | Verify-before-naming greps | "`grep -r '<symbol-or-table-name>' lib/ app/ supabase/migrations/`" | A | `INFRASTRUCTURE_VERIFY_GREPS` | Default by source-dir layout |
 | 12 | Spec doc path | "`docs/brainstorms/YYYY-MM-DD-<slug>-design.md`" | A | `SPEC_DOC_PATH_CONVENTION` | Q-H1 + scaffold |
 | 13 | Bash mkdir scaffold | "`mkdir -p docs/brainstorms/`" | A | derived | derived |
@@ -242,7 +242,7 @@ Each sub-section: 5-column table. Categories — **A** = project-specific VALUE 
 
 | # | Element | Verbatim | Cat | Knob | Greenfield strategy |
 |---|---|---|---|---|---|
-| 1 | Role framing | "Chief Product Officer of OpenGYM" | A | `PROJECT_DESCRIPTOR` | reuse |
+| 1 | Role framing | "Chief Product Officer of ProductName" | A | `PROJECT_DESCRIPTOR` | reuse |
 | 2 | Vision doc inventory | "`project_core_vision.md` / `project_mcp_vision.md` / `project_autoresearch.md` / `project_map_ux.md` / MEMORY.md" | C | `PRODUCT_VISION_DOCS` + memory inventory | Scaffold via `/dotclaude:setup-vision-docs` (opt-in) |
 | 3 | Architecture-layer priority | "Spatial Engine > AI Intelligence > MCP / API > Gym Vertical" | A | `ARCHITECTURE_LAYER_PRIORITY` | Q-J2 (greenfield default: "simple") |
 | 4 | Core differentiators table | "Spatial layout (map-first UX) / Equipment ↔ Movement bridge / MCP intelligence layer / Premium feel (WHOOP-tier)" | A | `CORE_DIFFERENTIATORS_LIST` | Q-J3 |
@@ -265,10 +265,10 @@ Each sub-section: 5-column table. Categories — **A** = project-specific VALUE 
 | 4 | A-tier benchmark | "WHOOP onboarding. Linear inbox. Raycast. Things 3." | A | `A_TIER_BENCHMARK_REFERENCES` | Q-B2 |
 | 5 | C-tier benchmark | "Half-shipped startups." | A | `C_TIER_BENCHMARK_DESCRIPTOR` | Universal |
 | 6 | 5 composition pitfalls | "Duplication / Orphan / Tone mismatch / Hierarchy violations / Residue" | B | `COMPOSITION_PITFALL_TAXONOMY` | Universal |
-| 7 | Pitfall examples — Duplication | "Rex's prose 'Got it — 2 floors, 6 rooms' + the `showAskResolved` chip … + the `showSetupChecklist` widget" | A | `COMPOSITION_PITFALL_EXAMPLES` | Skip greenfield |
+| 7 | Pitfall examples — Duplication | "Assistant's prose 'Got it — 2 floors, 6 rooms' + the `showAskResolved` chip … + the `showSetupChecklist` widget" | A | `COMPOSITION_PITFALL_EXAMPLES` | Skip greenfield |
 | 8 | Pitfall examples — Orphan | "The 'Тип? → вилла' chip lingering in the active-ask slot" | A | (same) | Skip greenfield |
-| 9 | Pitfall examples — Tone | "Composer placeholder reading 'Type a name…' when the user is *answering* Rex" | A | (same) | Skip greenfield |
-| 10 | Pitfall examples — Hierarchy | "`SetupChecklistInlineWidget` rendered as a 50%-screen-height card on top of Rex's actual question" | A | (same) | Skip greenfield |
+| 9 | Pitfall examples — Tone | "Composer placeholder reading 'Type a name…' when the user is *answering* Assistant" | A | (same) | Skip greenfield |
+| 10 | Pitfall examples — Hierarchy | "`SetupChecklistInlineWidget` rendered as a 50%-screen-height card on top of Assistant's actual question" | A | (same) | Skip greenfield |
 | 11 | Pitfall examples — Residue | "The universal X dismiss button positioned at `top: 6, right: 6` over every active-ask widget" | A | (same) | Skip greenfield |
 | 12 | Tier 1 benchmarks (with steal) | "Apple Music / Photos / App Store / Settings / Wallet on iOS 26 / Telegram on iOS 26" + per-app what-to-steal | A | `TIER_1_BENCHMARKS` | Q-B1 |
 | 13 | Tier 2 benchmarks (with steal) | "WHOOP onboarding — rhythm / Linear — text hierarchy / Raycast — input-first / Things 3 — empty states / Matterport/Polycam — spatial capture speed / Apple Quick Look + RoomPlan — AR fluidity" | A | `TIER_2_BENCHMARKS_WITH_DIMENSION` | Q-B2 |
@@ -280,13 +280,13 @@ Each sub-section: 5-column table. Categories — **A** = project-specific VALUE 
 
 | # | Element | Verbatim | Cat | Knob | Greenfield strategy |
 |---|---|---|---|---|---|
-| 1 | Surface enumeration globs | "`ls app/wizard/**/*.tsx / ls app/wizard/**/_layout.tsx / ls lib/rex/setup/**/*.ts / ls lib/auth/**/*.tsx / ls app/(owner)/**/*.tsx`" | A | `SURFACE_DIR_STRUCTURE` | Q-D3 (greenfield = none) |
+| 1 | Surface enumeration globs | "`ls app/wizard/**/*.tsx / ls app/wizard/**/_layout.tsx / ls lib/assistant/setup/**/*.ts / ls lib/auth/**/*.tsx / ls app/(owner)/**/*.tsx`" | A | `SURFACE_DIR_STRUCTURE` | Q-D3 (greenfield = none) |
 | 2 | Translation glob | "`ls lib/verticals/gym/owner/translations/**/*.ts`" | A | `TRANSLATION_FILE_LOCATIONS` | Q-D3 |
 | 3 | Narration glob | "`ls lib/verticals/gym/owner/narration/**/*.ts`" | A | `NARRATION_FILE_LOCATIONS` | Q-D3 |
 | 4 | 6 surface types | "first-touch / daily-driver / settings / error / promotional / bridge" | B | `SURFACE_TYPES_IN_USE` | Universal default; subset by project |
 | 5 | Example surfaces per type | "Sign-up = first-touch; Status/Floor/People = daily-driver; …" | A | `SURFACE_TYPE_EXAMPLES` | Skip greenfield |
-| 6 | Wizard intro example | "Wizard step 1 — Meet Rex" + "Hi — I'm Rex. Let's set up your gym." | A | (paired with C2) | Q-C2 |
-| 7 | Forbidden-pattern matrix | "first-touch=None / daily-driver=Hi, I'm Rex, Welcome, …" | B | `FORBIDDEN_PATTERN_MATRIX` | Universal default + brand additions |
+| 6 | Wizard intro example | "Wizard step 1 — Meet Assistant" + "Hi — I'm Assistant. Let's set up your gym." | A | (paired with C2) | Q-C2 |
+| 7 | Forbidden-pattern matrix | "first-touch=None / daily-driver=Hi, I'm Assistant, Welcome, …" | B | `FORBIDDEN_PATTERN_MATRIX` | Universal default + brand additions |
 | 8 | Path frontmatter | "`paths: \"docs/audits/**,docs/flows/**,docs/designs/**,docs/brainstorms/**\"`" | A | `JOURNEY_AUDIT_AUTO_LOAD_PATHS` | Derive from doc-path conventions |
 | 9 | Cross-references | "`feedback_daily_vs_onboarding_copy` / `project_rex_intro_onboarding_only`" | C | `BINDING_MEMORIES_FOR_FORBIDDEN_PATTERNS` | Scaffold opt-in |
 | 10 | Mandatory framing | "STOP if the map can't complete — read more files" | B | universal | universal |
@@ -296,7 +296,7 @@ Each sub-section: 5-column table. Categories — **A** = project-specific VALUE 
 | # | Element | Verbatim | Cat | Knob | Greenfield strategy |
 |---|---|---|---|---|---|
 | 1 | Example bug | "`bucket.l0.allDay` — translations/narration.ts:60" | A | `PAST_REUSE_BUG_EXAMPLES` | Skip greenfield |
-| 2 | Existing assistant name | "Rex" | A | `IN_PRODUCT_ASSISTANT_CHARACTER` | Q-C2 |
+| 2 | Existing assistant name | "Assistant" | A | `IN_PRODUCT_ASSISTANT_CHARACTER` | Q-C2 |
 | 3 | Grep search paths | "`grep -rn \"<exact-string-or-key>\" app/ lib/ docs/`" | A | `USER_VISIBLE_CODE_DIRS` | Derive |
 | 4 | Verdict matrix | "first-touch → daily-driver = REJECT (write new copy) / first-touch → first-touch (different stage) = CAUTION / …" | B | `REUSE_VERDICT_MATRIX` | Universal |
 | 5 | Section 0a name | "Section 0a — Element-reuse audit" | A | `SPEC_SECTION_HEADER_FOR_REUSE_AUDIT` | Universal |
@@ -313,8 +313,8 @@ Each sub-section: 5-column table. Categories — **A** = project-specific VALUE 
 | 3 | Partner test reference | "Samantha (the partner-companion model … from *Her*). Telegram's product voice. Apple's empty-state voice in Photos / Notes." | A | `BRAND_VOICE_REFERENCE` | Q-C3 |
 | 4 | Anti-references (4 registers) | "Customer-service / Apology / Performance / Tutorial" | B | `VOICE_ANTI_REFERENCES` | Q-C4 |
 | 5 | Stranger test framing | "Does this string assume the user has already met the assistant — or is it introducing them as if for the first time?" | A | `IN_PRODUCT_ASSISTANT_CHARACTER` | Q-C2 |
-| 6 | Forbidden-phrase mirror | "Hi / Hello / Hey there / I'm Rex / Welcome / …" | A | `BRAND_FORBIDDEN_PHRASES` | Q-C4 |
-| 7 | Auto-exempt file | "The forbidden-phrase list is binding everywhere except `app/wizard/meet-rex.tsx`" | A | `ASSISTANT_INTRO_EXEMPT_FILE` | Q-C2 (intro file path) |
+| 6 | Forbidden-phrase mirror | "Hi / Hello / Hey there / I'm Assistant / Welcome / …" | A | `BRAND_FORBIDDEN_PHRASES` | Q-C4 |
+| 7 | Auto-exempt file | "The forbidden-phrase list is binding everywhere except `app/wizard/meet-assistant.tsx`" | A | `ASSISTANT_INTRO_EXEMPT_FILE` | Q-C2 (intro file path) |
 | 8 | Triad override note | "Day-30 / Partner / Stranger" | A | `PERSONA_TRIAD` | Q-C5 (override) |
 | 9 | Mandatory framing | "Audit-time gate is mandatory. Even if the design passed this gate at spec time, the audit re-runs it" | B | universal | universal |
 | 10 | Memory cross-refs | "`feedback_daily_vs_onboarding_copy`, `project_rex_intro_onboarding_only`" | C | `BINDING_MEMORIES_FOR_FORBIDDEN_PATTERNS` | Scaffold opt-in |
@@ -364,7 +364,7 @@ Each sub-section: 5-column table. Categories — **A** = project-specific VALUE 
 | 2 | Iteration cap soft | "soft target 6" | A | `ITERATION_CAP_SOFT` | Universal default |
 | 3 | Reviewer agent name | "`flow-ux-reviewer` for multi-screen arcs; `ux-reviewer` for single-screen drilldowns" | B | `REVIEWER_AGENT_NAME` | Derive from kit |
 | 4 | Tier 1/2 refs | "Apple iOS 26 + Telegram on iOS 26 = Tier 1; WHOOP/Strava/Oura/Linear/Superhuman = Tier 2" | A | `TIER_1_BENCHMARKS` + `TIER_2_BENCHMARKS` | Q-B1/B2 |
-| 5 | Flow-level dimensions | "Rex tone consistency, CTA weight progression, loading-state treatment, disclosure pacing, color/tonality drift" | B | `FLOW_CONTINUITY_DIMENSIONS` | Universal |
+| 5 | Flow-level dimensions | "Assistant tone consistency, CTA weight progression, loading-state treatment, disclosure pacing, color/tonality drift" | B | `FLOW_CONTINUITY_DIMENSIONS` | Universal |
 | 6 | State-clarity scorecard | "truth alignment, motion proof, stage legibility, partial disclosure, failure affordance, terminal state" | B | `STATE_CLARITY_DIMENSIONS` | Universal; opt-in per project |
 | 7 | Semantic-count rule | "`1/4`, `3/3`, `Processing 2`, `N items ready` — Name the denominator out loud. Is it 'total equipment in this gym' (user truth) or 'the job's scoped subset' (job truth)?" | A | `SEMANTIC_COUNT_AUDIT_PATTERNS` | Skip greenfield; default rule preserved |
 | 8 | DAG pipeline corollary | "specs → icons → exercises → templates" | A | `PROJECT_PIPELINE_DAG` | Skip greenfield |
@@ -487,11 +487,11 @@ Each sub-section: 5-column table. Categories — **A** = project-specific VALUE 
 |---|---|---|---|---|---|
 | 1 | Per-line phrase format | one phrase per line | B | `FORBIDDEN_PHRASES_FILE_FORMAT` | Universal |
 | 2 | Comment syntax | "`#` comments" | B | (same) | Universal |
-| 3 | Override syntax | "`greeting: \"Hi, Dima\",  // allow-forbidden: meet-rex intro`" | B | `OVERRIDE_COMMENT_SYNTAX` | Universal default |
-| 4 | Exempt-file pattern | "Or in `app/wizard/meet-rex.tsx` (auto-exempt)" | A | `ASSISTANT_INTRO_EXEMPT_FILE` | Q-C2 (intro path) |
+| 3 | Override syntax | "`greeting: \"Hi, developer\",  // allow-forbidden: meet-assistant intro`" | B | `OVERRIDE_COMMENT_SYNTAX` | Universal default |
+| 4 | Exempt-file pattern | "Or in `app/wizard/meet-assistant.tsx` (auto-exempt)" | A | `ASSISTANT_INTRO_EXEMPT_FILE` | Q-C2 (intro path) |
 | 5 | Universal AI-slop denials | "Hi / Hello / Hey there" | B | `UNIVERSAL_FORBIDDEN_PHRASES` | Universal default |
-| 6 | Self-introduction patterns | "I'm Rex / My name is Rex / I'm your gym's intelligence / Let me introduce / Meet Rex" | A | `BRAND_FORBIDDEN_PHRASES` (self-intro tier) | Q-C2/C4 |
-| 7 | Welcome-as-stranger | "Welcome / Welcome to OpenGYM" | A | (same) | Q-C4 |
+| 6 | Self-introduction patterns | "I'm Assistant / My name is Assistant / I'm your gym's intelligence / Let me introduce / Meet Assistant" | A | `BRAND_FORBIDDEN_PHRASES` (self-intro tier) | Q-C2/C4 |
+| 7 | Welcome-as-stranger | "Welcome / Welcome to ProductName" | A | (same) | Q-C4 |
 | 8 | Onboarding-register on daily | "Let's get started / Let's begin / Get started / Here's how this works / Let me show you around / First, let me explain" | B | `ONBOARDING_REGISTER_FORBIDDEN_ON_DAILY` | Universal default |
 | 9 | Customer-service register | "I'm here to help / How can I help / Is there anything else / Sorry to interrupt / Sorry, that didn't work / Oops" | B | `CUSTOMER_SERVICE_REGISTER_FORBIDDEN` | Universal default |
 | 10 | Persona-doc cross-ref | "Authoritative source for: docs/design-system/persona.md, .claude/hooks/check-forbidden-phrases.sh" | C | `PERSONA_DOC_PATH` | Scaffold opt-in (Q-C3 follow-up) |
@@ -512,12 +512,12 @@ Each sub-section: 5-column table. Categories — **A** = project-specific VALUE 
 |---|---|---|---|---|---|
 | 1 | Source-of-truth path | "`$CLAUDE_PROJECT_DIR/.claude/rules/forbidden-phrases.txt`" | A | `FORBIDDEN_PHRASES_FILE_PATH` | Universal default |
 | 2 | Filter to TS/TSX | "case \"$f\" in *.ts\|*.tsx" | A | `ENFORCED_FILE_EXTENSIONS` | Default by language |
-| 3 | Auto-exempt file | "*app/wizard/meet-rex.tsx" | A | `ASSISTANT_INTRO_EXEMPT_FILE` | Q-C2 |
+| 3 | Auto-exempt file | "*app/wizard/meet-assistant.tsx" | A | `ASSISTANT_INTRO_EXEMPT_FILE` | Q-C2 |
 | 4 | Generic exemptions | "*__tests__* / *.test.* / *.spec.* / *__snapshots__* / *.gen.ts / *database.types.ts" | A | `GENERIC_EXEMPT_PATHS` | Default |
-| 5 | Enforcement file patterns | "*/translations/*.ts / */narration/*.ts / */copy/*.ts / *Rex* / *rex* / *Companion* / *Narration*" | A | `ENFORCEMENT_FILE_PATH_PATTERNS` | Derive from translation paths + assistant name |
+| 5 | Enforcement file patterns | "*/translations/*.ts / */narration/*.ts / */copy/*.ts / *Assistant* / *assistant* / *Companion* / *Narration*" | A | `ENFORCEMENT_FILE_PATH_PATTERNS` | Derive from translation paths + assistant name |
 | 6 | Override comment | "`// allow-forbidden`" | A | `OVERRIDE_COMMENT_SYNTAX` | Universal |
 | 7 | Match pattern | "`['\"][^'\"]*\b(${phrases})\b[^'\"]*['\"]`" | B | `MATCH_PATTERN_GENERATOR` | Universal default |
-| 8 | Error message | "BLOCKED: $f contains forbidden Rex phrase(s)" | A | `BLOCK_MESSAGE_TEMPLATE` | Derive |
+| 8 | Error message | "BLOCKED: $f contains forbidden Assistant phrase(s)" | A | `BLOCK_MESSAGE_TEMPLATE` | Derive |
 | 9 | Persona doc link | "Persona doc: docs/design-system/persona.md §\"Forbidden phrases\"" | C | `PERSONA_DOC_PATH` | Scaffold opt-in |
 
 ### 1.24 — `hooks/check-token-only.sh` (~7 non-generic elements)
