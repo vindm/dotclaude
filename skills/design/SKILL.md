@@ -10,40 +10,109 @@ You are setting up design-discipline for the user's project. The output is a `.c
 
 ## Phase 1 — Read the project's UI shape
 
-Before any question:
+Before any question. The goal is to enter the interview already knowing **what** the project ships, **how** it's structured, **what** discipline already exists. The richer Phase 1, the fewer questions the interview needs — and the more grounded the authored agents will be.
 
-1. **UI surface inventory** — find every file with visible-to-user output:
-   ```bash
-   # Mobile (RN / Expo / SwiftUI / Compose)
-   find . -path ./node_modules -prune -o -name "*.tsx" -print | head -50
-   find . -name "*.swift" -path "*/UI/*" | head -20
-   find . -path "*/composables/*" -name "*.kt" | head -20
+Run these 10 reads. Each gives a data point the interview leverages.
 
-   # Web (React / Vue / Svelte / etc.)
-   find . -path ./node_modules -prune -o \( -name "*.tsx" -o -name "*.vue" -o -name "*.svelte" \) -print | head -50
+### 1.1 — Stack signal
 
-   # CLI / TUI
-   find . -name "*.{ts,py,rs,go}" -path "*/{ui,tui,prompts}*" | head -20
-   ```
+```bash
+# Stack identity
+cat README.md 2>/dev/null | head -40
+cat package.json 2>/dev/null | head -60
+cat pyproject.toml Cargo.toml go.mod composer.json 2>/dev/null | head -20
+```
 
-2. **Design system signal** — look for:
-   ```bash
-   find . -path ./node_modules -prune -o \( -name "tokens.*" -o -name "theme.*" -o -name "design-system.*" -o -name "*.tokens.json" -o -name "tailwind.config.*" \) -print
-   ```
+Read for: framework, language, target platform. Mobile? Web? Desktop? Both?
 
-3. **Component library**:
-   ```bash
-   ls -d components/ src/components/ src/ui/ lib/ui/ 2>/dev/null
-   ```
+### 1.2 — Top-level structure (2 levels deep)
 
-4. **Existing design conventions** — search for:
-   - `CLAUDE.md` mentioning design / theme / chrome / tokens
-   - `docs/design-system/` or similar
-   - A `STYLE_GUIDE.md` / `BRAND.md`
+```bash
+ls -la
+ls -la src/ app/ lib/ components/ pages/ routes/ 2>/dev/null
+```
 
-5. **Recent design fixes** — `git log --oneline --grep="fix.*design\|fix.*UI\|fix.*style\|fix.*ux\|fix.*color\|fix.*spacing" -30`. These are the real bug classes.
+Read for: where does UI code live? Is there a clear `components/` directory? `app/` (Next/Expo Router)? `routes/` (SvelteKit/Remix)?
 
-Build mental model of: what's the primary surface? What's the design system maturity? What kinds of design bugs has this project shipped?
+### 1.3 — Existing project conventions
+
+```bash
+ls -la CLAUDE.md AGENTS.md CONTRIBUTING.md STYLE_GUIDE.md BRAND.md docs/ 2>/dev/null
+find . -maxdepth 3 -name "CLAUDE.md" -o -name "AGENTS.md" 2>/dev/null
+```
+
+Read **every** found doc fully. Conventions in these files override anything you'd otherwise author. The user's existing docs win every conflict.
+
+### 1.4 — Design system source
+
+```bash
+find . -path ./node_modules -prune -o \( \
+  -name "tokens.*" -o -name "theme.*" -o -name "design-system.*" \
+  -o -name "*.tokens.json" -o -name "tailwind.config.*" \
+  -o -name "globals.css" -o -name "variables.scss" \
+\) -print 2>/dev/null
+```
+
+If found, **read the file**. Note: token naming convention (semantic vs palette), dark-mode support, the scale of the system (10 tokens vs 200).
+
+### 1.5 — Component library inventory
+
+```bash
+ls components/ src/components/ src/ui/ lib/ui/ app/components/ 2>/dev/null
+```
+
+Sample 5-8 component files. Read for: naming convention (kebab vs PascalCase), prop API patterns, styling approach (CSS modules / Tailwind / styled-components / inline). The authored `design-token-auditor` needs to know which patterns to sweep.
+
+### 1.6 — Route / screen inventory
+
+```bash
+# Next/Expo Router (file-based)
+find . -path ./node_modules -prune -o \( -name "page.tsx" -o -name "page.jsx" -o -name "+page.svelte" -o -name "index.tsx" \) -print | head -20
+# React Router / explicit
+grep -rn "Route\|createBrowserRouter\|router\.get\|Stack\.Screen" src/ app/ 2>/dev/null | head -20
+```
+
+Count routes. Identify: is this single-screen, multi-screen, multi-section (tabs / dashboard sections / docs sidebar)? This determines whether `flow-auditor` and `pages-audit` agents apply.
+
+### 1.7 — CI + scripts
+
+```bash
+ls .github/workflows/ scripts/ 2>/dev/null
+cat package.json 2>/dev/null | grep -A 30 '"scripts"'
+```
+
+Read for: existing visual-verification machinery (Playwright config? Maestro flows? Storybook? Chromatic?). Existing lint config. Build/test/dev scripts. The authored `visual-verification.md` rule references whatever exists; don't invent new ones.
+
+### 1.8 — Git history mining (PRE-INTERVIEW)
+
+```bash
+git log --oneline -30
+git log --oneline --grep="fix:" -30
+git log --oneline -E --grep="design|UX|style|color|spacing|a11y|layout|copy|tone|chrome|polish" -30
+```
+
+Identify the **2-3 most design-flavored commits** by subject line. These are what you'll ask about by SHA in interview Phase D. **Do this before the interview**, not during — you want to enter the interview already armed with the SHAs.
+
+### 1.9 — Assertions / lint config
+
+```bash
+ls .eslintrc* .prettierrc* tsconfig.json biome.json 2>/dev/null
+find . -maxdepth 3 -name "jest.config.*" -o -name "vitest.config.*" -o -name "playwright.config.*" -o -name ".maestro" 2>/dev/null
+```
+
+Read for: existing test infrastructure (Jest / Vitest / Playwright / Maestro). Lint rules already covering tokens / hex / a11y. The authored agents should integrate with what exists, not replace it.
+
+### 1.10 — Dev loop signal
+
+From `package.json` scripts (already read in 1.7): identify the **dev** command (`dev`, `start`, `serve`), the **test** command, the **build** command, the **e2e** command if present. The authored `visual-verification.md` and the `ux-reviewer` agent's capture procedure reference these explicitly.
+
+---
+
+**At end of Phase 1**, write a one-paragraph mental-model summary to yourself:
+
+> *Primary surface: <X>. Stack: <Y>. Existing conventions doc: <yes/no, path>. Design-system maturity: <none / partial / mature>. Multi-screen or single-screen: <X>. CI maturity: <X>. Visual-verification path already wired: <yes/no, what>. War-story SHAs to ask about: <list of 2-3 SHA + subject>.*
+
+This is the substrate the interview adapts to. Skip questions whose answer is already in the summary.
 
 ## Phase 2 — Interview
 
@@ -136,6 +205,53 @@ Based on what applied + the interview answers, author these in `.claude-staging/
 
 - **`check-design-tokens.sh`** — substitute `THEME_PATH` with the user's actual theme source file path
 - **`check-forbidden-phrases.sh`** (if rules/forbidden-phrases.txt is shipped) — substitute scopes with the user's actual user-copy paths
+
+## Depth checklist (MANDATORY per authored agent)
+
+Every agent / skill / rule you author in Phase 4 MUST contain ALL of these 10 structural elements, or the artifact is shallow and the user will reject it. This checklist is the difference between a "v0.1 sketch" and a "battle-tested kit." Treat it as binding.
+
+1. **Named benchmarks** — specific Tier 1 + Tier 2 apps from the interview, with WHY each is the benchmark. "Apple-like" or "modern apps" is NOT a benchmark. "Linear for keyboard speed" or "Apple iOS 26 Settings + Telegram for chrome" is.
+
+2. **5+ inspection dimensions** — each with a concrete method (grep pattern, command, manual check). Vague "look for issues" fails this check. "Sweep `#[0-9a-fA-F]{3,8}` across `src/**/*.tsx` excluding `theme.ts`" passes.
+
+3. **Rubric anchored per grade** — S/A/B/C/D/F with each grade referencing a NAMED benchmark. "S = a Linear engineer would compliment this; A = ships at Linear quality with one polish pass; B = ships at competent SaaS quality; C = ships but visibly behind; D = embarrassing next to Linear; F = block ship." Each tier mentions the actual app.
+
+4. **Report-format sections** — explicit named sections (not "describe findings" but `## Strengths / ## Critical issues / ## Verdict / ## Highest-ROI move`). The agent must produce predictable output the user can scan.
+
+5. **Cross-references** — at least 2 other artifacts (skills / rules / agents) this composes with. The artifact says "runs AFTER `interaction-audit`," "consumes the journey map from `journey-audit/SKILL.md`," etc. Composability is what makes a kit a kit.
+
+6. **Numbered non-negotiable rules** — 5-10 rules with rationale per rule, not just a list of "do this." "1. Never grade without a captured screenshot — pixel review is the contract; reading code is not a substitute." The rationale clause is what makes the rule sticky.
+
+7. **Project-specific anti-patterns from git** — 3-5 anti-patterns derived from the **bug-mining sub-phase** (interview Phase D). E.g. "Settings page bypassed the type scale for two weeks before someone noticed (commit `abc1234`) — sweep for `font-size:` / `text-[` outside the typography scale." Generic anti-patterns from the principle doc do NOT count for this slot.
+
+8. **Edge cases + abort conditions** — explicit "do NOT do X" and "abort if Y." E.g. "If the captured screenshot is stale (timestamp older than the most recent edit), STOP and recapture before grading." Refusal lists are part of this slot.
+
+9. **Calibration text** — concrete examples of S-tier and F-tier output. *"S-tier looks like: <2-3 sentences of what a passing audit reads like>. F-tier looks like: <2-3 sentences of what failure reads like>."* This is what makes "S" enforceable rather than impressionistic.
+
+10. **Operational specifics** — tool commands, file paths derived from Phase 1 scan, environment variables. E.g. `npx playwright test --grep "@visual"`, `find src/components -name "*.tsx" | xargs grep -l "useTheme"`, `theme.colors.accent.primary`. Abstract artifacts cite no commands and grade nothing.
+
+**If your draft lacks ANY of these 10 elements, go back and add it.** Battle-tested depth is not optional polish — it's the contract.
+
+### LOC targets (signal, not gospel)
+
+- **Major agents** (`ux-reviewer`, `a11y-audit`, `interaction-audit`, `flow-auditor`): **150–250 LOC**.
+- **Skills** (`journey-audit/SKILL.md`, `element-reuse-check/SKILL.md`, `persona-lens/SKILL.md`, `quality-bar/SKILL.md`): **80–150 LOC**.
+- **Rules** (`design-north-star.md`, `audit-routing.md`, `visual-verification.md`): **40–100 LOC**.
+
+If your draft comes in **under 100 LOC for a major agent**, you've shipped shallow. Stop and deepen — almost always one of the 10 elements is missing or perfunctory. The 100-LOC line is a heuristic; the 10-element checklist is the actual contract.
+
+### How to verify depth before staging
+
+After authoring each artifact, before moving to staging, run a self-check:
+
+```
+For each of the 10 elements:
+- Is it present? (yes / no)
+- Is it project-specific or generic-textbook? (project / generic)
+- Would the user be able to point at the specific line that fulfills it? (yes / no)
+```
+
+Any "no" or "generic" answer means redo. Cite the user's interview answers; cite the Phase 1 file paths; cite the SHAs you mined from git. Specificity is the signal.
 
 ## Phase 5 — Stage + present + commit
 

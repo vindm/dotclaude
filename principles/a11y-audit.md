@@ -184,6 +184,23 @@ The final agent (typically `.claude/agents/a11y-audit.md`) should specify:
 <list>
 ```
 
+## Depth signatures — what battle-tested looks like
+
+The authored `a11y-audit.md` agent fails the depth bar if it lacks any of these 10 structural elements. Accessibility is a domain where shallow audits are actively misleading — they pass the screen on cosmetic criteria while real users with assistive tech remain locked out. Depth is not negotiable.
+
+1. **Named benchmarks** — Apple's own apps (Music, Settings, Wallet) for iOS a11y; Stripe / Linear for web a11y standards; Microsoft Office for desktop a11y. The benchmark for "S-tier a11y" must be a real product the user can open and compare against, not "WCAG AA pass." E.g. *"Tier 1 = Apple Settings VoiceOver flow; Tier 2 = Linear keyboard navigation for power-user a11y."*
+2. **5+ inspection dimensions** — assistive labels, hit-target size, contrast ratios, text scaling, motion preference, plus platform-specific (focus rings on web; VoiceOver rotor on iOS; TalkBack live regions on Android). Each with the concrete command/grep for inspecting it.
+3. **Rubric anchored per grade** — `S = Apple-parity (zero CRIT, zero MAJOR, every interactive element labeled and reachable) / A = ships with 1-2 MAJOR / B = ships with multiple MAJOR; ship-blocking CRIT clear / C = at least one CRIT; ship blocked / D = pervasive CRITs / F = unusable by assistive-tech users`. Crit-class severity OVERRIDES visual grade — Apple iOS 26 Settings is the parity claim, and parity without a11y is no parity.
+4. **Report-format sections** — `## Captured artifact / ## Overall grade / ## Dim 1: Assistive labels (table) / ## Dim 2: Hit targets (table) / ## Dim 3: Contrast (table with computed ratios) / ## Dim 4: Text scaling / ## Dim 5: Motion / ## Ship-blocking findings (CRIT) / ## Major findings / ## Minor`. Tables are mandatory; flat prose loses signal.
+5. **Cross-references** — composes with `ux-audit.md` (orthogonal dimensions; both must pass), `interaction-audit.md` (parallel dispatch), `audit-routing.md` (CRIT in a11y blocks ship regardless of visual grade), `visual-verification.md` (capture is precondition), the project's theme/token file (contrast computation source).
+6. **Numbered non-negotiable rules** — minimum 6: *(1) CRIT-class findings (missing label on interactive, sub-threshold hit target) block ship regardless of visual grade — call this out in the first line of the report. (2) Audit BOTH light and dark modes if the project supports them. (3) Audit all meaningful states — happy, error, empty, loading, focus, disabled. (4) Compute contrast from token values, NOT visual estimation from a screenshot. (5) Provide a fix per finding — "missing label" without "add `accessibilityLabel='close'`" is unactionable. (6) Verify Dynamic Type / text-scale at 200% explicitly — devs test at 100%, and that's where scale bugs hide.*
+7. **Project-specific anti-patterns from git** — 3-5 from interview Phase D. E.g. *"Close-X icon on modal at 28×28 (commit `abc1234` fix) — sweep for sub-44pt close icons on every modal in `src/components/Modal/`."* *"Empty list state used decorative-image label that screen reader spoke verbatim (commit `def5678`) — flag every `Image` not wrapped in `accessibilityHidden`."*
+8. **Edge cases + abort conditions** — *"Abort if project has no theme file (no source of truth for contrast computation). Refuse if scope is "the whole app" — audit one surface at a time. Skip Dim 5 (motion) if the project has no animation library — but flag the omission."*
+9. **Calibration text** — `S-tier looks like: <every interactive element labeled, VoiceOver/screen-reader can complete the primary task without sighted assistance, 44pt+ hit targets throughout, contrast computed > 4.5:1 for text and > 3:1 for UI in both modes, Dynamic Type at 200% reflows cleanly>. F-tier looks like: <icon-only buttons with no labels, hit targets at 24×24, contrast 2.8:1 on primary text, layout collapses at 130% Dynamic Type, motion ignores reduced-motion preference>.`
+10. **Operational specifics** — platform-specific hierarchy/inspection commands derived from Phase 1: `maestro hierarchy --compact` for iOS sim, `axe-core` for web (or `pa11y` / `lighthouse --only-categories=accessibility`), Xcode Accessibility Inspector for native iOS, the user's actual theme/token path for contrast computation. Compliance target (WCAG 2.2 AA vs AAA vs Section 508) stated explicitly.
+
+If the authored `a11y-audit.md` lacks any of these, redo. A shallow a11y audit is worse than no audit — it gives false confidence.
+
 ## Cross-references
 
 - `ux-audit.md` — visual polish. Visual + a11y are orthogonal; both must pass.

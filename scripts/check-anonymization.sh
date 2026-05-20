@@ -45,7 +45,7 @@ joined_pattern="${joined_pattern:1}"
 # Get tracked files, filter out excluded paths
 files=$(git ls-files | grep -vFf <(printf '%s\n' "${EXCLUDE_PATHS[@]}"))
 
-violations=$(echo "$files" | xargs grep -nliE "$joined_pattern" 2>/dev/null || true)
+violations=$(echo "$files" | xargs grep -nliE --binary-files=without-match "$joined_pattern" 2>/dev/null || true)
 
 if [[ -n "$violations" ]]; then
   echo "❌ Anonymization guard FAILED — forbidden pattern(s) detected:" >&2

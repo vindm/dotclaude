@@ -154,6 +154,23 @@ See `audit-routing.md` for the full routing rules.
 <single concrete action>
 ```
 
+## Depth signatures — what battle-tested looks like
+
+The authored `ux-reviewer.md` agent fails the depth bar if it lacks any of these 10 structural elements. Tune per the interview's answers — the textbook is here, but the *project-specific* anchors come from the user.
+
+1. **Named benchmarks** — the **2-3 Tier 1 apps + 2-3 Tier 2 apps with dimensions** the user named in interview B1/B2 appear by name in the agent body. Not "modern apps" — the names. E.g. *"Tier 1 chrome = Linear + Stripe Dashboard. Tier 2 = Things 3 for empty states (they teach, not apologize), Linear for keyboard-affordance discoverability."*
+2. **5+ inspection dimensions** — chrome material, motion language, type scale conformance, color discipline, hierarchy, copy register, hit-target consistency. Each with a concrete read method (grep pattern / hierarchy command / manual visual scan against a captured screenshot).
+3. **Rubric anchored per grade** — `S = looks like a Linear screen next to a Linear screen / A = ships at Linear quality with one polish pass / B = competent SaaS but visibly ours / C = ships but lags / D = embarrassing / F = block ship`. Each grade name-checks the benchmark.
+4. **Report-format sections** — `## Captured artifact / ## Surface type (from journey map) / ## Overall grade / ## Tier 1 (chrome) vs <named ref> / ## Tier 2 (domain) vs <named ref> / ## Composition pitfalls (5 named) / ## Highest-ROI move`. Predictable structure.
+5. **Cross-references** — composes with `journey-audit/SKILL.md` (mandatory surface-type classification BEFORE grading), `visual-verification.md` (capture precondition), `interaction-audit.md` (runs BEFORE so semantic fixes don't shift layout under the visual review), `a11y-audit.md` (runs in parallel — orthogonal dimensions), `quality-bar/SKILL.md` (composition pitfalls source).
+6. **Numbered non-negotiable rules** — minimum 6: *(1) Never grade without a captured screenshot — pixel review is the contract. (2) Never grade without surface-type classification — register depends on type. (3) Tier 1 + Tier 2 BOTH named in every grade — chrome and domain are separable. (4) Composition pitfalls scanned BEFORE the grade, not after — they inform the grade. (5) "Highest-ROI move" is one concrete action, not a list. (6) Refuse multi-screen scope and route to `flow-audit`.* Each with a rationale clause.
+7. **Project-specific anti-patterns from git** — 3-5 from interview Phase D bug-mining. E.g. *"Settings page bypassed the type scale for 2 weeks (commit `abc1234`) — scan for typography violations against the scale on EVERY settings-class surface."* The SHA and the symptom are both present.
+8. **Edge cases + abort conditions** — *"Abort if surface isn't reachable in current build. Abort if captured screenshot timestamp is older than last edit. Refuse multi-screen requests. Refuse if Tier 1 benchmark unspecified."*
+9. **Calibration text** — `S-tier looks like: <Linear-quality screen sitting next to a Linear screen with no visible drop in chrome rigor; hierarchy reads at 1m; empty state teaches>. F-tier looks like: <default-Material rendering, type-scale violations, apologetic empty state, hierarchy noise>.`
+10. **Operational specifics** — capture commands derived from Phase 1 (Playwright? Maestro? `xcrun simctl io`? manual + Cmd-Shift-3?). File paths to the user's theme tokens. The user's actual component-library directory. Names of the user's primary chrome surfaces (e.g. settings sheet, dashboard cards, modal headers).
+
+If the authored `ux-reviewer.md` lacks any of these, redo. Battle-tested ≠ optional polish.
+
 ## Cross-references
 
 - `visual-verification.md` — capture discipline. The audit grades captured artifacts; capture is the precondition.
