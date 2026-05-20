@@ -1,0 +1,49 @@
+{
+  "name": "dotclaude",
+  "version": "0.0.1",
+  "description": "Battle-tested Claude Code workflow pack — guardrails, audit pipelines, war-stories.",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "dotclaude": "dist/bin/dotclaude.js"
+  },
+  "files": [
+    "dist",
+    "templates",
+    "profiles",
+    "examples",
+    "war-stories"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/bin/dotclaude.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint 'src/**/*.ts' 'tests/**/*.ts'",
+    "format": "prettier --write 'src/**/*.ts' 'tests/**/*.ts'",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "mustache": "^4.2.0",
+    "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/mustache": "^4.2.5",
+    "@types/node": "^20.11.0",
+    "@types/prompts": "^2.4.9",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.2.0"
+  },
+  "keywords": ["claude-code", "anthropic", "ai", "guardrails", "hooks", "dotfiles"],
+  "license": "MIT"
+}
