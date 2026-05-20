@@ -11,6 +11,10 @@ asks 5 smart questions, and authors a custom `.claude/` from scratch.
 
 <br>
 
+<img src="./demo/demo.gif" width="900" alt="/dotclaude:design running on a Vite + React project, authoring 8 design artifacts in ~15 seconds">
+
+<br>
+
 [![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-cc785c?style=for-the-badge)](https://docs.anthropic.com/claude-code/plugins)
 [![License](https://img.shields.io/badge/license-MIT-cc785c?style=for-the-badge)](LICENSE)
 [![Skills](https://img.shields.io/badge/skills-7-cc785c?style=for-the-badge)](#slash-commands)
