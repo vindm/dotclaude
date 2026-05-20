@@ -14,7 +14,7 @@ Not templates. Not a kit. A **methodology**.
 
 <br>
 
-<img src="./demo/demo.gif" width="900" alt="/dotclaude:design — Layer 6 design kit running on a Vite + React project, authoring 8 artifacts in ~15 seconds">
+<img src="./demo/bootstrap.gif" width="900" alt="/dotclaude:bootstrap — full 7-layer hierarchical interview walks project identity → architecture → process → quality bar → knowledge graph → domain kits → maintenance, authoring CLAUDE.md + docs/ + .claude/ in ~30s">
 
 <br>
 
@@ -43,6 +43,18 @@ Then in any project root:
 | 🗃️ `/dotclaude:data` | Layer 6: DB integrity, query discipline, migrations. |
 | 🤖 `/dotclaude:ai-workflow` | Layer 6: LLM cost monitoring + eval discipline. |
 | 🪄 `/dotclaude:init` | v1 entry — Layer 6 only (no upstream layers). Use for incremental setup. |
+
+<br>
+
+## Layer 6 in action — `/dotclaude:design`
+
+Bootstrap delegates to existing domain skills at Layer 6. Here's `/dotclaude:design` authoring a tailored design kit standalone (the v1 showpiece, preserved):
+
+<div align="center">
+
+<img src="./demo/demo.gif" width="900" alt="/dotclaude:design — Layer 6 design kit running on a Vite + React project, authoring 8 artifacts in ~15 seconds">
+
+</div>
 
 <br>
 
