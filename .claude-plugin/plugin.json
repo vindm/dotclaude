@@ -1,7 +1,7 @@
 {
   "name": "dotclaude",
-  "description": "Design-discipline + coding hygiene for Claude Code. Reads your project, interviews you about goals and past failure modes, then authors a customized .claude/ kit — UX audit agents, IA / a11y / token-discipline / flow-audit skills, code-review and data-integrity guardrails — tailored to your actual stack. Targeted flows: /dotclaude:design (showpiece), /dotclaude:coding, /dotclaude:planning, /dotclaude:testing, /dotclaude:data, /dotclaude:ai-workflow, or /dotclaude:init for full bootstrap.",
-  "version": "1.0.0",
+  "description": "AI dev infrastructure framework for any Claude Code project. /dotclaude:bootstrap walks 7 layers (project identity → architecture → process discipline → quality bar → knowledge graph → domain kits → maintenance) and authors CLAUDE.md + docs/ knowledge graph + .claude/ system derived from your project. Per-domain entry: /dotclaude:design (UX/IA/a11y/visual showpiece) + /dotclaude:coding /planning /testing /data /ai-workflow.",
+  "version": "1.1.0",
   "author": {
     "name": "Dima Vinokurov"
   },

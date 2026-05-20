@@ -1,6 +1,6 @@
 {
   "name": "dotclaude",
-  "description": "Authors a custom .claude/ for your project — UX audit, a11y, design tokens, code review, data integrity — tuned to your actual stack. Not generic templates.",
+  "description": "AI dev infrastructure framework — /dotclaude:bootstrap authors CLAUDE.md + docs/ + .claude/ tuned to your project. Per-domain entries: design (showpiece), coding, planning, testing, data, ai-workflow.",
   "owner": {
     "name": "vindm",
     "url": "https://github.com/vindm"
@@ -12,11 +12,11 @@
         "source": "github",
         "repo": "vindm/dotclaude"
       },
-      "description": "Most Claude Code plugins paste fixed templates. dotclaude authors a custom .claude/ for your project — UX audit agents, a11y, design tokens, code review, data integrity — derived from your actual stack, named benchmarks, and past failure modes. Slash commands: /dotclaude:design (showpiece), /dotclaude:coding, /dotclaude:planning, /dotclaude:testing, /dotclaude:data, /dotclaude:ai-workflow, /dotclaude:init.",
-      "version": "1.0.0",
+      "description": "AI dev infrastructure framework for any Claude Code project. /dotclaude:bootstrap walks 7 layers — project identity → architecture → process → quality bar → knowledge graph → domain kits → maintenance — and authors CLAUDE.md + docs/ + .claude/ derived from your project. Per-domain entries: /dotclaude:design (UX/IA/a11y showpiece), /dotclaude:coding, /dotclaude:planning, /dotclaude:testing, /dotclaude:data, /dotclaude:ai-workflow. /dotclaude:init is the v1 entry (Layer 6 only) for incremental adoption.",
+      "version": "1.1.0",
       "license": "MIT",
       "homepage": "https://github.com/vindm/dotclaude",
-      "tags": ["design", "ux-audit", "a11y", "accessibility", "code-review", "design-tokens", "audit", "workflow", "agent-skills"]
+      "tags": ["ai-dev-infrastructure", "bootstrap", "claude-md", "design", "ux-audit", "a11y", "code-review", "design-tokens", "audit", "workflow", "agent-skills", "knowledge-graph"]
     }
   ]
 }

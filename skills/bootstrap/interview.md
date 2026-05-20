@@ -40,6 +40,18 @@ Wait for explicit mode pick. The rest of Phase A is unchanged.
 
 **Skip-if-Phase-1**: if README.md opens with a clear one-paragraph description, confirm in one sentence: *"Your README says `<X>` — is that still the right framing, or has it shifted?"*
 
+### A1.5 — Secondary product framing (optional, ~30 sec)
+
+> *"In ONE more sentence, what makes this project hard or different from the obvious-looking version of it? Skip if your A1 already captures it. (Common shape: 'X with optionality on Y' — e.g. 'a gym vertical, with the spatial engine generalizing to other venues as optionality.' Captures the moat hint without committing the moat.)"*
+
+**Drives**: Layer 1 secondary-product framing — distinct from A6 moat. A1 captures purpose; A1.5 captures the "primary product + optionality" structure if it exists. Useful for CLAUDE.md Architecture (when the optionality has a code-shape implication, e.g. one codebase serving two products) AND for the Quality Bar register (one product may be S-tier register, the other credible-register).
+
+**Listen for**: a user volunteering *"actually it's two things on one codebase"* or *"the underlying engine could generalize to..."* These are the signals A1 didn't fully capture. Most projects answer *"A1 already says it"* — that's fine. Don't force a second framing if there isn't one.
+
+**Discovered**: 2026-05-21 smoke test against the case-study project. A1 captured *"intelligence layer for premium specialty gyms,"* but the ground-truth CLAUDE.md opens with *"Primary product + optionality on one codebase. Primary: gym vertical. Optionality: spatial engine."* The optionality framing was load-bearing for downstream architecture decisions; missing it produced a thinner Identity section.
+
+**Skip-if-volunteered-already**: if A1's answer already contains *"primary X + optionality Y"* / *"a vertical that uses an engine"* / *"two products on one codebase"* — confirm in one sentence and skip A1.5 question.
+
 ### A2 — Wedge ICP
 
 > *"Who are the first 5 specific customers you'd want for this? Name them — companies, roles, or specific people. If you can't list 5 by name, the wedge is too fuzzy; tell me what you DO know and I'll help sharpen."*
@@ -331,6 +343,21 @@ Show the user the applicability matrix derived from Phase 1 scan:
 > *Confirm? I'll then run the applied domains in sequence.*"
 
 User accepts / overrides. Each skip is a deliberate call.
+
+### F1.5 — Broadest runbook / master entry-point skill
+
+> *"Is there a 'master runbook' for this project — the one document a developer would read from cold to understand how the codebase is organized? Knowledge-graph entry point + capability map + recent-activity summary all in one. If yes, name the broadest doc that does this today (default: `docs/README.md`). If no, I'll author one as the universal entry point under Layer 5."*
+
+**Drives**: Layer 5 entry-point doc + Layer 6 substrate-runbook skill scaffold (e.g. a `product-context` / `product-atlas` / `runbook` skill that auto-loads on the broadest path glob and points into the knowledge graph).
+
+**Discovered**: 2026-05-21 smoke test. The case-study had a `product-context` skill — the broadest-path-glob skill that fires on every owner/member/wizard/brainstorm file and routes the conversation to the right capability ID + canonical flow + recent audit. Without F1.5, bootstrap missed scaffolding this — and runbook-shaped skills are structurally hard to invent without explicit prompting.
+
+**Three answers shape the output**:
+- *"Yes — `docs/README.md` already does this"*: Layer 5 confirms and Layer 6 scaffolds a thin `runbook` / `project-context` skill that auto-loads broadly and points into `docs/README.md`.
+- *"Yes but it's named differently"* (e.g. `docs/onboarding.md`, `OVERVIEW.md`): Layer 5 standardizes — propose moving to `docs/README.md` or preserve the user's chosen name + cross-link.
+- *"No — please author one"*: Layer 5 authors `docs/README.md` per knowledge-graph principle + Layer 6 scaffolds the runbook skill referencing it.
+
+**Skip-if-tiny-project**: if Phase 1 found < 50 source files AND no `docs/` AND solo: skip F1.5. A runbook skill earns its keep at scale; a 20-file solo project doesn't need it yet.
 
 ### F2 — Per-domain delegation
 

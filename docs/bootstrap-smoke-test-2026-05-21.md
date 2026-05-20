@@ -66,7 +66,7 @@ Running the scan ladder on the case-study WITHOUT reading `CLAUDE.md` / `docs/` 
 | §1.2 stack | TypeScript + Expo 55 + RN 0.83 + Reanimated 4 + React Compiler + Jest + Maestro + Storybook + Supabase + AI SDK (Anthropic + Google + OpenAI) + MCP SDK | L2, L3, L6 |
 | §1.3 existing AI infra | CLAUDE.md exists (READ allowed by skill) — triggers brownfield. **But for Pass 2, simulating non-existence.** | L1 mode = greenfield-fresh (simulated) |
 | §1.4 git history | 959 commits, 2 contributor identities (same human), oldest 2025-12-17 (~5mo). Prefix conventions: `feat()`, `fix()`, `docs()`, `refactor()`, `chore()`, `i18n()` | L1, L3, L7 |
-| §1.5 source surface | 7043 source files (TS/TSX/Swift), `app/` 30+ routes including `(owner)`, `(member)`, `(space)`, `(auth)`, `wizard`, `rex-chat.tsx`, `walk-tag.tsx`, `space-map.tsx` | L2, L6 |
+| §1.5 source surface | 7043 source files (TS/TSX/Swift), `app/` 30+ routes including `(owner)`, `(member)`, `(space)`, `(auth)`, `wizard`, `<assistant>-chat.tsx`, `walk-tag.tsx`, `space-map.tsx` | L2, L6 |
 | §1.6 test/CI | Jest config + Maestro flows under `e2e/flows/`, Storybook, `.husky/`, `.lintstagedrc.cjs`, `app.config.js`, EAS scripts | L3, L6 |
 | §1.7 DB | `supabase/migrations/`, `lib/db/database.types.ts`, `@supabase/supabase-js` dep | L6 data |
 | §1.8 AI | `@ai-sdk/anthropic`, `@ai-sdk/google`, `@ai-sdk/openai`, `@ai-sdk/mcp`, `ai`, `@anthropic-ai/sdk` | L6 ai-workflow |

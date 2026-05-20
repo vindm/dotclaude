@@ -142,6 +142,20 @@ The cells are filled with specific apps named in the interview (Q-B1 + Q-B2). Em
 
 6. **Per-platform primitives.** Where the project's native chrome primitives live — components, tokens, theme. The rule should point at the existing infrastructure (e.g., "use `<NativeTabs>`, not a custom tab bar") so reviewers don't reinvent.
 
+## Authored artifacts (what ships when this principle applies)
+
+When a bootstrap or `/dotclaude:design` run hits the applicability gate above, these artifacts ship by default. Treat this as the inventory contract — if your output lacks any of these for a UI-shipping project, you skimped.
+
+- **`.claude/rules/design-north-star.md`** — names Tier 1 + Tier 2 benchmarks with WHY each was picked (the calibration rationale paragraph), the per-surface chrome reference table, and the anti-patterns list. ~80–150 LOC. Read by every visual reviewer agent every session — must be terse + binding.
+- **`.claude/skills/quality-bar/SKILL.md`** — operational S/A/B/C/D rubric anchored to the named benchmarks. Auto-loads when any UI work happens. ~100–200 LOC. Cross-references `design-north-star.md` for the references themselves.
+- **Per-domain quality anchors** in each design agent's frontmatter or body (e.g. `ux-reviewer.md`, `flow-ux-reviewer.md`, `interaction-audit.md`) — each agent's grade scale references the benchmarks named in the north-star rather than re-deriving them. The references are stated once in the north-star, consumed many times by agents.
+- **Per-surface chrome reference table** — the row-per-surface table per the template in §"Authoring the rule" §3.5. Lives inside `design-north-star.md`. The shape is binding (every project that takes design seriously produces this table); the content is project-specific.
+- **(Mature projects only) `docs/design-system/` per-aspect docs** — when the project's design system matures beyond what fits in one rule file, the system grows into a subdirectory: `persona.md` / `motion.md` / `tokens.md` / `components.md` / `page-archetypes.md`. These are *output of design exploration over time*, not output of one bootstrap pass — bootstrap scaffolds the `design-system/README.md` entry point + invites the per-aspect docs as they emerge. Don't author empty per-aspect docs (they become wishlist docs that stay empty); author the README + let the per-aspect docs land when there's content.
+- **(Conditional) `voice-north-star.md`** — when the project has a brand voice worth grading (most consumer / B2C projects). Same shape as `design-north-star.md` but for tone / register / forbidden phrases instead of visual chrome.
+- **(Conditional) `api-north-star.md`** — when the project is a library / SDK / public API. Same shape but for API ergonomics (named API references like React Query for hook ergonomics, Zod for type-narrowing, requests-Python for readability).
+
+The artifact set scales with project shape — a research prototype with no UI ships only `api-north-star.md` (and only if it's a library); a mature consumer iOS app ships the full set plus a populated `docs/design-system/`.
+
 ## Cross-references
 
 - `quality-rubric.md` — the rubric's Tier 1 / Tier 2 anchors derive from this rule.

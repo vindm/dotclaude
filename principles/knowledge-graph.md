@@ -115,6 +115,20 @@ Before authoring the knowledge graph, audit:
 
 6. **What's the archive policy?** Default: brainstorm > 60 days no commit-follow-up → archive. Audit > 90 days no re-audit → archive. Spec whose feature shipped + has conformance → archive. Confirm or adjust thresholds with the user.
 
+## Common substrate docs — author these by default
+
+Every mature project benefits from these substrate docs even if it doesn't have them yet. They're the universal-pattern docs that compound returns; project-specific topical docs live alongside but aren't enumerated here (those land as the work happens).
+
+- **`docs/README.md`** — entry point + reading order + authority hierarchy + maintenance conventions. **Author at bootstrap time** for every project that ships a `docs/` directory at all. This is the navigation aid that makes the rest of the graph addressable. Without it, the graph is unfindable; with it, every other doc is one read away. ~120–200 LOC.
+- **`docs/product/capabilities.md`** — WHAT-the-product-does layer with stable IDs (`O.1` for owner-side, `M.1` for member-side, etc.). **Scaffold at bootstrap time** for shipped / mature projects; defer for greenfield (author when first 3 capabilities ship). The scaffold establishes the ID convention even before entries exist — future capabilities slot in cleanly.
+- **`docs/design-system/<surface>.md`** — per-surface design docs (`persona.md`, `motion.md`, `tokens.md`, `components.md`, `page-archetypes.md`). **Defer until the design system matures**, but `docs/design-system/README.md` ships at bootstrap time as the entry point when the project has UI surfaces. The per-aspect docs are *output of design exploration over months*, not bootstrap output — invite them, don't pre-author empty.
+- **`docs/archive/{brainstorms,specs,plans,audits}/`** — empty subdirectories with `.gitkeep`. **Ship at bootstrap time**. Their existence prevents the temptation to delete aged docs ("there's nowhere to put them — let's just delete"). Once `docs/archive/` exists as the obvious move-to destination, the archive policy enforces naturally.
+- **`docs/scratch/`** — ephemeral notes that signal *"not load-bearing, may be deleted on cleanup"*. **Optional, opt-in**. Ship if the user wants a place for working drafts that doesn't pollute the brainstorm namespace. If shipped, accept that scratch items get deleted periodically — the signal *"not authoritative"* is the value.
+
+Bootstrap authors `docs/README.md` + `docs/archive/*/` empty subdirs + (conditionally) `docs/product/capabilities.md` by default. The other substrate docs are opt-in per Phase E interview questions (E2 for naming conventions, E4 for permanent docs). Don't pre-author empty `docs/auth-flow.md` / `docs/health-integration.md` / `docs/intelligence-pipeline.md` style substrate docs — those are *project-specific topic docs* that emerge when the topic earns a canonical doc, not when bootstrap runs. The README's authority hierarchy table reserves slots for them; they fill in as content lands.
+
+**Discovered**: 2026-05-21 smoke test against case-study project. The ground-truth `docs/` had ~12 subdirectories + 4 permanent slug-only substrate docs at root (`auth-flow.md`, `health-integration.md`, `intelligence-pipeline.md`, `owner-onboarding.md`). Bootstrap correctly defers the project-specific topic docs (they land when the topic earns a canonical doc) but should explicitly enumerate the universal substrate docs to author by default. This section is that enumeration.
+
 ## Authoring guidance — what to write into the final artifact
 
 ### `docs/README.md` — the entry point (~120-200 LOC)

@@ -64,7 +64,7 @@ ls -la docs/ 2>/dev/null
 
 **Read each found file fully.** This is the brownfield-vs-greenfield decision point.
 
-- **CLAUDE.md exists and > 200 LOC + structured** (has Identity + Architecture + How You Work or equivalent sections) → **brownfield comprehensive**. Recommend REFUSE mode (suggest `/dotclaude:audit` or per-layer commands instead — see "Brownfield handling" below).
+- **CLAUDE.md exists and (> 200 LOC OR > 5 top-level H2 sections with Identity / Architecture / How You Work all present) AND `.claude/` has > 10 artifacts** → **brownfield comprehensive**. Recommend REFUSE mode (suggest `/dotclaude:audit` or per-layer commands instead — see "Brownfield handling" below). *Rationale: the case-study smoke test (2026-05-21) had a 100-LOC-but-comprehensive CLAUDE.md backed by 74 `.claude/` artifacts; the 200-LOC threshold alone missed it. The OR clause catches founders who write terse but structurally mature docs.*
 - **CLAUDE.md exists but < 50 LOC** → **brownfield partial**. APPEND mode (add missing layers without stomping).
 - **CLAUDE.md missing, but .claude/ has artifacts** → **brownfield v1-bootstrapped**. APPEND Layers 1–5 + 7; respect existing Layer 6.
 - **None of the above** → **greenfield**. Run all 7 layers fresh.
@@ -199,6 +199,11 @@ The user can interrupt at any layer with "skip layer N" / "I'll do that later" /
   - One-line per layer describing responsibility.
   - Boundary statements ("never X → Y") if multi-tier.
   - Constraints bullets (file-size ceiling, theme tokens, etc.).
+  - **Trailing comment in the Constraints block** (load-bearing — included by default):
+    ```
+    <!-- Add new constraints below as the project grows. Each constraint = one bullet with WHY (the problem it prevents) + WHERE-ENFORCED (hook / rule / manual review). Graduate recurring `feedback_*` memory entries into constraints here when they fire 3+ times. -->
+    ```
+    This anchor is doing real work: it tells future-Claude (and future contributors) exactly where new constraints accrue, what shape they take, and where they come from (graduated memory). Without the anchor, the Constraints list becomes either calcified ("we set it once 6 months ago, nobody updates it") or sprawled ("constraints showed up in 3 different sections of CLAUDE.md"). The load-bearing constraints accrue from lived incidents, NOT from a single-pass interview; the anchor invites them home.
 - **`.claude-staging/rules/file-size.md`** — universal rule (substitute ceiling from interview).
 - **`.claude-staging/hooks/check-file-size.sh`** — universal hook (ceiling substituted).
 - **`.claude-staging/rules/<boundary>.md`** + **`.claude-staging/hooks/check-<boundary>.sh`** — per declared boundary, if greppable.
@@ -315,6 +320,8 @@ Show the user the applicability matrix BEFORE running anything. Each skip is a d
 Without this pre-loading, each domain skill re-derives upstream context — wasteful, inconsistent across domains. With it, the domain skills focus on their specific knob set.
 
 **Each domain interview**: 3–6 questions, ~5–10 min. The `/dotclaude:design` skill is the deepest (~17 questions, 53 knobs). Others are smaller. Cumulative time across 3–5 applied domains: ~20–30 min.
+
+**Wall-clock for ≥6-domain projects.** When the applicability matrix lights up ≥ 6 domains (typical for mature multi-tier projects: design + coding + planning + testing + data + ai-workflow + maybe native-bridge + pipeline-integrity), total bootstrap wall-clock extends to **~90–110 min** (vs ~25–45 min for typical 1–5 domain projects). Surface this estimate to the user during Phase F applicability confirmation; offer to **defer Layer 6 to per-domain invocation across multiple sessions** (e.g. run `/dotclaude:design` today, `/dotclaude:data` tomorrow) rather than barreling through in one sitting. The user can also accept the long run if they have a 2-hour block. Either is fine; what's not fine is silently committing them to 90 min when they expected 30.
 
 **Cross-domain consistency**: `forbidden-phrases.txt` ships under design (voice) AND coding (AI slop). Bootstrap merges them at the end of Layer 6 rather than the v1 "last domain wins" approach — see Phase 3 below.
 
