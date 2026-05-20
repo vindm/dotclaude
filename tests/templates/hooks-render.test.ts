@@ -169,3 +169,15 @@ describe('check-no-todo-comments.sh template', () => {
     expect(out).not.toContain('{{');
   });
 });
+
+describe('check-secret-leak.sh template', () => {
+  const tpl = readFileSync(
+    resolve(__dirname, '../../templates/hooks/check-secret-leak.sh'),
+    'utf8',
+  );
+  it('renders without unsubstituted placeholders', () => {
+    const out = renderTemplate(tpl, {});
+    expect(out).not.toContain('{{');
+    expect(out).not.toContain('}}');
+  });
+});
