@@ -72,11 +72,7 @@ Story should be anonymized — no proper nouns from real projects, no real custo
 
 ## Anonymization is enforced
 
-The repo has a strict deny-list (see `scripts/check-anonymization.sh`):
-
-```
-opengym, intel-gym, rex, bali, omni, obsidian, gymnasium, genki, vinokuroff.dm
-```
+The repo has a strict deny-list. The authoritative pattern set lives in [`scripts/check-anonymization.sh`](./scripts/check-anonymization.sh) and is mirrored by CI. It covers the source project's codename, the founder's identifiers, customer / region terms, and a handful of specialty-gym brand names — read the script for the full list.
 
 Plus any specific project, customer, or company names should be replaced with generic placeholders (`<project>`, `<customer>`, `<the gym>`, etc.).
 
