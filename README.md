@@ -1,20 +1,18 @@
 <div align="center">
 
-<img src="./assets/logo.svg" width="560" alt="dotclaude">
+<img src="./assets/logo.svg" width="560" alt="dotclaude — AI dev infrastructure framework for Claude Code">
 
 <br>
 
-**AI dev infrastructure framework for any Claude Code project.**
+**AI dev infrastructure framework for Claude Code.**
 
-dotclaude walks you through 7 layers — project identity → architecture → process →
-quality bar → knowledge graph → domain kits → maintenance — and authors
-CLAUDE.md + docs/ + .claude/ derived from your project.
+Walks you through 7 layers — project identity → architecture → process → quality bar → knowledge graph → domain kits → maintenance — and authors `CLAUDE.md` + `docs/` + `.claude/` derived from your project.
 
 Not templates. Not a kit. A **methodology**.
 
 <br>
 
-<img src="./demo/bootstrap.gif" width="900" alt="/dotclaude:bootstrap — full 7-layer hierarchical interview walks project identity → architecture → process → quality bar → knowledge graph → domain kits → maintenance, authoring CLAUDE.md + docs/ + .claude/ in ~30s">
+<img src="./demo/bootstrap.gif" width="900" alt="/dotclaude:bootstrap walking the full 7-layer hierarchical interview, authoring CLAUDE.md + docs/ + .claude/ in ~30s on a fresh project">
 
 <br>
 
@@ -30,169 +28,165 @@ Not templates. Not a kit. A **methodology**.
 ```bash
 claude plugin marketplace add vindm/dotclaude
 claude plugin install dotclaude@dotclaude
+# Then in any project root:
+/dotclaude:bootstrap
 ```
 
-Then in any project root:
+# dotclaude — AI dev infrastructure for Claude Code
 
-| Command | What it does |
+A Claude Code plugin that bootstraps your project's `CLAUDE.md`, `docs/` knowledge graph, and `.claude/` system through a hierarchical interview. Distilled methodology from one battle-tested production codebase.
+
+**Jump to:** [Slash commands](#slash-commands) · [How it works](#how-it-works) · [See it in action](#see-it-in-action) · [What to expect](#what-to-expect) · [FAQ](#faq) · [Install](#install--contribute)
+
+<br>
+
+## Slash commands
+
+| Command | What it sets up |
 |---|---|
-| 🪄 `/dotclaude:bootstrap` | **Headline.** Full 7-layer hierarchical interview. Authors CLAUDE.md + docs/ + .claude/. |
-| 🎨 `/dotclaude:design` | **Showpiece.** Set up design / UX / IA / a11y / visual audit kit (Layer 6 standalone). |
-| 🧹 `/dotclaude:coding` | Layer 6: file-size discipline, code review, voice / forbidden phrases. |
-| 📐 `/dotclaude:planning` | Layer 6: pre-impl validation, audit routing. |
-| 🧪 `/dotclaude:testing` | Layer 6: test architecture + coverage strategy. |
-| 🗃️ `/dotclaude:data` | Layer 6: DB integrity, query discipline, migrations. |
-| 🤖 `/dotclaude:ai-workflow` | Layer 6: LLM cost monitoring + eval discipline. |
-| 🪄 `/dotclaude:init` | v1 entry — Layer 6 only (no upstream layers). Use for incremental setup. |
+| 🪄 `/dotclaude:bootstrap` | **Headline.** Full 7-layer hierarchical interview. Authors `CLAUDE.md` + `docs/` + `.claude/`. |
+| 🎨 `/dotclaude:design` | **Showpiece.** UI / IA / a11y / visual-quality audit kit (Layer 6 standalone). |
+| 🧹 `/dotclaude:coding` | File-size discipline, code review, voice / forbidden phrases. |
+| 📐 `/dotclaude:planning` | Pre-impl validation, audit routing. |
+| 🧪 `/dotclaude:testing` | Test architecture + coverage strategy. |
+| 🗃️ `/dotclaude:data` | DB integrity, query discipline, migrations. |
+| 🤖 `/dotclaude:ai-workflow` | LLM cost monitoring + eval discipline. |
+| 🪄 `/dotclaude:init` | v1 entry — Layer 6 only, skips upstream layers. |
+
+**Inside the plugin** — 35 methodology principles · 12 hook templates · 7 domain skills + 1 bootstrap orchestrator · 4 anonymized war stories. Cost: ~984 tokens always-on per session; 2.7–5.5k per skill invocation; ~12k for full bootstrap. Full architectural reference in [`docs/v2-vision.md`](./docs/v2-vision.md).
 
 <br>
 
-## Layer 6 in action — `/dotclaude:design`
+## How it works
 
-Bootstrap delegates to existing domain skills at Layer 6. Here's `/dotclaude:design` authoring a tailored design kit standalone (the v1 showpiece, preserved):
+### The 7-layer hierarchy
 
-<div align="center">
-
-<img src="./demo/demo.gif" width="900" alt="/dotclaude:design — Layer 6 design kit running on a Vite + React project, authoring 8 artifacts in ~15 seconds">
-
-</div>
-
-<br>
-
-## The 7-layer hierarchy
-
-Every Claude Code project benefits from a layered AI dev infrastructure stack. dotclaude organizes that stack into seven dependency-ordered layers. Each layer authors a specific slice of `CLAUDE.md` + `docs/` + `.claude/`. Layers compose: Layer 1's output feeds Layers 2–6; Layer 7 polices everything above.
+Each layer authors a specific slice of `CLAUDE.md` + `docs/` + `.claude/`. Dependency-ordered — Layer 1's output feeds Layers 2–6; Layer 7 polices the rest.
 
 | # | Layer | What bootstrap authors |
 |---|---|---|
-| 1 | **Project Identity** | `CLAUDE.md` opening — vision + wedge ICP + moat + production-vs-internal + stage. The grounding every later layer reads. |
-| 2 | **Architecture** | `CLAUDE.md` Architecture + Constraints + boundary rules + universal hooks (`check-file-size.sh`, boundary checks). |
-| 3 | **Process Discipline** | `CLAUDE.md` "How You Work" + Definition of Done + task classification table + verification ladder rules + memory typing scaffold. |
-| 4 | **Quality Bar** | `.claude/rules/design-north-star.md` (Tier 1 + Tier 2 benchmarks + anti-references + per-surface chrome table) + `quality-bar` skill. |
-| 5 | **Knowledge Graph** | `docs/README.md` + subdirectory skeleton + authority hierarchy + `docs/product/capabilities.md` scaffold. |
-| 6 | **Domain Kits** | Per applicable domain: design / coding / planning / testing / data / ai-workflow / native-bridge / pipeline-integrity. `.claude/{agents,skills,hooks,rules}/*`. **This is what v1 already did** — preserved as Layer 6. |
-| 7 | **Maintenance** | Saturday-style design-debt ritual + drift detection + `skill-auditor` agent. Default-deferred for greenfield / early projects. |
+| 1 | **Project Identity** | `CLAUDE.md` opening — vision + ICP + moat + production-vs-internal + stage |
+| 2 | **Architecture** | `CLAUDE.md` Architecture + Constraints + boundary rules + universal hooks |
+| 3 | **Process Discipline** | `CLAUDE.md` "How You Work" + DoD + task-classification table + verification ladder + memory typing |
+| 4 | **Quality Bar** | `.claude/rules/design-north-star.md` (Tier 1 + Tier 2 benchmarks + anti-references) + `quality-bar` skill |
+| 5 | **Knowledge Graph** | `docs/README.md` + subdirectory skeleton + `docs/product/capabilities.md` scaffold |
+| 6 | **Domain Kits** | Per applicable domain: design / coding / planning / testing / data / ai-workflow. `.claude/{agents,skills,hooks,rules}/*` |
+| 7 | **Maintenance** | Saturday-style design-debt ritual + drift detection + `skill-auditor` agent (default-deferred for early projects) |
 
-Layers are dependency-ordered. Skipping Layer 1 and asking Layer 4 questions produces generic outputs (*"Apple iOS + Telegram"* as defaults regardless of whether the project even has a UI). Bootstrap walks them in order, pre-loads each layer with upstream context, and refuses to barrel through.
+### Bootstrap in 5 phases
 
-**Full reference**: [`docs/v2-vision.md`](./docs/v2-vision.md) — the foundation doc for v2 with every layer described in depth, 12 transferable methodology lessons distilled from one battle-tested production codebase, and the full bootstrap flow walkthrough.
+| Phase | What happens | Duration |
+|---|---|---|
+| 1. Project scan | Auto-discovers ~30–40% of inputs from `package.json`, file tree, `git log`, existing `CLAUDE.md` / `docs/` / `.claude/` | ~5s |
+| 2. Hierarchical interview | 7 phases (A–G), 1–3 Qs per turn, skip-if-Phase-1-answered | 20–60 min |
+| 3. Cross-layer coordination | Merges forbidden-phrase lists; reconciles audit routing | < 1 min |
+| 4. Stage → review → commit | All authoring lands in `.claude-staging/` first; explicit approval gate | varies |
+| 5. Output summary | Inventory by layer + skipped reasons + next-step recommendations | < 30s |
 
-<br>
+### Brownfield safety
 
-## How bootstrap works
+Bootstrap detects your project's state via Phase 1 scan and runs in the right mode automatically.
 
-`/dotclaude:bootstrap` runs in 5 phases:
+| Project state | Mode | What bootstrap does |
+|---|---|---|
+| No `CLAUDE.md` + no `.claude/` | **Fresh** | Runs all 7 layers |
+| `CLAUDE.md` < 50 LOC OR `.claude/` < 5 artifacts | **APPEND** | Adds missing layers only; never stomps existing |
+| `CLAUDE.md` > 200 LOC OR > 5 H2s + structured | **REFUSE** | Recommends Layer 6 standalone or manual edits |
 
-**1. Phase 1 — Project scan (silent, ~5 sec).** Reads `package.json` / `Cargo.toml` / `pyproject.toml`, file tree, existing `CLAUDE.md` / `docs/` / `.claude/`, `git log` (contributors + age + cadence + prefix conventions), test config, DB / AI / native-module signals. Auto-discovers ~30–40% of all 7-layer inputs before any question.
-
-**2. Phase 2 — Hierarchical interview (~20–60 min).** Seven phases (A–G), one per layer, 1–3 questions per turn (never fire-hose). Skip discipline: if a question's answer is already in the Phase 1 scan, confirm in one sentence and move on. Each layer waits for explicit user confirmation before authoring.
-
-**3. Phase 3 — Cross-layer coordination.** When Layer 4 (voice) and Layer 6 (design + coding) both propose forbidden phrases, bootstrap merges them into one file. When Layer 4 (cross-rubric translation) and Layer 6 (per-domain audit pipelines) both touch audit routing, bootstrap reconciles. Conflicts between layers (Layer 1 says "production" + Layer 4 set to "internal") are surfaced for resolution.
-
-**4. Phase 4 — Stage + review + commit.** Everything authored lands in `.claude-staging/` + `docs-staging/` + `CLAUDE.md.draft` first. Bootstrap walks the user through 3–5 highlight artifacts with concrete reasoning citations (*"I authored X because you said Y in Q-A2"*). Explicit approval gate — *"ok"* or silence is NOT approval; bootstrap waits for *"ship it"* / *"yes commit"*.
-
-**5. Phase 5 — Output summary.** Structured inventory by layer, with skipped layers + their reasons, recommended next steps, and the next-session re-entry points.
-
-**Brownfield-safe.** Bootstrap detects existing `CLAUDE.md` + `.claude/` + `docs/` content and runs in one of three modes: **APPEND** (add missing layers without stomping), **REFUSE** (recommend a less invasive path when the existing setup is comprehensive — see alternatives below), **FRESH-OVERWRITE** (destructive, requires double confirmation). The REFUSE mode is a feature — it protects the user's investment in mature AI infrastructure.
-
-<br>
-
-## Brownfield vs greenfield
-
-Bootstrap's first question is *"is this a fresh project or one with existing AI infrastructure?"* and answers it from Phase 1's scan, not by asking.
-
-**Greenfield** (no `CLAUDE.md`, no `.claude/`, no substantial `docs/`): bootstrap runs all 7 layers fresh. ~25–45 min wall-clock for typical 1–5 domain projects.
-
-**Brownfield partial** (`CLAUDE.md` < 50 LOC, OR `.claude/` with < 5 artifacts): bootstrap detects what's missing and runs only those layers. Existing content is never stomped. Final CLAUDE.md merge is section-by-section diff with per-section user approval.
-
-**Brownfield comprehensive** (`CLAUDE.md` > 200 LOC **OR** > 5 H2 sections with Identity / Architecture / How You Work all present, AND `.claude/` has > 10 artifacts): bootstrap **refuses** to run end-to-end. The project already has substantial infrastructure; running bootstrap risks overwriting load-bearing content like task-classification tables, accumulated constraints, conformance-matrix discipline. Bootstrap surfaces three alternatives:
-
-- **Layer 6 standalone in update mode** — re-run `/dotclaude:design`, `/dotclaude:coding`, `/dotclaude:planning`, `/dotclaude:testing`, `/dotclaude:data`, or `/dotclaude:ai-workflow` to refresh one domain kit without touching upstream layers.
-- **Manual section-by-section edit** — open `CLAUDE.md` and edit the affected H2 section directly; bootstrap can't beat your project-specific knowledge for incremental tweaks.
-- **`/dotclaude:bootstrap` in APPEND mode** — if Phase 1 scan detects partial coverage (e.g. `CLAUDE.md` exists but no `.claude/`), APPEND adds only the missing layers; existing content is never stomped.
-
-Per-layer commands (`/dotclaude:identity` / `/dotclaude:architecture` / `/dotclaude:quality-bar` / etc.) and a dedicated `/dotclaude:audit` gap-report skill are on the v2 roadmap — see [`docs/v2-vision.md`](./docs/v2-vision.md) §6 — but do not ship in v1.1. Today the three options above are the supported path.
-
-The REFUSE recommendation IS the value-add. Bootstrap protects the months of accumulated AI infrastructure that comprehensive-brownfield projects represent.
+REFUSE is a feature — it protects accumulated AI infrastructure from being overwritten.
 
 <br>
 
-## Honest limitations
+## See it in action
 
-dotclaude is calibrated against one battle-tested production codebase (the source project; 5 months active, ~960 commits, 7k source files, 74 `.claude/` artifacts, 40+ docs in `docs/`). The 2026-05-21 bootstrap smoke test compared bootstrap's one-pass output against that ground truth ([full report](./docs/bootstrap-smoke-test-2026-05-21.md)). The findings calibrate honest expectations:
+`/dotclaude:design` running on a fresh Vite + React + TypeScript project, authoring 8 tailored design artifacts (4 agents + 2 skills + 2 hooks) in ~15 seconds:
 
-**~65% depth match against a fully battle-tested project.** Decomposed:
-- Universal infrastructure (file-size hooks, vertical-boundary patterns, task-classification table, design-north-star, quality-bar rubric): **~75–95% match.** Bootstrap structurally delivers what the methodology promises.
-- Accumulated-feedback constraints in `CLAUDE.md` (translation-files-shallow-spread, lint-staged-stash-desync, language-specific compiler warnings): **~30–50% match.** Each one is a captured incident from lived debug experience. Bootstrap authors the scaffold + the "accrue-here" anchor; the entries themselves emerge over months.
-- Domain-specific procedural skills (substrate runbooks like `chat-system`, `import-scanner`, `equipment-ai`; decision skills like `engine-vs-vertical-decision`): **~40% match.** These emerge from coding sessions where you wanted procedural memory of how subsystem X works. They land when you've lost > 1 hour relearning the same substrate twice — not on first bootstrap.
+<div align="center">
 
-**Wall-clock — honest range:**
+<img src="./demo/demo.gif" width="900" alt="/dotclaude:design — Layer 6 design kit authored fresh for a Vite + React + Tailwind project with Linear + Stripe Dashboard benchmarks">
 
-| Project shape | Time |
+</div>
+
+**Validation reports** (real runs, not simulations):
+- [Bootstrap on a battle-tested production codebase](./docs/bootstrap-smoke-test-2026-05-21.md) — full 7-layer flow, ~65% depth match
+- [`/dotclaude:design` on a fresh Vite + React project](./docs/design-real-smoke-test-2026-05-21.md) — grade **A**
+- [`/dotclaude:coding` on the same fresh project](./docs/coding-real-smoke-test-2026-05-21.md) — grade **A-minus**
+
+<br>
+
+## What to expect
+
+**Wall-clock per project shape:**
+
+| Project shape | Bootstrap time |
 |---|---|
-| Greenfield 1–2 weeks, 1–3 domains | 20–35 min |
+| Greenfield, 1–3 domains | 20–35 min |
 | Early prototype, 3–5 domains | 40–60 min |
 | Shipped, 5–7 domains | 60–90 min |
-| Mature, 8 domains (max-domain case) | 90–120 min |
-| Brownfield comprehensive (REFUSE) | < 5 min (no authoring) |
-| Brownfield partial (APPEND) | 15–45 min (subset of greenfield-fresh) |
+| Mature, 8 domains (max-domain) | 90–120 min |
+| Brownfield comprehensive (REFUSE) | < 5 min, no authoring |
 
-The 25–45 min vision claim holds for **greenfield + 1–5 domains**, which is most projects. Mature 8-domain projects are the outlier — bootstrap surfaces the wall-clock estimate during Phase F applicability confirmation and offers to defer Layer 6 to per-domain invocation across multiple sessions.
+**What bootstrap can't manufacture in one pass:**
 
-**What bootstrap structurally cannot do in one pass:**
+- **Accumulated incident memories** — emerge from coding sessions over weeks/months
+- **Per-aspect design system docs** — land when content emerges from real design work
+- **Substrate runbook skills** — written when you've lost > 1 hour relearning a subsystem twice
 
-- **Accumulated dated incident memories** (`feedback_*` / `project_*` entries) — output of coding sessions over time. Bootstrap scaffolds the memory typing taxonomy; the entries themselves accumulate.
-- **Battle-tested per-aspect design system docs** (`docs/design-system/{persona,motion,tokens,components,page-archetypes}.md`) — output of design exploration over months. Bootstrap scaffolds the entry README; the per-aspect docs land when content emerges.
-- **Project-specific audit reports** (`docs/audits/*.md`) — output of conformance matrices when plans ship. Bootstrap creates the empty `docs/audits/` directory; audit reports land when the work happens.
-- **Substrate runbook skills** (`chat-system`, `import-scanner`, `auth-navigation`) — procedural memory of project subsystems. Land when a session demands them.
+Bootstrap creates the scaffold + the "accrue-here" anchors. The entries themselves accumulate over time. The methodology compounds; one-pass output is the seed, not the tree.
 
-**Recommendation**: run bootstrap once for the universal infrastructure. Then expand `.claude/skills/` organically as the project matures and recurring "I had to relearn this" moments emerge. The methodology compounds; the one-pass output is the seed, not the tree.
+Full depth-match analysis: [`docs/bootstrap-smoke-test-2026-05-21.md`](./docs/bootstrap-smoke-test-2026-05-21.md).
 
 <br>
 
-## What's inside
+## FAQ
 
-| | |
-|--|--|
-| 🎯 **7 domain skills** (Layer 6) | One slash command per concern — design / coding / planning / testing / data / ai-workflow / init |
-| 🪄 **1 bootstrap meta-skill** (Layers 1–7) | The headline `/dotclaude:bootstrap` orchestrator + hierarchical `interview.md` |
-| 📚 **35 principles** | Methodology docs Claude reads selectively per project — covering project identity / architecture / file discipline / decomposition / task classification / plan-driven work / memory system / quality rubric / design benchmarking / knowledge graph / audit routing / Saturday ritual + 23 per-domain depth principles |
-| 🔧 **12 hook templates** | Generic shell guardrails (file-size ceiling, raw-hex sweep, secret leak, boundary checks, forbidden phrases, etc.) — the only true templates with Mustache placeholders |
-| 📖 **4 war stories** | Anonymized debugging narratives — proof material for methodology claims, not output |
+**How is this different from a `CLAUDE.md` template?**
 
-Cost profile: **~984 tokens per session** always-on (the slash command definitions). **2.7–5.5k tokens per skill on-invoke**. Bootstrap itself is ~12k tokens because it loads the upstream principles selectively per layer.
+Templates are static text you paste + edit. dotclaude reads your actual project (`package.json`, file tree, `git log --grep="fix:"`, existing conventions) and **authors** a `CLAUDE.md` tuned to it. The 7 layers are a methodology, not a template.
 
-Full architectural reference: [`docs/v2-vision.md`](./docs/v2-vision.md).
+**Will dotclaude overwrite my existing `CLAUDE.md` or `.claude/`?**
+
+No. Phase 1 scan detects existing infrastructure. Mature setups trigger REFUSE mode (recommends Layer 6 standalone instead). Partial setups trigger APPEND mode (adds missing layers only, never stomps). All authoring goes to `.claude-staging/` first; explicit approval gate before commit.
+
+**Does it work for non-iOS / non-React-Native projects?**
+
+Yes. The methodology is platform-agnostic. Smoke tested on a Vite + React + TypeScript + Tailwind project — grade A. The 7 layers map to any project shape; the domain skills (`/dotclaude:coding`, `/dotclaude:data`, etc.) are stack-universal.
+
+**Can I use just one domain skill without bootstrap?**
+
+Yes. `/dotclaude:design`, `/dotclaude:coding`, or any other domain skill runs standalone. Useful for incremental setup or adding a new concern to an existing `CLAUDE.md`.
+
+**What does it cost in tokens?**
+
+~984 tokens always-on per session (skill descriptions). 2.7–5.5k per single skill invocation. ~12k for the full bootstrap (loads upstream principles selectively per layer). Session overhead is < 1% of typical Claude usage.
+
+**How do I uninstall?**
+
+`claude plugin uninstall dotclaude@dotclaude`. The `.claude/` directory dotclaude authored stays in your project — it's yours to edit, version, or remove.
 
 <br>
 
-## Install
+## Install & contribute
 
 ```bash
-# Production
+# Production install (any Claude Code session)
 claude plugin marketplace add vindm/dotclaude
 claude plugin install dotclaude@dotclaude
 
-# Dev (contributing)
+# Dev install (for contributing)
 git clone https://github.com/vindm/dotclaude.git && cd dotclaude
 claude --plugin-dir .
 ```
 
-<br>
+**Contributing**: full guide in [**CONTRIBUTING.md**](./CONTRIBUTING.md) — covers adding principles, hooks, skills, war stories, smoke test discipline, and the PR checklist.
 
-## Contribute
-
-Full guide: [**CONTRIBUTING.md**](./CONTRIBUTING.md).
-
-In short — add a principle in [`principles/`](./principles/), a hook in [`hook-templates/`](./hook-templates/), a skill in [`skills/<name>/`](./skills/) matching [`skills/design/`](./skills/design/) as canonical, or a war story in [`examples/`](./examples/). Run `bash scripts/check-anonymization.sh` before pushing (CI mirrors it). New principles / skills need a smoke test report under [`docs/`](./docs/) — see [`docs/design-real-smoke-test-2026-05-21.md`](./docs/design-real-smoke-test-2026-05-21.md) as the canonical shape.
-
-<br>
+**Changelog**: see [CHANGELOG.md](./CHANGELOG.md) for v1.0.0 → v1.1.0 (v2 reframe).
 
 ---
 
 <div align="center">
 
 <sub>Built from months of working with Claude Code as a daily driver.</sub><br>
-<sub>MIT licensed.</sub>
+<sub>MIT licensed · <a href="./docs/v2-vision.md">v2 architecture</a> · <a href="./CHANGELOG.md">changelog</a> · <a href="./CONTRIBUTING.md">contribute</a></sub>
 
 </div>
