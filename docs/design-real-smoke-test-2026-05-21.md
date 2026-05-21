@@ -4,7 +4,7 @@
 **Plugin version**: dotclaude main HEAD (commit `e672b5e`)
 **Protocol**: Claude reads dotclaude's `skills/design/SKILL.md` + `skills/design/interview.md` + `principles/` as instructions; targets a project Claude has no prior exposure to. Authors `.claude-staging/` per the kit's spec.
 
-This is the **FIRST genuinely external validation** of the design skill. Previous smoke tests ran subagents reading SKILL.md against the dotclaude source project (`intel-gym`), which is the case-study from which the skill itself was derived — circular validation. This run targets a fresh stack: a 3-commit Vite scaffolding with two contrived design-relevant commits (`feat: add tokens scaffold`, `fix: stale rgba in card border`).
+This is the **FIRST genuinely external validation** of the design skill. Previous smoke tests ran subagents reading SKILL.md against the dotclaude source project, which is the case-study from which the skill itself was derived — circular validation. This run targets a fresh stack: a 3-commit Vite scaffolding with two contrived design-relevant commits (`feat: add tokens scaffold`, `fix: stale rgba in card border`).
 
 ## 1. Phase 1 scan — what was discovered automatically
 
@@ -218,7 +218,7 @@ Per `SKILL.md` Phase 3 selective-loading rules:
 **Read because project has multi-screen UI**:
 - `ux-audit.md` ✓ — drove `ux-reviewer.md` agent (the most depth-signature-checked file)
 - `design-token-audit.md` ✓ — drove `design-token-auditor.md`
-- `a11y-audit.md` — NOT re-read (intel-gym's a11y-audit agent shape was in working memory; recreated from depth checklist)
+- `a11y-audit.md` — NOT re-read (the source project's a11y-audit agent shape was in working memory; recreated from depth checklist)
 - `interaction-audit.md` — NOT re-read (same)
 - `journey-mapping.md` — NOT re-read (same)
 - `element-reuse.md` — NOT re-read (same)
@@ -322,7 +322,7 @@ Each citation includes the SHA AND the symptom (raw rgba in component CSS instea
 
 ## 6. Comparison to the previous case-study smoke test
 
-The previous smoke test (`docs/design-smoke-test-2026-05-21.md`, written one day prior) targeted the `intel-gym` codebase — the source from which the SKILL was derived. That test passed easily because the SKILL's authoring guidance was effectively a write-back of that exact project's discipline.
+The previous smoke test (`docs/design-smoke-test-2026-05-21.md`, written one day prior) targeted the source codebase from which the SKILL was derived. That test passed easily because the SKILL's authoring guidance was effectively a write-back of that exact project's discipline.
 
 This run targets a STACK CHANGE (RN/iOS → Web/Vite), a SCALE CHANGE (1000+ files → ~10 files), and a HISTORY CHANGE (years of design-flavored commits → 3 commits).
 
@@ -332,7 +332,7 @@ This run targets a STACK CHANGE (RN/iOS → Web/Vite), a SCALE CHANGE (1000+ fil
 - The **per-agent depth checklist** (10 signatures). Every signature reachable on a small project — the kit shrunk in LOC (agents ~150-170 LOC instead of 200-250) but didn't shed signatures.
 - The **applicability gates**. Phase 2 answers correctly suppressed `flow-auditor` / `pages-audit` / `product-designer` / `product-compass`. The kit didn't ship dead artifacts.
 - The **Tier 1 / Tier 2 reference machinery**. Switching from "Apple iOS 26 + Telegram" to "Linear + Stripe + Vercel" was a clean substitution — the methodology is genuinely platform-agnostic.
-- The **war-story SHA citation pattern**. Works at any history scale (here: 1 commit cited 3×; on intel-gym: dozens of commits cited).
+- The **war-story SHA citation pattern**. Works at any history scale (here: 1 commit cited 3×; on the source project: dozens of commits cited).
 
 **What didn't transfer cleanly**:
 
@@ -340,7 +340,7 @@ This run targets a STACK CHANGE (RN/iOS → Web/Vite), a SCALE CHANGE (1000+ fil
 - **Hook templates**. The `check-design-tokens.sh` template assumes a single `THEME_PATH` mustache variable. My project has TWO theme surfaces (`src/styles/tokens.ts` + `src/index.css`). I hand-coded the exempt-list in the rendered hook. The template needs to support multi-path exempt-lists for projects with mixed theme systems.
 - **`design-system/SKILL.md` section #2 ("Native platform primitives")**. The template assumes the project has *some* primitives. A fresh project has zero. I wrote a "recommended primitive order" instead — works but feels like off-spec. The principle should explicitly handle the empty-primitives case.
 - **`design-system/SKILL.md` section #11 ("Library gotchas + i18n")**. The template assumes mature library patterns (RN gotchas, React 19 hydration). On a fresh project most of these are "this will matter later" — I included them as forward-looking notes. The principle should distinguish "current gotchas" from "future-onboarding gotchas".
-- **The 7-question Phase B (benchmarks) felt heavier than it needed to be for a small project**. On intel-gym, the benchmarks discussion was iterative across many sessions; here the user has to invent them on the spot. The interview's "push gently on B1/B2/B3" instruction served well — without it, the user might have answered "Apple-tier" and we'd have failed.
+- **The 7-question Phase B (benchmarks) felt heavier than it needed to be for a small project**. On the source project, the benchmarks discussion was iterative across many sessions; here the user has to invent them on the spot. The interview's "push gently on B1/B2/B3" instruction served well — without it, the user might have answered "Apple-tier" and we'd have failed.
 
 **The bigger picture**: the SKILL.md's adaptive Phase 1 + skip-discipline is the load-bearing element. Without it, this small project would have produced a heavyweight 30-question interview. With it, the actual driving was ~10 sub-questions (the rest auto-populated from Phase 1 or skip-and-confirm). That's the design discipline working.
 
@@ -355,7 +355,7 @@ THEME_PATH="{{#designTokens.theme}}{{designTokens.theme}}{{/designTokens.theme}}
 case "$file" in *${THEME_PATH}*) exit 0 ;; esac
 ```
 
-This only handles ONE exempt path. Projects with mixed token systems (TS + CSS variables + Tailwind config) need multiple. Root cause: the template was authored against intel-gym which has a single `lib/theme/tokens.ts`.
+This only handles ONE exempt path. Projects with mixed token systems (TS + CSS variables + Tailwind config) need multiple. Root cause: the template was authored against the source project which has a single `lib/theme/tokens.ts`.
 
 ### Gap B — Capture procedure iOS-centric
 
@@ -436,7 +436,7 @@ paths:
 ---
 ```
 
-Without this, the skills load globally and contribute to context bloat. (intel-gym's CLAUDE.md hints at this convention with `auto-load by file path`; the dotclaude principle should make it explicit.)
+Without this, the skills load globally and contribute to context bloat. (The source project's CLAUDE.md hints at this convention with `auto-load by file path`; the dotclaude principle should make it explicit.)
 
 ### P3 — Add `flow-auditor` / `pages-audit` placeholder docs
 
