@@ -182,12 +182,9 @@ claude --plugin-dir .
 
 ## Contribute
 
-- **Add a principle** — drop a `.md` in [`principles/`](./principles/) matching existing structure (when-to-ship gate, why-it-matters, core methodology, depth signatures, anti-patterns, cross-references).
-- **Add a hook template** — drop a `.sh` in [`hook-templates/`](./hook-templates/) with Mustache placeholders.
-- **Add a domain skill** — create `skills/<name>/` matching [`skills/design/`](./skills/design/) as canonical (5-phase shape: project scan → interview → principle read → author → stage + commit).
-- **Add a Layer-1-through-5 contribution** — touch `skills/bootstrap/` + write principle docs.
+Full guide: [**CONTRIBUTING.md**](./CONTRIBUTING.md).
 
-Anonymization enforced — see [`scripts/check-anonymization.sh`](./scripts/check-anonymization.sh) + the CI mirror.
+In short — add a principle in [`principles/`](./principles/), a hook in [`hook-templates/`](./hook-templates/), a skill in [`skills/<name>/`](./skills/) matching [`skills/design/`](./skills/design/) as canonical, or a war story in [`examples/`](./examples/). Run `bash scripts/check-anonymization.sh` before pushing (CI mirrors it). New principles / skills need a smoke test report under [`docs/`](./docs/) — see [`docs/design-real-smoke-test-2026-05-21.md`](./docs/design-real-smoke-test-2026-05-21.md) as the canonical shape.
 
 <br>
 
