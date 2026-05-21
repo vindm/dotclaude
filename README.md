@@ -18,6 +18,7 @@ Not templates. Not a kit. A **methodology**.
 
 <br>
 
+[![CI](https://github.com/vindm/dotclaude/actions/workflows/anonymization-guard.yml/badge.svg)](https://github.com/vindm/dotclaude/actions/workflows/anonymization-guard.yml)
 [![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-cc785c?style=for-the-badge)](https://docs.anthropic.com/claude-code/plugins)
 [![License](https://img.shields.io/badge/license-MIT-cc785c?style=for-the-badge)](LICENSE)
 [![Version](https://img.shields.io/badge/version-1.1.0-cc785c?style=for-the-badge)](#)
