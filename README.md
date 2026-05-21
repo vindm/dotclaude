@@ -92,7 +92,7 @@ Layers are dependency-ordered. Skipping Layer 1 and asking Layer 4 questions pro
 
 **5. Phase 5 — Output summary.** Structured inventory by layer, with skipped layers + their reasons, recommended next steps, and the next-session re-entry points.
 
-**Brownfield-safe.** Bootstrap detects existing `CLAUDE.md` + `.claude/` + `docs/` content and runs in one of three modes: **APPEND** (add missing layers without stomping), **REFUSE** (recommend `/dotclaude:audit` instead when the existing setup is comprehensive), **FRESH-OVERWRITE** (destructive, requires double confirmation). The REFUSE mode is a feature — it protects the user's investment in mature AI infrastructure.
+**Brownfield-safe.** Bootstrap detects existing `CLAUDE.md` + `.claude/` + `docs/` content and runs in one of three modes: **APPEND** (add missing layers without stomping), **REFUSE** (recommend a less invasive path when the existing setup is comprehensive — see alternatives below), **FRESH-OVERWRITE** (destructive, requires double confirmation). The REFUSE mode is a feature — it protects the user's investment in mature AI infrastructure.
 
 <br>
 
@@ -106,9 +106,11 @@ Bootstrap's first question is *"is this a fresh project or one with existing AI 
 
 **Brownfield comprehensive** (`CLAUDE.md` > 200 LOC **OR** > 5 H2 sections with Identity / Architecture / How You Work all present, AND `.claude/` has > 10 artifacts): bootstrap **refuses** to run end-to-end. The project already has substantial infrastructure; running bootstrap risks overwriting load-bearing content like task-classification tables, accumulated constraints, conformance-matrix discipline. Bootstrap surfaces three alternatives:
 
-- `/dotclaude:audit` — read existing infra, produce gap report, no writes.
-- Per-layer commands (`/dotclaude:identity` / `/dotclaude:architecture` / `/dotclaude:quality-bar` / etc.) — surgically address one layer at a time.
-- Layer 6 standalone (`/dotclaude:design`, `/dotclaude:coding`, etc.) — re-run a domain kit in update mode.
+- **Layer 6 standalone in update mode** — re-run `/dotclaude:design`, `/dotclaude:coding`, `/dotclaude:planning`, `/dotclaude:testing`, `/dotclaude:data`, or `/dotclaude:ai-workflow` to refresh one domain kit without touching upstream layers.
+- **Manual section-by-section edit** — open `CLAUDE.md` and edit the affected H2 section directly; bootstrap can't beat your project-specific knowledge for incremental tweaks.
+- **`/dotclaude:bootstrap` in APPEND mode** — if Phase 1 scan detects partial coverage (e.g. `CLAUDE.md` exists but no `.claude/`), APPEND adds only the missing layers; existing content is never stomped.
+
+Per-layer commands (`/dotclaude:identity` / `/dotclaude:architecture` / `/dotclaude:quality-bar` / etc.) and a dedicated `/dotclaude:audit` gap-report skill are on the v2 roadmap — see [`docs/v2-vision.md`](./docs/v2-vision.md) §6 — but do not ship in v1.1. Today the three options above are the supported path.
 
 The REFUSE recommendation IS the value-add. Bootstrap protects the months of accumulated AI infrastructure that comprehensive-brownfield projects represent.
 

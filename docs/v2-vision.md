@@ -1407,6 +1407,8 @@ These properties are what differentiate bootstrap from a template-paster. Templa
 
 ## 6. v1 → v2 migration
 
+> **Status note (2026-05-21)**: this section describes the FULL v2 migration plan as originally drafted. As of v1.1 (today), **only `skills/bootstrap/` ships** plus the upstream principles. The per-layer skills (`skills/identity/`, `skills/architecture/`, `skills/process/`, `skills/quality-bar/`, `skills/knowledge-graph/`, `skills/maintenance/`) and the standalone `/dotclaude:audit` command remain on the v2 roadmap — they are NOT available in v1.1. References to `/dotclaude:identity`, `/dotclaude:architecture`, `/dotclaude:quality-bar`, `/dotclaude:audit`, etc. below are future-state. Today, the supported paths are: `/dotclaude:bootstrap` (full 7 layers), the 7 Layer-6 domain skills (preserved from v1), and `/dotclaude:init` (Layer-6-only orchestration).
+
 ### What stays (zero migration burden for existing users)
 
 - **All 29 existing principles in `principles/`.** They underpin Layer 6 (most of them) + Layer 3 (`file-discipline.md`, `decomposition.md` apply at process discipline tier).
@@ -1426,21 +1428,23 @@ These properties are what differentiate bootstrap from a template-paster. Templa
 
 ### What's NEW
 
-- **5–6 new principles in `principles/` upstream of Layer 6** — these become Stage 2 deliverables:
+- **5 new principles in `principles/` upstream of Layer 6 (SHIPPED in v1.1)**:
   - `project-identity.md` — Layer 1 methodology (vision / ICP / moat structure; what to ask; what to author).
-  - `architecture-discipline.md` — Layer 2 (layer model + boundaries + constraint enforcement + the 4-tier cost ladder).
+  - `knowledge-graph.md` — Layer 5 methodology (docs/ index, authority hierarchy, capability map scaffold).
   - `plan-driven-work.md` — Layer 3, specifically the spec → plan → impl → conformance-matrix pattern.
   - `memory-system.md` — Layer 3, the user / feedback / project / reference typing + decay policies.
   - `task-classification.md` — Layer 3, the routing matrix pattern + when each row applies.
-  - `maintenance-ritual.md` — Layer 7, Saturday-style ritual + drift detection + skill audit.
-- **5–6 new per-layer skills** in `skills/`:
-  - `skills/identity/SKILL.md`
-  - `skills/architecture/SKILL.md`
-  - `skills/process/SKILL.md`
-  - `skills/quality-bar/SKILL.md`
-  - `skills/knowledge-graph/SKILL.md`
-  - `skills/maintenance/SKILL.md`
-- **The bootstrap skill** at `skills/bootstrap/SKILL.md` — the meta-orchestrator. Runs Phase 0 scan → Layer 1 → Layer 2 → ... → Layer 7. Calls into the per-layer skills + the v1 domain skills.
+  - Plus `saturday-ritual.md` (optional, Layer 7) for projects opting into the maintenance discipline.
+- **The bootstrap skill** at `skills/bootstrap/SKILL.md` (SHIPPED in v1.1) — the meta-orchestrator. Runs Phase 0 scan → Layer 1 → Layer 2 → ... → Layer 7 inline (without delegating to separate per-layer skills). Calls into the v1 domain skills for Layer 6.
+- **5–6 standalone per-layer skills (NOT YET SHIPPED — v2 roadmap)** would let users invoke a single layer in isolation:
+  - `skills/identity/SKILL.md` (planned)
+  - `skills/architecture/SKILL.md` (planned)
+  - `skills/process/SKILL.md` (planned)
+  - `skills/quality-bar/SKILL.md` (planned)
+  - `skills/knowledge-graph/SKILL.md` (planned)
+  - `skills/maintenance/SKILL.md` (planned)
+
+  In v1.1, the upstream layers are accessed only through `/dotclaude:bootstrap`. The per-layer commands referenced elsewhere in this doc are forward-looking.
 
 ### What's DEPRECATED (soft — kept for back-compat)
 
