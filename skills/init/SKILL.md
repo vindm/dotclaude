@@ -1,10 +1,24 @@
 ---
-description: Full bootstrap of a customized .claude/ for the current project. Runs the relevant subset of domain skills (design / coding / planning / testing / data / ai-workflow) based on project shape. Use /dotclaude:init for a one-shot full setup; for targeted setups invoke a single domain skill directly (e.g. /dotclaude:design).
+description: Lighter alternative to /dotclaude:bootstrap when you want Layer 6 domain kits only, skipping upstream layers. Orchestrates the relevant subset of domain skills (design / coding / planning / testing / data / ai-workflow) based on project shape — no identity / architecture / process / quality-bar / knowledge-graph / maintenance authoring. Use /dotclaude:init for incremental Layer 6 setup on partial-brownfield projects, or when the user already has CLAUDE.md authored by hand.
 ---
 
-# `/dotclaude:init` — meta-orchestrator
+# `/dotclaude:init` — Layer 6 meta-orchestrator
 
-You are doing a full `.claude/` bootstrap for the user's current project. This skill orchestrates: it determines which **domain skills** apply to this project, then runs each in sequence.
+## v2 context (read first — added 2026-05-21)
+
+In v1.1, dotclaude introduced **`/dotclaude:bootstrap`** as the headline 7-layer setup command. Bootstrap walks project identity → architecture → process discipline → quality bar → knowledge graph → domain kits (this IS Layer 6) → maintenance, authoring `CLAUDE.md` + `docs/` + `.claude/` together.
+
+**`/dotclaude:init` is the v1 entry-point — preserved, now positioned as Layer-6-only.** Use it when:
+
+- You already have a `CLAUDE.md` authored by hand and don't want bootstrap to touch it.
+- You want incremental Layer 6 setup on a partial-brownfield project (some `.claude/` artifacts exist; you want to extend them).
+- The project doesn't need the upstream layers yet (early prototype; you want design discipline before deciding on long-term architecture).
+
+**Use `/dotclaude:bootstrap` instead when**: greenfield project, no `CLAUDE.md`, want comprehensive AI dev infrastructure setup (~25–45 min wall-clock for typical 1–5 domain projects). See [README.md](../../README.md) §"How bootstrap works" for the full 7-layer walkthrough.
+
+The two commands are complementary, not competing:
+- `/dotclaude:bootstrap` = full hierarchical setup (Layers 1–7).
+- `/dotclaude:init` = Layer 6 only (this skill).
 
 For an even more targeted setup, the user can invoke a single domain skill directly:
 
@@ -15,7 +29,7 @@ For an even more targeted setup, the user can invoke a single domain skill direc
 - `/dotclaude:data` — DB integrity, query discipline, migrations
 - `/dotclaude:ai-workflow` — LLM workflow cost monitoring + eval discipline
 
-`/dotclaude:init` is the meta — it picks which of those flow.
+`/dotclaude:init` is the meta over those domain skills — it picks which of them flow. It does NOT author the upstream-layer artifacts (`CLAUDE.md` identity / architecture sections, `docs/` knowledge graph, `quality-bar/SKILL.md` cross-cutting rubric, etc.) — those are bootstrap's lane.
 
 ## Phase 1 — Project scan (do this BEFORE asking the user anything)
 
