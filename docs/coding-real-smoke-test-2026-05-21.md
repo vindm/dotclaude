@@ -202,7 +202,7 @@ This is the principle's "don't pick a ceiling the codebase doesn't approach" gui
 
 ## 6. Side-by-side with the source project's `code-reviewer.md`
 
-The source project's `code-reviewer.md` (`/Users/dima/Documents/Projects/intel-gym/.claude/agents/code-reviewer.md`, 162 LOC) is what the principle abstracts FROM. Comparison:
+The source project's `code-reviewer.md` (the battle-tested codebase from which dotclaude's principles were distilled — 162 LOC) is what the principle abstracts FROM. Comparison:
 
 | Dimension | Source project | my-app staged kit | Verdict |
 |---|---|---|---|
