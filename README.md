@@ -4,183 +4,169 @@
 
 <br>
 
-dotclaude sets up a project's `CLAUDE.md`, `docs/` knowledge graph, and `.claude/` system through a guided, layered interview. It reads your actual project first and authors infrastructure tuned to it, rather than handing you a template to fill in.
-
-<br>
-
-<img src="./demo/bootstrap.gif" width="900" alt="/dotclaude:bootstrap walking the 7-layer interview and authoring CLAUDE.md + docs/ + .claude/ on a fresh project">
+**Install one plugin and your project instantly has a team of senior-engineer AI tools** — code reviewers, design auditors, safety guards, and a "how to work" discipline — all ready to use, no setup. Distilled from a real production codebase used daily under pressure.
 
 <br>
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-cc785c?style=for-the-badge)](https://docs.anthropic.com/claude-code/plugins)
 [![License](https://img.shields.io/badge/license-MIT-cc785c?style=for-the-badge)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.2.0-cc785c?style=for-the-badge)](#)
+[![Version](https://img.shields.io/badge/version-2.0.1-cc785c?style=for-the-badge)](#)
 
 </div>
 
 <br>
 
 ```bash
+# 1. install (run once, in any Claude Code session)
 claude plugin marketplace add vindm/dotclaude
 claude plugin install dotclaude@dotclaude
-# then, in any project root:
-/dotclaude:bootstrap
+
+# 2. that's it — now just ask Claude to use a tool, e.g.:
+#    "review my changes with dotclaude:code-review"
+#    "audit this screen with dotclaude:ux-audit"
 ```
 
 # dotclaude
 
-A Claude Code plugin that bootstraps a project's AI dev infrastructure — `CLAUDE.md`, a `docs/` knowledge graph, and a `.claude/` system — through a hierarchical interview. The methodology is distilled from one production codebase, used daily and refined under real pressure.
+A [Claude Code](https://docs.anthropic.com/claude-code) plugin. **You install it, and a set of ready-made AI dev tools immediately works in your project** — you don't configure or generate anything. The tools are the kind a senior engineer would set up by hand, distilled from one production codebase and battle-tested in daily use.
 
-**Jump to:** [Slash commands](#slash-commands) · [How it works](#how-it-works) · [Examples](#examples) · [What to expect](#what-to-expect) · [FAQ](#faq) · [Install](#install--contribute)
+**Jump to:** [What you get](#what-you-get) · [Install](#install) · [How to use it](#how-to-use-it) · [Advanced: scaffold a new project](#advanced-scaffold-a-new-project) · [FAQ](#faq)
 
 <br>
 
-## Slash commands
+## What you get
 
-| Command | What it sets up |
+The moment the plugin is enabled, three things become available in your project. **You use them as-is — nothing to set up.**
+
+### 🛡️ Guard hooks — run automatically
+
+These fire on their own as you (or Claude) work. No invocation needed.
+
+| Guard | What it does |
 |---|---|
-| `/dotclaude:bootstrap` | The full 7-layer interview. Authors `CLAUDE.md` + `docs/` + `.claude/`. |
-| `/dotclaude:design` | UI / IA / a11y / visual-quality audit kit (Layer 6, standalone). |
-| `/dotclaude:coding` | File-size discipline, code review, voice / forbidden phrases. |
-| `/dotclaude:planning` | Pre-implementation validation, audit routing. |
-| `/dotclaude:testing` | Test architecture and coverage strategy. |
-| `/dotclaude:data` | DB integrity, query discipline, migrations. |
-| `/dotclaude:ai-workflow` | LLM cost monitoring and eval discipline. |
-| `/dotclaude:init` | v1 entry — Layer 6 only, skips the upstream layers. |
+| **git-safety** | Blocks destructive git (`push --force`, `reset --hard`, `clean -f`, `--no-verify`) before it runs |
+| **secret-leak** | Blocks obvious credentials (API keys, tokens) from being written into source |
+| **file-size** | Blocks files over 1000 lines (nudges you to split them) |
+| **bash-safety** | Warns on `rm -rf $VAR` and friends where an unquoted variable could expand to something dangerous |
+| **git-context** | At session start, tells Claude your current branch / uncommitted changes / unpushed commits |
+| **uncommitted-warning** | Warns before `/clear` if you have uncommitted work that would be lost |
 
-The plugin holds 40 methodology principles, 14 hook templates, 7 domain skills plus a bootstrap orchestrator, and 7 anonymized war stories. Session overhead is about 984 tokens (the always-on skill descriptions); a single skill runs 2.7–5.5k, a full bootstrap roughly 12k. Architecture reference: [`docs/v2-vision.md`](./docs/v2-vision.md).
+### 🔍 Review & audit agents — call them on demand
 
-<br>
+Ask Claude to run one (e.g. *"use dotclaude:code-review on my changes"*). Each is read-only and gives a graded report — it reads **your** project and adapts, it doesn't apply a generic checklist.
 
-## How it works
-
-### The 7-layer hierarchy
-
-Each layer authors one slice of `CLAUDE.md` + `docs/` + `.claude/`, in dependency order: Layer 1 feeds Layers 2–6, and Layer 7 maintains the rest.
-
-| # | Layer | What bootstrap authors |
-|---|---|---|
-| 1 | Project Identity | `CLAUDE.md` opening — vision, ICP, moat, production-vs-internal, stage |
-| 2 | Architecture | `CLAUDE.md` Architecture + Constraints + boundary rules + universal hooks |
-| 3 | Process Discipline | `CLAUDE.md` "How You Work" (named principles + tests), DoD, task-classification table, memory typing, handoff |
-| 4 | Quality Bar | `.claude/rules/<domain>-north-star.md` (benchmarks + anti-references) + `quality-bar` skill |
-| 5 | Knowledge Graph | `docs/README.md` + subdirectory skeleton + `docs/product/capabilities.md` scaffold + knowledge-layers doctrine |
-| 6 | Domain Kits | Per applicable domain: design / coding / planning / testing / data / ai-workflow. `.claude/{agents,skills,hooks,rules}/*` |
-| 7 | Maintenance | Design-debt ritual + drift detection + `skill-auditor` agent (deferred by default for early projects) |
-
-### Bootstrap in 5 phases
-
-| Phase | What happens | Duration |
-|---|---|---|
-| 1. Project scan | Auto-discovers ~30–40% of inputs from `package.json`, file tree, `git log`, existing `CLAUDE.md` / `docs/` / `.claude/` | ~5s |
-| 2. Hierarchical interview | 7 phases (A–G), 1–3 questions per turn, skipping anything Phase 1 already answered | 20–60 min |
-| 3. Cross-layer coordination | Merges forbidden-phrase lists; reconciles audit routing | < 1 min |
-| 4. Stage → review → commit | All authoring lands in `.claude-staging/` first; explicit approval gate | varies |
-| 5. Output summary | Inventory by layer, skip reasons, next-step recommendations | < 30s |
-
-### Brownfield safety
-
-Bootstrap detects your project's state in its Phase 1 scan and picks a mode automatically.
-
-| Project state | Mode | What bootstrap does |
-|---|---|---|
-| No `CLAUDE.md` and no `.claude/` | Fresh | Runs all 7 layers |
-| `CLAUDE.md` < 50 LOC or `.claude/` < 5 artifacts | Append | Adds missing layers only; never overwrites existing |
-| `CLAUDE.md` > 200 LOC or structured with > 5 sections | Refuse | Recommends a standalone Layer 6 skill or manual edits |
-
-Refuse mode is deliberate: an existing, substantial setup is left untouched rather than overwritten.
-
-<br>
-
-## Examples
-
-`/dotclaude:design` running on a fresh Vite + React + TypeScript project, authoring 8 tailored design artifacts (4 agents, 2 skills, 2 hooks) in about 15 seconds:
-
-<div align="center">
-
-<img src="./demo/demo.gif" width="900" alt="/dotclaude:design authoring a Layer 6 design kit for a Vite + React + Tailwind project">
-
-</div>
-
-Validation reports from real runs:
-
-- [Bootstrap on a production codebase](./docs/bootstrap-smoke-test-2026-05-21.md) — full 7-layer flow, ~65% depth match against months-evolved ground truth
-- [`/dotclaude:design` on a fresh Vite + React project](./docs/design-real-smoke-test-2026-05-21.md) — grade A
-- [`/dotclaude:coding` on the same fresh project](./docs/coding-real-smoke-test-2026-05-21.md) — grade A−
-
-<br>
-
-## What to expect
-
-Wall-clock per project shape:
-
-| Project shape | Bootstrap time |
+| Agent | Use it when… |
 |---|---|
-| Greenfield, 1–3 domains | 20–35 min |
-| Early prototype, 3–5 domains | 40–60 min |
-| Shipped, 5–7 domains | 60–90 min |
-| Mature, 8 domains | 90–120 min |
-| Brownfield comprehensive (Refuse) | < 5 min, no authoring |
+| `dotclaude:code-review` | you finished a change and want a senior second pair of eyes before committing |
+| `dotclaude:pre-flight` | you're about to start something risky and want the blast-radius mapped first |
+| `dotclaude:test-architect` | you want tests designed + written for code that lacks them |
+| `dotclaude:data-integrity` | you have a database and want to find orphaned / stuck / corrupt rows |
+| `dotclaude:ux-audit` | you built a screen and want it graded for visual polish |
+| `dotclaude:a11y-audit` | you want a screen checked for accessibility (labels, contrast, hit targets) |
+| `dotclaude:interaction-audit` | you want to find "dead" buttons that look like they do something but don't |
+| `dotclaude:flow-audit` | you want a whole multi-screen flow (onboarding, checkout) audited end-to-end |
 
-Some things a single pass can't manufacture — they accumulate from real work over time:
+*(Also: `pages-audit`, `flow-continuity-review`, `design-token-audit`, `product-designer`, `skill-vs-code-audit`, `product-direction-validator`. 14 in total.)*
 
-- **Incident memories** emerge from coding sessions over weeks and months.
-- **Per-aspect design-system docs** land when the content shows up in actual design work.
-- **Substrate runbook skills** get written the second time you lose an hour relearning a subsystem.
+### 🧭 Working-discipline skills — load when relevant
 
-Bootstrap creates the scaffold and the "accrue here" anchors; the entries fill in as you work. The one-pass output is the seed, not the tree. Full depth-match analysis: [`docs/bootstrap-smoke-test-2026-05-21.md`](./docs/bootstrap-smoke-test-2026-05-21.md).
+Claude pulls these in automatically when the task calls for it. The headline one:
+
+- **`dotclaude:operating-discipline`** — the "how to work well" baseline: understand before building, weigh real alternatives, finish + verify, stay lean. It's what keeps Claude from grabbing the first thing that compiles.
+- Plus `handoff` (save state before context runs out), `decomposition` (split a too-big file), `plan-driven-work`, `memory-system`, and more.
+
+<br>
+
+## Install
+
+```bash
+claude plugin marketplace add vindm/dotclaude
+claude plugin install dotclaude@dotclaude
+```
+
+That enables everything above. There is **no configuration step** — the agents read your project at runtime and adapt to your stack.
+
+To try it without installing (e.g. to evaluate it), clone and point a session at it:
+
+```bash
+git clone https://github.com/vindm/dotclaude.git
+claude --plugin-dir ./dotclaude
+```
+
+<br>
+
+## How to use it
+
+- **Hooks** — nothing to do. They run as you work and block / warn automatically. (They need `jq` on your PATH.)
+- **Agents** — ask Claude in plain language: *"review this with dotclaude:code-review"*, *"run dotclaude:a11y-audit on the settings screen"*. You'll get a graded report; the agent never edits your code (except `test-architect` and `product-designer`, which produce artifacts).
+- **Skills** — you don't invoke most of them; Claude loads them when the work matches. You can also call one explicitly: *"use dotclaude:decomposition on this file"*.
+
+Your own project's `.claude/` always wins: if you define a tool with the same name, yours overrides the plugin's.
+
+<br>
+
+## Advanced: scaffold a new project
+
+The tools above work in **any** project as-is. But a project also has things no shared tool can know — its vision, architecture, design benchmarks, the routing table for which tool to run when. For that there's the generator:
+
+```bash
+/dotclaude:bootstrap     # in a project root
+```
+
+It reads your project, asks a short interview, and authors the **project-specific** layer — a `CLAUDE.md`, a `docs/` structure, and a thin local `.claude/` — on top of the consumed tools above. It never re-creates what the plugin already provides; it only writes what's unique to your project. It stages everything for your approval and never overwrites an existing setup.
+
+<img src="./demo/bootstrap.gif" width="820" alt="/dotclaude:bootstrap interviewing a project and authoring its project-specific CLAUDE.md + docs/ + .claude/">
+
+<br>
+
+## How it's built
+
+dotclaude is a **consumable base + a thin generator**:
+
+- The **base** (agents / skills / hooks above) is universal and used as-is — that's most of the value, and why there's nothing to configure.
+- The **generator** (`bootstrap`) handles only the un-shareable, project-specific layer.
+
+Everything is distilled from one production codebase, anonymized, and shaped so the agents derive your project's specifics at runtime instead of baking in someone else's. Design rationale: [`docs/v3-consume-direct-brainstorm.md`](./docs/v3-consume-direct-brainstorm.md).
 
 <br>
 
 ## FAQ
 
-**How is this different from a `CLAUDE.md` template?**
+**Do I have to configure anything after installing?**
+No. The agents, skills, and hooks work immediately. The agents read your project (stack, git history, conventions) at runtime, so they adapt without setup.
 
-A template is static text you paste and edit. dotclaude reads your actual project — `package.json`, the file tree, `git log --grep="fix:"`, existing conventions — and authors a `CLAUDE.md` tuned to it. The 7 layers are a methodology, not a fill-in-the-blanks file.
+**Will it overwrite my `CLAUDE.md` or `.claude/`?**
+No. The base is provided *alongside* your files — both coexist, and anything you define with the same name as a plugin tool overrides the plugin's. Only the optional `/dotclaude:bootstrap` writes files, and it stages for approval and refuses to overwrite an existing setup.
 
-**Will it overwrite my existing `CLAUDE.md` or `.claude/`?**
-
-No. The Phase 1 scan detects existing infrastructure. A substantial setup triggers Refuse mode (it recommends a standalone Layer 6 skill instead); a partial one triggers Append mode (missing layers only, nothing overwritten). All authoring goes to `.claude-staging/` first, behind an explicit approval gate.
-
-**Does it work outside iOS / React Native?**
-
-Yes — the methodology is platform-agnostic. It's been smoke tested on a Vite + React + TypeScript + Tailwind project (grade A). The 7 layers map to any project shape, and the domain skills are stack-universal.
-
-**Can I use one domain skill without bootstrap?**
-
-Yes. `/dotclaude:design`, `/dotclaude:coding`, or any other domain skill runs standalone — useful for incremental setup or adding a single concern to an existing `CLAUDE.md`.
+**Does it work for my stack (not React Native / iOS)?**
+Yes — it's stack-agnostic. The agents discover your language, framework, and conventions at runtime. No UI? The UI agents just stay unused.
 
 **What does it cost in tokens?**
-
-About 984 tokens always-on per session (the skill descriptions), 2.7–5.5k per skill invocation, and roughly 12k for a full bootstrap. Per-session overhead is under 1% of typical usage.
+Hooks are free (no model call). Skills load only when relevant; an agent run is paid only when you invoke it. There's no heavy always-on cost.
 
 **How do I uninstall?**
-
-`claude plugin uninstall dotclaude@dotclaude`. The `.claude/` directory it authored stays in your project — it's yours to edit, version, or remove.
+`claude plugin uninstall dotclaude@dotclaude`. Anything `/dotclaude:bootstrap` wrote into your project stays — it's yours.
 
 <br>
 
 ## Install & contribute
 
 ```bash
-# install (any Claude Code session)
+# install
 claude plugin marketplace add vindm/dotclaude
 claude plugin install dotclaude@dotclaude
 
-# develop / contribute
+# develop / contribute (run the local copy in-place)
 git clone https://github.com/vindm/dotclaude.git && cd dotclaude
 claude --plugin-dir .
 ```
 
-Contributing guide: [CONTRIBUTING.md](./CONTRIBUTING.md) — adding principles, hooks, skills, and war stories, the smoke-test discipline, and the PR checklist.
-
-Changelog: [CHANGELOG.md](./CHANGELOG.md) covers v1.0.0 through v1.2.0.
+[CONTRIBUTING.md](./CONTRIBUTING.md) · [CHANGELOG.md](./CHANGELOG.md)
 
 ---
 
 <div align="center">
 
-<sub>Built from months of using Claude Code as a daily driver.</sub><br>
-<sub>MIT licensed · <a href="./docs/v2-vision.md">architecture</a> · <a href="./CHANGELOG.md">changelog</a> · <a href="./CONTRIBUTING.md">contribute</a></sub>
+<sub>Built from months of using Claude Code as a daily driver. MIT licensed.</sub>
 
 </div>
