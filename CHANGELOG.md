@@ -4,6 +4,27 @@ All notable changes to dotclaude are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project loosely follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) — minor versions for new layers / skills / principles, patches for fixes and doc corrections.
 
+## [Unreleased] — v3: consume-direct base
+
+The framework gains a **directly-consumable base** alongside the generator. Enabling the plugin now gives a project a ready-made universal layer used as-is — no per-project authoring — and `bootstrap` shrinks to a thin generator that authors only the un-shareable project layer on top. Full rationale + the verified plugin-mechanics constraints in `docs/v3-consume-direct-brainstorm.md`.
+
+### Added
+- **`agents/` (14 consumable)** — `code-review`, `pre-flight`, `test-architect`, `data-integrity`, `skill-vs-code-audit`, `product-direction-validator`, `a11y-audit`, `ux-audit`, `interaction-audit`, `flow-audit`, `flow-continuity-review`, `pages-audit`, `design-token-audit`, `product-designer`. Default `model: sonnet` (shadow with opus); read-only auditors carry no Write/Edit; all derive project specifics (anti-patterns, schema, benchmarks) at runtime rather than from a baked snapshot.
+- **`skills/` (13 new consumable)** — `operating-discipline` (the always-on "how you work" methodology), `decomposition`, `journey-mapping`, `persona-testing`, `element-reuse`, `iterative-polish-autoloop`, `authoring-skills`, `handoff`, `plan-driven-work`, `knowledge-layers`, `memory-system`, `migration-create`, `saturday-ritual`.
+- **`hooks/hooks.json` (5 universal guards)** — git-safety, secret-leak, file-size, session-start git context, uncommitted-on-clear; fire additively in every consumer; scripts referenced via `${CLAUDE_PLUGIN_ROOT}`.
+- **`docs/v3-consume-direct-brainstorm.md`** — the v3 design, plan, and verified plugin-mechanics constraints.
+
+### Changed
+- **`bootstrap` → thin generator** (`skills/bootstrap/SKILL.md` 673 → 92 lines; `interview.md` 553 → 379, phases A/B/D/E only). Phase 0 enables the plugin (the base); bootstrap then authors only identity / architecture / quality-bar / knowledge-graph + a thin local `CLAUDE.md` that points at the consumed `operating-discipline` skill. Process / domain / maintenance are consumed, not interviewed.
+- **Distribution model** — generator-only → consumable base + thin generator. The distillation tool that grows the base lives in the *source* project, not here (the source owns the act of distillation).
+
+### Constraints discovered (load-bearing, verified against the plugin reference)
+- Plugins cannot ship `rules`, and a plugin root `CLAUDE.md` is not loaded — instructions ship as **skills**. So always-on methodology is a skill (soft always-on); a hard every-session guarantee is a one-line pointer the generator writes into the project's local `CLAUDE.md`.
+
+### Still open
+- Dogfood validation in a live consuming session (does the skill load / hooks fire / agents dispatch as `dotclaude:<name>`).
+- `principles/` cleanup — many are now redundant with the shipped base; status map in `principles/README.md`.
+
 ## [1.2.0] - 2026-06-14
 
 ### Added — process-discipline catch-up from the source project

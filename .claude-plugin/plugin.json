@@ -1,6 +1,6 @@
 {
   "name": "dotclaude",
-  "description": "AI dev infrastructure framework for any Claude Code project. /dotclaude:bootstrap walks 7 layers (project identity → architecture → process discipline → quality bar → knowledge graph → domain kits → maintenance) and authors CLAUDE.md + docs/ knowledge graph + .claude/ system derived from your project. Per-domain entry: /dotclaude:design (UX/IA/a11y/visual showpiece) + /dotclaude:coding /planning /testing /data /ai-workflow.",
+  "description": "AI dev infrastructure for Claude Code — a consumable base + a thin generator. Enable the plugin and a project gets a ready-made universal layer used as-is: the operating-discipline skill (how to work), 14 auditor/designer agents (code-review, ux-audit, a11y-audit, pre-flight, data-integrity, product-designer, …), process/knowledge/UI skills, and universal guard hooks. /dotclaude:bootstrap then authors only the un-shareable project layer (identity, architecture, quality-bar, knowledge graph) on top.",
   "version": "1.2.0",
   "author": {
     "name": "Dima Vinokurov"
