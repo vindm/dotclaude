@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Block edits that push a file above the LOC ceiling.
-# Configurable via dotclaude.yml `fileSize.ceiling` and `fileSize.warn`.
+# Ceiling 1000 / warn 950 (a consumer that wants a different limit edits these two lines).
 #
 # Override per-line: append `# allow-size: <reason>` to the line that explains the exemption.
 
 set -euo pipefail
 
-CEILING={{fileSize.ceiling}}
-WARN={{fileSize.warn}}
+CEILING=1000
+WARN=950
 
 input=$(cat)
 file_path=$(echo "$input" | jq -r '.tool_input.file_path // empty')
