@@ -206,6 +206,8 @@ The user can interrupt at any layer with "skip layer N" / "I'll do that later" /
     This anchor is doing real work: it tells future-Claude (and future contributors) exactly where new constraints accrue, what shape they take, and where they come from (graduated memory). Without the anchor, the Constraints list becomes either calcified ("we set it once 6 months ago, nobody updates it") or sprawled ("constraints showed up in 3 different sections of CLAUDE.md"). The load-bearing constraints accrue from lived incidents, NOT from a single-pass interview; the anchor invites them home.
 - **`.claude-staging/rules/file-size.md`** — universal rule (substitute ceiling from interview).
 - **`.claude-staging/hooks/check-file-size.sh`** — universal hook (ceiling substituted).
+- **`.claude-staging/hooks/check-git-safety.sh`** — universal PreToolUse hook blocking destructive git (force push, reset --hard, clean -f, --no-verify, …) by whole-command match, so flag reordering can't bypass it.
+- **`.claude-staging/hooks/warn-uncommitted-on-clear.sh`** — universal SessionEnd hook warning on uncommitted WIP before `/clear` (nudges WIP-commit over stash).
 - **`.claude-staging/rules/<boundary>.md`** + **`.claude-staging/hooks/check-<boundary>.sh`** — per declared boundary, if greppable.
 - **`docs-staging/architecture/`** subdirectory with `.gitkeep` (placeholder; Layer 5 fills the actual `docs/` tree).
 
@@ -215,22 +217,24 @@ The user can interrupt at any layer with "skip layer N" / "I'll do that later" /
 
 ### Layer 3: Process Discipline
 
-**Read first**: `../../principles/plan-driven-work.md` + `../../principles/memory-system.md` + `../../principles/task-classification.md`. These three principles together capture Layer 3's substance.
+**Read first**: `../../principles/operating-principles.md` + `../../principles/lean-by-default.md` + `../../principles/task-classification.md` + `../../principles/plan-driven-work.md` + `../../principles/memory-system.md` + `../../principles/handoff.md`. Together these capture Layer 3's substance: the named operating principles, the depth-vs-ceremony doctrine, the routing table, the plan-conformance workflow, memory typing, and the session-handoff discipline.
 
 **Run**: `interview.md` Phase C (4–6 questions).
 
 **Author** to `.claude-staging/`:
 
 - **`CLAUDE.md.draft`** — append "How You Work" section:
-  - Behavioral defaults (one or two sentences — "Trace before you propose" / "Plan-driven work: spec ↔ impl conformance mandatory" if applicable).
+  - **The named operating principles** (per `operating-principles.md` — 3–4 NAMED principles, each with a `**The test:**` line: Understand before you build · Reason to the right solution · Goal-driven complete execution · Depth by default, ceremony on demand). These sit ABOVE the task table. Include the autonomous-run fallback inside principle 1 and the every-turn standing checks.
+  - **Depth by default, ceremony on demand** + an **"Escalate when (and only when)"** trigger table (per `lean-by-default.md`), derived from the project's actual triggers (migrations, multi-module changes, new UI, native code, plan-backed work, user-asks-for-review).
   - **Task classification table** (per `task-classification.md` template — 5–8 rows minimum; Ambiguous row mandatory). Cell content uses verb-led sequences referencing named specialists.
   - Specialists subsection enumerating domain skills, validation agents, user-invocable skills (placeholder names; Layer 6 fills them).
 - **`CLAUDE.md.draft`** — append "Definition of Done" section (8–15 items per `plan-driven-work.md` template).
 - **`.claude-staging/rules/plan-driven-work.md`** — only if user opted in to plan-driven discipline.
 - **`.claude-staging/rules/visual-verification.md`** — per `../../principles/visual-verification.md`, with project-specific capture command from interview.
-- **Memory system scaffold**: a `memory-conventions.md` doc inside `.claude-staging/` describing the typing taxonomy (user / feedback / project / reference) per `memory-system.md`. The actual memory directory is outside the project — bootstrap creates the *conventions doc*, not the directory itself. The user wires up the memory directory after bootstrap.
+- **Memory system scaffold**: a `memory-conventions.md` doc inside `.claude-staging/` describing the typing taxonomy (user / feedback / project / reference) per `memory-system.md`, the ≤ 40-line entry ceiling, and the self-healing reconcile. Ship `hooks/git-context-sessionstart.sh` (SessionStart memory reconcile). The actual memory directory is outside the project — bootstrap creates the *conventions doc* + hook, not the directory itself.
+- **`.claude-staging/skills/handoff/SKILL.md`** + **`docs-staging/handoffs/.gitkeep`** — per `handoff.md`, for projects with long multi-session work. The skill encodes the routing rule (durable fact → memory · plan progress → doc banner · orphan WIP → ephemeral handoff doc) and the `/clear` quality gate.
 
-**Depth bar**: per `task-classification.md` depth signatures — 5+ rows, Ambiguous row exists, verb-led cells, named specialists by file path (even if those file paths are placeholders Layer 6 fills), table is in CLAUDE.md not a sub-file.
+**Depth bar**: per `operating-principles.md` + `task-classification.md` depth signatures — each operating principle is NAMED and carries a test; the Escalate table has concrete triggers (not "complex work"); the routing table has 5+ rows with an Ambiguous row, verb-led cells, named specialists by file path; everything load-bearing is in CLAUDE.md not a sub-file.
 
 **Confirm before moving on**.
 
@@ -256,7 +260,7 @@ For projects with no UI / no chrome surface (libraries, pure backend, research p
 
 ### Layer 5: Knowledge Graph
 
-**Read first**: `../../principles/knowledge-graph.md`. Sections to extract: "Core methodology — the 7-subdirectory taxonomy" + "Authoring guidance — what to write into the final artifact" + "Depth signatures".
+**Read first**: `../../principles/knowledge-graph.md` (the `docs/` taxonomy) + `../../principles/knowledge-layers.md` (the cross-layer authority order). Sections to extract from knowledge-graph: "Core methodology — the 7-subdirectory taxonomy" + "Authoring guidance" + "Depth signatures". From knowledge-layers: the `.claude` → code → docs authority doctrine + stable-anchor references + archive-out-of-reach.
 
 **Run**: `interview.md` Phase E (3–5 questions).
 
@@ -266,12 +270,13 @@ For projects with no UI / no chrome surface (libraries, pure backend, research p
   - Reading order for a newcomer.
   - Authority hierarchy table (≥ 8 question shapes).
   - Maintenance conventions (naming + cross-link + archive policy).
+- **`CLAUDE.md.draft`** — append a short "Knowledge layers" paragraph per `knowledge-layers.md`: the `.claude/` (guidance) → code (truth) → `docs/` (reflection) authority order; doc-vs-code conflict → code wins; reference stable anchors (indexes + folder conventions), never hard-cite dated artifacts. Add a one-line Definition-of-Done item: *reflection docs follow code — update or stale-mark in the same change*.
 - **Subdirectory skeleton** with `.gitkeep`:
   - `docs-staging/brainstorms/`
   - `docs-staging/specs/` (or `designs/` — match user preference)
   - `docs-staging/plans/`
   - `docs-staging/audits/`
-  - `docs-staging/archive/{brainstorms,specs,plans,audits}/`
+  - `docs-staging/archive/{brainstorms,specs,plans,audits}/` — shipped/superseded docs land here. Per `knowledge-layers.md`, make this **Read-denied** to the agent via a `.claude/settings.json` permission deny (kept for humans; never cited as current authority).
 - **`docs-staging/product/capabilities.md`** — only if user opted in (capability map). Scaffold per `knowledge-graph.md` template even if empty.
 - **Optional** (user opt-in per project shape):
   - `docs-staging/flows/` if multi-screen UI arcs exist (Layer 6 design will populate).
@@ -308,6 +313,8 @@ The 8 canonical domains:
 Show the user the applicability matrix BEFORE running anything. Each skip is a deliberate call with a stated reason.
 
 **Author**: for each confirmed-applicable domain, **delegate to the existing v1 domain skill** — read `skills/<domain>/SKILL.md` (sibling directory) and execute its Phase 1–5 sequence. Bootstrap orchestrates; domain skills do the actual authoring.
+
+**Every skill authored in Layer 6 follows `../../principles/authoring-skills.md` — "point, don't mirror".** Skills bind to durable invariants (conventions, contracts, footguns, navigation) and point at canonical sources; they never mirror perishable snapshots (step-by-step prose that restates code, `file.ts:142` cites, exhaustive rosters). Any structural claim is dated-and-hedged ("as of <date>, verify against code"). For projects authoring any skills, also stage `.claude-staging/rules/authoring-skills.md` per that principle.
 
 **Bootstrap's contribution to Layer 6**: pre-load each domain skill with Layers 1–5 context. Specifically:
 
@@ -647,10 +654,10 @@ REFUSE mode is not silent. The recommendation IS the value-add.
 |---|---|---|
 | `project-identity.md` | 1 | `CLAUDE.md.draft` Identity + `docs-staging/product/vision.md` (optional) |
 | `file-discipline.md` + `decomposition.md` | 2 | `CLAUDE.md.draft` Architecture + `rules/file-size.md` + `hooks/check-file-size.sh` |
-| `task-classification.md` + `plan-driven-work.md` + `memory-system.md` | 3 | `CLAUDE.md.draft` How You Work + DoD + `rules/plan-driven-work.md` + `rules/visual-verification.md` + `memory-conventions.md` |
+| `operating-principles.md` + `lean-by-default.md` + `task-classification.md` + `plan-driven-work.md` + `memory-system.md` + `handoff.md` | 3 | `CLAUDE.md.draft` How You Work (named principles + tests + Escalate table) + DoD + `rules/plan-driven-work.md` + `rules/visual-verification.md` + `memory-conventions.md` + `hooks/git-context-sessionstart.sh` + `skills/handoff/SKILL.md` + `docs-staging/handoffs/` |
 | `quality-rubric.md` + `design-benchmarking.md` | 4 | `rules/<domain>-north-star.md` per domain + `skills/quality-bar/SKILL.md` |
-| `knowledge-graph.md` | 5 | `docs-staging/README.md` + `docs-staging/` subdirectory skeleton + `docs-staging/product/capabilities.md` (optional) |
-| `audit-routing.md` + each domain's principle | 6 | Delegated to `skills/<domain>/SKILL.md` v1 |
+| `knowledge-graph.md` + `knowledge-layers.md` | 5 | `docs-staging/README.md` + `docs-staging/` subdirectory skeleton (archive Read-denied) + `CLAUDE.md.draft` Knowledge-layers paragraph + `docs-staging/product/capabilities.md` (optional) |
+| `audit-routing.md` + `authoring-skills.md` + each domain's principle | 6 | Delegated to `skills/<domain>/SKILL.md` v1 + `rules/authoring-skills.md` |
 | `saturday-ritual.md` | 7 | `rules/maintenance-ritual.md` + `agents/skill-auditor.md` + `skills/audit-rituals/SKILL.md` + `docs-staging/design-debt/registry.md` — OR `_deferred/maintenance-ritual.md` stub |
 
 ---
@@ -662,4 +669,4 @@ REFUSE mode is not silent. The recommendation IS the value-add.
 - `../design/SKILL.md` — Layer 6 design kit (deepest domain — ~17-question interview, 53 knobs).
 - `../coding/SKILL.md`, `../planning/SKILL.md`, `../testing/SKILL.md`, `../data/SKILL.md`, `../ai-workflow/SKILL.md` — other Layer 6 domain skills.
 - `../../docs/v2-vision.md` — the foundational design doc for v2. §2 defines the 7-layer hierarchy; §5 walks the bootstrap flow with quoted exchanges; §8 details the Stage 3 implementation plan this skill executes.
-- `../../principles/` — the 35 principle docs. Each layer's authoring reads selectively per the principle → layer → artifact map above.
+- `../../principles/` — the 40 principle docs. Each layer's authoring reads selectively per the principle → layer → artifact map above.

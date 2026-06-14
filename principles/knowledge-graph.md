@@ -85,6 +85,17 @@ When a brainstorm > 60 days has no commit follow-up, when an audit > 90 days has
 
 - **Lifecycle**: archived → searchable but out of the active reading order → recoverable if context demands.
 - **Why never delete**: historical context matters. The decision log that led to a pivot is the cheapest way to understand *why* the current direction exists. Deleting it makes the current direction look arbitrary.
+- **Read-deny the archive to the agent.** Aged-out docs are for humans, not for the assistant — an archived decision cited as current authority is a stale-doc bug waiting to happen. Add a `.claude/settings.json` permission deny on `docs/archive/**`. The archive stays human-recoverable; the agent simply can't read it (and so can't quote a superseded decision as if it were live). See `knowledge-layers.md`.
+
+### Reference discipline — stable anchors, never hard-cites
+
+A doc / rule / skill that names a *specific dated file* (`docs/audits/2026-04-15-onboarding-conformance.md`) rots the moment that file is archived or renamed — and a dangling reference is worse than none, because a reader trusts it. Bind references to **stable anchors** instead:
+
+- Point at canonical indexes (`docs/README.md`, `docs/product/capabilities.md`) and **folder conventions** (`docs/audits/`, `docs/brainstorms/`), then discover the specific artifact at runtime by listing the folder.
+- Reference capabilities by their stable ID (`O.1`, `M.2`), never by the dated doc that happens to describe them now.
+- A dated artifact is a *destination you write to*, not a *target you cite from elsewhere*. The graph's permanent layer (indexes, capability IDs, folder conventions) is the citable surface; the dated layer is write-only-from-the-outside.
+
+This is the docs-side application of *point, don't mirror* (`authoring-skills.md`) and the authority order in `knowledge-layers.md`.
 
 ### Optional subdirectories
 

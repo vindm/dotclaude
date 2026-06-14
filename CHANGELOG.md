@@ -4,6 +4,36 @@ All notable changes to dotclaude are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project loosely follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) — minor versions for new layers / skills / principles, patches for fixes and doc corrections.
 
+## [1.2.0] - 2026-06-14
+
+### Added — process-discipline catch-up from the source project
+
+A re-audit of the battle-tested source codebase (the project dotclaude distills) against the v1.1 framework surfaced ~3 weeks of process-layer learnings not yet generalized. This release ports the project-agnostic core; the RN/iOS/Supabase-specific machinery stays in the source project.
+
+- **5 new methodology principles:**
+  - `principles/operating-principles.md` — Layer 3. "How You Work" authored as 3–4 NAMED operating principles (Understand before you build · Reason to the right solution · Goal-driven complete execution · Depth by default, ceremony on demand), each closing in a `**The test:**` line that makes it auditable. Folds in the autonomous-run fallback (state assumptions when no one can answer) and the every-turn standing checks.
+  - `principles/lean-by-default.md` — Layer 3. Depth ≠ ceremony: an "Escalate when (and only when)" trigger table gates all process machinery, plus context-budget discipline for the always-loaded surface. Cross-refs the cost ladder in `audit-routing.md`.
+  - `principles/knowledge-layers.md` — Layer 5. The cross-layer authority order `.claude/` (guidance) → code (truth) → `docs/` (reflection); doc-vs-code conflict → code wins; stable-anchor references; archive-out-of-reach (Read-denied history).
+  - `principles/authoring-skills.md` — Layer 6. "Point, don't mirror" — skills bind to durable invariants and point at canonical sources, never mirror perishable snapshots (`file.ts:142` cites, step-by-step prose, exhaustive rosters) that rot within one refactor.
+  - `principles/handoff.md` — Layer 3. Conscious session handoff before context loss: route durable facts → memory, plan progress → doc banner, orphan WIP → ephemeral handoff doc; the `/clear` quality gate; WIP-commit-not-stash.
+- **2 new hook templates:**
+  - `hook-templates/check-git-safety.sh` — PreToolUse hook blocking destructive git (force push, `reset --hard`, `clean -f`, `--no-verify`, history rewrites) by whole-command match, so flag reordering can't bypass a prefix deny rule.
+  - `hook-templates/warn-uncommitted-on-clear.sh` — SessionEnd hook warning on uncommitted WIP before `/clear` (nudges a WIP commit over `git stash`).
+- **3 new anonymized war stories** in `examples/`:
+  - `the-doc-that-lied.md` — a stale reflection doc trusted over code; a second writer of the same state, found by grep too late. Paradigm for `knowledge-layers.md`.
+  - `the-stash-that-ate-the-afternoon.md` — `git stash` inside a killed pipeline stranded an afternoon's WIP. Paradigm for WIP-commit-not-stash (`handoff.md`).
+  - `the-commit-that-dropped-six-files.md` — `lint-staged` re-staged a subset; the message claimed seven files, one landed. Paradigm for commit-integrity verification.
+
+### Changed
+
+- **`principles/memory-system.md`** — added the ≤ 40-line per-entry ceiling (entries are facts, not essays), a "Self-healing" section (SessionStart git-state reconcile + periodic headless audit), and two depth signatures. Cross-refs `handoff.md` + `knowledge-layers.md`.
+- **`hook-templates/git-context-sessionstart.sh`** — upgraded from a one-line branch/commit echo to full git state (uncommitted count, ahead/behind upstream, live worktrees) plus a memory self-healing instruction: reconcile any memory entry the git state contradicts before starting work.
+- **`skills/bootstrap/SKILL.md`** — Layer 3 now authors the named-principles-with-tests "How You Work" + Escalate table + handoff skill; Layer 5 authors the knowledge-layers doctrine + archive Read-deny; Layer 6 applies "point, don't mirror" to every authored skill. The principle → layer → artifact map and the universal-hooks set updated accordingly.
+- **`principles/knowledge-graph.md`** — strengthened the `docs/archive/` section with the agent Read-deny (`docs/archive/**` permission deny) and added a "Reference discipline — stable anchors, never hard-cites" subsection (bind to indexes / capability IDs / folder conventions, not dated filenames).
+- **`principles/code-review.md`** — added a "Commit integrity" section: verify the staged set landed (`git show --stat HEAD`) after multi-file commits, since `lint-staged`-style hooks can silently desync the committed set from the message.
+- **`principles/lean-by-default.md` + `hook-templates/auto-lint-posttool.sh`** — added a per-edit latency budget (Idea 4): don't run multi-second commands per edit, consolidate `Write|Edit` checks into one dispatcher. The per-edit `eslint --fix` template now ships with a "when NOT to use" warning (redundant with lint-staged + DoD; slow linters tax every write) — the source project removed exactly this pattern as redundant and slow.
+- **README + plugin/marketplace descriptions** — inventory updated to 40 principles · 14 hook templates · 7 war stories; version badge to 1.2.0.
+
 ## [1.1.0] - 2026-05-21
 
 ### Added — v2 reframe

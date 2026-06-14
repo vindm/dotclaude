@@ -152,6 +152,18 @@ Tune the anchors to project-specific stakes if the project's stakes call for it 
 
 The agent should always include "what's done well." Pure-negative reviews train against shipping; reviews that name what's working calibrate the team on the bar.
 
+## Commit integrity — verify the staged set landed
+
+When the project runs a pre-commit formatter or `lint-staged`-style hook that re-stages files, the set that lands can silently drift from the set you meant to commit: the hook reformats, partially re-stages, or a glob misses a file, and the commit message claims seven files while one actually lands. Lint passes, tests pass, the message lies. The drift surfaces days later when a "committed" change turns out to be missing (see `../examples/the-commit-that-dropped-six-files.md`).
+
+Encode one cheap discipline wherever the project commits multi-file changes:
+
+- **After every multi-file commit, run `git show --stat HEAD`** and confirm the file list matches what the message claims. This is one command; it converts a silent, days-late failure into an immediate, obvious one.
+- **Recovery is `git reset --soft HEAD~1`, re-stage explicitly, recommit** — never paper over it with a follow-up "oops, also this file" commit that splits one logical change across two.
+- Where the project authors a `code-reviewer` agent or a Definition-of-Done checklist, add commit-integrity as a line item; where it authors hooks, a PostToolUse hook can echo the `git show --stat` after a commit.
+
+This belongs to code review because it's the same instinct as parallel-path detection: trust the *result* less than the *intent*, and verify the two match.
+
 ## Cross-references
 
 - `pre-flight.md` — the pre-implementation companion. Run `pre-flight` before writing code; run `code-review` after. They share the parallel-path methodology but operate at different points in the loop.
@@ -159,6 +171,7 @@ The agent should always include "what's done well." Pure-negative reviews train 
 - `data-integrity.md` — when code review surfaces a write-path concern on persistent state, the data-integrity agent does the deeper sweep.
 - `../examples/the-write-that-returned-success.md` — paradigm example of a bug code-review catches: silent no-op at a trust boundary.
 - `../examples/the-bug-surfaced-five-screens-later.md` — paradigm example of cascade-through-valid: code review catches this by tracing the operation back across all entry points, not by debugging the symptom.
+- `../examples/the-commit-that-dropped-six-files.md` — paradigm example of commit-integrity drift: the message claimed seven files, lint-staged landed one, and the gap shipped silently.
 
 ## Anti-patterns in the agent you write (mistakes to avoid)
 
