@@ -1,8 +1,10 @@
 # `/dotclaude:bootstrap` interview
 
-The hierarchical interview that drives the 7-layer bootstrap. Seven phases (A–G), one per layer, ~22–30 questions total, ~25–40 min wall clock for greenfield, ~15–25 min for brownfield in APPEND mode.
+The interview that drives the thin-generator bootstrap. Under dotclaude v3 consume-direct, the universal base — process discipline (the `operating-discipline` skill), the auditor agents / domain kits, and the maintenance ritual (the `saturday-ritual` skill) — is **consumed from the plugin, not authored by bootstrap.** So the interview covers ONLY the four un-shareable project-specific layers: **A Identity, B Architecture, D Quality Bar, E Knowledge Graph.** Phases C (process), F (domain kits), and G (maintenance) were removed because they're consumed — the A/B/D/E letters are kept as-is so they still map to SKILL.md's Phase references.
 
-**Pacing rule**: 1–3 questions per conversational turn. Never fire-hose. Listen for off-script signal — a user-volunteered *"our settings page got out of hand"* is gold for Layer 6 design's anti-patterns slot.
+Four phases, ~14–22 questions total, ~18–30 min wall clock for greenfield, ~10–18 min for brownfield in APPEND mode.
+
+**Pacing rule**: 1–3 questions per conversational turn. Never fire-hose. Listen for off-script signal — a user-volunteered *"our settings page got out of hand"* is gold for the Quality Bar's anti-patterns slot.
 
 **Skip discipline**: if a question's answer is obvious from Phase 1's project scan, do NOT ask — confirm in one sentence and move on. The cost of asking a redundant question is real (signals *"you weren't paying attention to my code"*).
 
@@ -22,7 +24,7 @@ If Phase 1 §1.3 found existing `CLAUDE.md` / `docs/` / `.claude/`:
 >
 > *- **Append mode** (default): I'll add only the missing layers; existing content stays untouched. You diff per-section before commit.*
 > *- **Audit mode**: I read your existing infra and produce a gap report; no writes.*
-> *- **Fresh-overwrite mode** (destructive): I author all 7 layers from scratch into staging; you diff before commit; the existing content gets replaced.*
+> *- **Fresh-overwrite mode** (destructive): I author the project-specific layers (identity / architecture / quality bar / knowledge graph) from scratch into staging; you diff before commit; the existing content gets replaced.*
 >
 > *Which?*
 
@@ -81,7 +83,7 @@ If the user names ≥ 3, the wedge is workable. If they name 0–2, surface the 
 
 > *"`git log` shows N contributors. Are they all actively writing code, or some historical / collaborators-via-issues only? And — solo-staying-solo, or planning to add collaborators in the next 3 months?"*
 
-**Drives**: Layer 3 process discipline (team coordination conventions: PR review etiquette, commit-message verbosity, branching strategy). Layer 7 maintenance ritual cadence default.
+**Drives**: the maturity/stage tag (A5) + downstream calibration. (Team coordination conventions and the maintenance-ritual cadence are consumed from the plugin — the `operating-discipline` and `saturday-ritual` skills — not authored here.)
 
 ### A5 — Maturity stage
 
@@ -98,7 +100,7 @@ Propose maturity tag with the heuristic:
 
 > *"Based on git: project is `<age>` old with `<file count>` source files. I'd tag this `<proposed maturity>`. Do you have external users yet — and roughly how many?"*
 
-**Drives**: Layer 7 applicability + Layer 1 stage tag.
+**Drives**: Layer 1 stage tag (and downstream Quality Bar register calibration).
 
 ### A6 — Moat / differentiation (optional, defer-able)
 
@@ -154,67 +156,9 @@ If the user names ≥ 1 boundary: confirm greppability (*"can this boundary be e
 
 **Skip-if-Phase-1**: if Phase 1 found existing hooks (`.claude/hooks/`), confirm: *"You already have `<X.sh>` and `<Y.sh>`. I'll keep those; want to add the universal file-size hook on top?"*
 
-### B5 — External integrations (deferred to Layer 6)
+### B5 — External integrations (no separate interview)
 
-Don't ask here. The integrations (Supabase, Stripe, OpenAI, AI SDK) get caught by Phase 1 §1.7 + §1.8 + §1.9 and feed Layer 6 applicability.
-
----
-
-## Phase C — Process Discipline (Layer 3) — 4–6 questions
-
-### C1 — Plan-driven y/n + threshold
-
-> *"Do you write specs / brainstorms / plans before non-trivial implementation, or do you trunk-based-ship-fast? And if plan-driven — what size of work triggers a plan? Common thresholds: > 1 day, > 3 files, > 2 modules."*
-
-**Drives**: Layer 3 plan-driven discipline rule + Plan-backed row in task classification table.
-
-If trunk-based: skip the conformance-matrix discipline; CLAUDE.md gets a shorter DoD; no Plan-backed row in task classification.
-
-If plan-driven: the conformance-matrix discipline ships. Threshold from user's answer goes into CLAUDE.md.
-
-### C2 — Task classification rows
-
-> *"In a typical week, what kinds of tasks do you work on? I have starter rows for: UI feature, bug fix, backend / pipeline, architecture change, data / schema, plan-backed, ambiguous. Which of these apply? Anything I should add (e.g. 'API addition' for backend-heavy projects, 'hotfix' if you have prod incidents)?"*
-
-**Drives**: Layer 3 task classification table rows.
-
-Show the universal default starter table per `task-classification.md` (or per-project-type variants for CLI / SaaS / docs / library / research). User confirms / adjusts.
-
-**Cap at 8–10 rows**. If the user wants > 10, push back: *"More than 10 rows stops being scannable. Some of these can be combined — e.g. 'bug fix' and 'hotfix' can be one row with hotfix as a sub-mode."*
-
-The **Ambiguous** row is mandatory; don't ask whether to include it.
-
-### C3 — Memory system y/n
-
-> *"Do you want a typed cross-conversation memory system? It captures: user preferences (e.g. 'always yarn, never npm'), feedback / corrections (graduate to rules when fired 3+ times), active project state, stable references. Default-on for projects > 2 weeks old; default-skip for single-session tools."*
-
-**Drives**: Layer 3 memory-conventions doc + memory section in "Where to find what."
-
-For greenfield / 1-week-old: default-skip. For everything else: default-on, propose the four-type taxonomy.
-
-If user says yes: explain the convention briefly, note the memory directory location is outside the project (`~/.claude/projects/<project-slug>/memory/`), bootstrap creates the conventions doc only.
-
-### C4 — Subagent dispatch pattern (skip-if-not-applicable)
-
-> *"Do you use subagents / Task tool / dispatch patterns? If yes — any project-specific conventions (worktree gates, dispatch prefixes, fresh-per-task)? If no — skip."*
-
-**Drives**: Layer 3 subagent-dispatch rule (only if applicable).
-
-For solo single-conversation use: skip. For team / multi-conversation projects: ask.
-
-### C5 — Verification ladder
-
-> *"For UI surfaces — how do you verify changes? Screenshot in browser / sim / device? Playwright / Maestro / manual? I'll codify the verification ladder so future sessions follow it."*
-
-**Drives**: Layer 3 `visual-verification.md` rule with project-specific capture commands.
-
-**Skip-if-Phase-1**: if Phase 1 §1.6 found Playwright / Maestro / Storybook config, propose the discovered command. Otherwise ask.
-
-**Skip-if-no-UI**: if Phase 1 §1.5 found no UI files, skip Phase C5 — Layer 3 ships without `visual-verification.md`.
-
-### C6 — File-size discipline (continuation from B4 if needed)
-
-Already covered in B4 unless user wants to revisit. If file-size ceiling is the universal default, the discussion ended in Phase B.
+Don't ask here. The integrations (Supabase, Stripe, OpenAI, AI SDK) get caught by Phase 1 §1.7 + §1.8 + §1.9. They inform which of the plugin's consumed auditor agents the project will actually dispatch (e.g. a DB triggers `dotclaude:data-integrity`) — but the auditors are consumed from the plugin, so there's no per-domain interview to feed.
 
 ---
 
@@ -317,117 +261,15 @@ For greenfield: most projects skip — author them when there's content to docum
 
 > *"Where should cross-conversation memory live? Default: `~/.claude/projects/<project-slug>/memory/` (Claude Code default). Override only if you want project-local memory (uncommon)."*
 
-**Drives**: Layer 3 memory-conventions doc + CLAUDE.md "Where to find what" memory pointer.
+**Drives**: the CLAUDE.md "Where to find what" memory pointer (the only project-specific piece). The memory-system *conventions* themselves are consumed from the plugin's `memory-system` skill — bootstrap just records where this project's memory lives.
 
 For 99% of cases: accept default. Override only if user has a specific reason.
 
 ---
 
-## Phase F — Domain Kits (Layer 6) — 1–2 questions per applicable domain
-
-### F1 — Applicability matrix confirmation
-
-Show the user the applicability matrix derived from Phase 1 scan:
-
-> *"Based on the project scan, here's what applies for Layer 6:*
->
-> *- ✅ **design** — `<reason: e.g. components/ directory has React Native screens>`*
-> *- ✅ **coding** — universal*
-> *- ✅ **planning** — `<reason: multi-module changes are common>`*
-> *- ❓ **testing** — `<no tests yet but `vitest` in deps. Skip or run?>`*
-> *- ❌ **data** — `<no DB / no migrations>`*
-> *- ❌ **ai-workflow** — `<no AI SDK deps>`*
-> *- ❌ **native-bridge** — `<web-only, no `ios/` or `android/`>`*
-> *- ❌ **pipeline-integrity** — `<no multi-stage pipelines>`*
->
-> *Confirm? I'll then run the applied domains in sequence.*"
-
-User accepts / overrides. Each skip is a deliberate call.
-
-### F1.5 — Broadest runbook / master entry-point skill
-
-> *"Is there a 'master runbook' for this project — the one document a developer would read from cold to understand how the codebase is organized? Knowledge-graph entry point + capability map + recent-activity summary all in one. If yes, name the broadest doc that does this today (default: `docs/README.md`). If no, I'll author one as the universal entry point under Layer 5."*
-
-**Drives**: Layer 5 entry-point doc + Layer 6 substrate-runbook skill scaffold (e.g. a `product-context` / `product-atlas` / `runbook` skill that auto-loads on the broadest path glob and points into the knowledge graph).
-
-**Discovered**: 2026-05-21 smoke test. The case-study had a `product-context` skill — the broadest-path-glob skill that fires on every owner/member/wizard/brainstorm file and routes the conversation to the right capability ID + canonical flow + recent audit. Without F1.5, bootstrap missed scaffolding this — and runbook-shaped skills are structurally hard to invent without explicit prompting.
-
-**Three answers shape the output**:
-- *"Yes — `docs/README.md` already does this"*: Layer 5 confirms and Layer 6 scaffolds a thin `runbook` / `project-context` skill that auto-loads broadly and points into `docs/README.md`.
-- *"Yes but it's named differently"* (e.g. `docs/onboarding.md`, `OVERVIEW.md`): Layer 5 standardizes — propose moving to `docs/README.md` or preserve the user's chosen name + cross-link.
-- *"No — please author one"*: Layer 5 authors `docs/README.md` per knowledge-graph principle + Layer 6 scaffolds the runbook skill referencing it.
-
-**Skip-if-tiny-project**: if Phase 1 found < 50 source files AND no `docs/` AND solo: skip F1.5. A runbook skill earns its keep at scale; a 20-file solo project doesn't need it yet.
-
-### F2 — Per-domain delegation
-
-For each confirmed-applicable domain, bootstrap reads `skills/<domain>/SKILL.md` (sibling directory) and runs its Phase 1–5 sequence. Bootstrap pre-loads:
-
-- Layer 1 identity (vision / ICP / production-vs-internal / stage)
-- Layer 2 architecture (layer model / constraints)
-- Layer 3 task classification (which task types apply)
-- Layer 4 quality bar (Tier 1 + Tier 2 benchmarks)
-- Layer 5 doc paths (audit / spec / plan paths)
-
-These pre-loads mean each domain skill skips questions whose answers are already known from upstream layers. E.g. `/dotclaude:design`'s Q-B1 (Tier 1 chrome benchmarks) is already answered from Layer 4 — confirm in one sentence rather than re-asking.
-
-Each domain interview: 3–6 questions, ~5–10 min. The design skill is the deepest (~17 questions, 53 knobs in v1, reduced to ~12 questions in v2 thanks to upstream pre-loads). Other domains are smaller.
-
-**Total Layer 6 time**: ~20–30 min for 3–5 applied domains.
-
-### F3 — Cross-domain merge surfacing
-
-After all domains complete, show the user any cross-domain merges:
-
-> *"Both Layer 4 (voice) and Layer 6 (design + coding) proposed forbidden phrases. Merged into one file at `.claude-staging/rules/forbidden-phrases.txt` — N total entries across 3 sections.*
->
-> *Both Layer 4 (quality bar) and Layer 6 (design audit-routing) contributed to audit pipeline ordering. Merged into `.claude-staging/rules/audit-routing.md`.*"
-
----
-
-## Phase G — Maintenance (Layer 7) — 1–2 questions (default-DEFERRED)
-
-### G1 — Long-lived project y/n
-
-> *"Layer 7 is a Saturday-style design-debt ritual — weekly 30-min cadence, batch decision interface (F/D/?/X marks), registry as canonical source. Default-defer for projects < 1 month OR solo+small. Default-on for projects > 3 months with active drift.*
->
-> *Your project: `<maturity from A5>`. Recommend: `<defer-and-stub | activate | skip>`. Confirm?*"
-
-**Drives**: Layer 7 mode (active / deferred-stub / skipped).
-
-Decision tree:
-- **< 1 month + solo + < 30 files** → recommend **skip entirely**. No artifact authored.
-- **1–3 months + (solo OR team)** → recommend **deferred-stub**. Authors `.claude/_deferred/maintenance-ritual.md` + CLAUDE.md TODO reminder.
-- **> 3 months + (team OR > 50 files)** → recommend **active**. Authors full Layer 7 artifacts.
-- **Research prototype** → recommend **skip entirely**. Maintenance overhead exceeds value.
-
-User can override the recommendation.
-
-### G2 — Cadence + audit categories (only if active)
-
-> *"Cadence: weekly (default) / biweekly / monthly. Time-box: 30 min (default). Audit categories — which detection mechanisms feed the registry?*
->
-> *Defaults (per project shape):*
-> *- UI-heavy → `design-token-auditor`, `skill-auditor`, `link-checker`*
-> *- Backend-heavy → `data-auditor`, `skill-auditor`, `dependency-auditor`*
-> *- Library → `api-surface-auditor`, `skill-auditor`*
-> *- Docs site → `link-checker`, `skill-auditor`*
->
-> *Customize?*"
-
-**Drives**: Layer 7 cadence + audit-categories list.
-
-Most projects accept the default. Customize only if user has specific preference.
-
-### G3 — Skip Phase G entirely
-
-If A5 said greenfield + < 30 files + solo: skip Phase G entirely. SKILL.md authors no Layer 7 artifact. Add a note in the final summary: *"Layer 7 skipped — re-run bootstrap in 2 months when the project crosses the activation threshold."*
-
----
-
 ## Summary turn (mandatory before authoring)
 
-Before invoking Phase 3 (cross-layer coordination) + Phase 4 (stage + commit), summarize back what you captured:
+Before invoking SKILL.md Phase 3 (stage → review → commit), summarize back what you captured:
 
 > *"Based on our conversation:*
 >
@@ -445,12 +287,6 @@ Before invoking Phase 3 (cross-layer coordination) + Phase 4 (stage + commit), s
 > *- Boundaries: `<list or "single-tier — none">`*
 > *- Constraints: `<list, with hook/rule binding>`*
 >
-> ***Process discipline (Layer 3)***
-> *- Plan-driven y/n: `<X>` (threshold: `<Y>` if y)*
-> *- Task classification: `<N>` rows including Ambiguous*
-> *- Memory system: `<y/n>`*
-> *- Verification ladder: `<X>`*
->
 > ***Quality bar (Layer 4)***
 > *- Tier 1 chrome: `<list>`*
 > *- Tier 2 domain: `<list with dimensions>`*
@@ -463,13 +299,7 @@ Before invoking Phase 3 (cross-layer coordination) + Phase 4 (stage + commit), s
 > *- Capability map: `<scaffold | empty | skip>`*
 > *- Memory directory: `<path>`*
 >
-> ***Domain kits (Layer 6)***
-> *- Apply: `<list>`*
-> *- Skip: `<list with reasons>`*
->
-> ***Maintenance (Layer 7)***
-> *- Mode: `<active | deferred-stub | skipped>`*
-> *- Cadence (if active): `<weekly | biweekly | monthly>`*
+> *(Process discipline, domain auditor kits, and the maintenance ritual are consumed from the dotclaude plugin — not authored here, so they're not summarized.)*
 >
 > *About to author the kit:*
 > *- `CLAUDE.md.draft` (~`<estimated LOC>` LOC) with sections: `<list>`*
@@ -484,32 +314,30 @@ Wait for explicit "go" before authoring. Acceptable signals: *"ship it"* / *"yes
 
 ## Interview structure summary
 
+Only the four project-specific phases are interviewed. Phases C (process), F (domain kits), and G (maintenance) are **removed because they're consumed from the dotclaude plugin** — the `operating-discipline` skill, the auditor agents, and the `saturday-ritual` skill respectively. The A/B/D/E letters are kept as-is so they still map to SKILL.md's Phase references.
+
 | Phase | Layer | Topic | Questions | Phase-1 scan helps |
 |---|---|---|---|---|
 | A | 1 | Project Identity | 4–6 | Partial (age, contributors, files) |
 | B | 2 | Architecture | 3–5 | Heavy (stack, dirs) |
-| C | 3 | Process Discipline | 4–6 | Partial (tests, scripts) |
+| ~~C~~ | ~~3~~ | ~~Process Discipline~~ | — | consumed (`operating-discipline` skill) |
 | D | 4 | Quality Bar | 4–6 | No (benchmarks are user-derived) |
 | E | 5 | Knowledge Graph | 3–5 | Partial (existing docs/) |
-| F | 6 | Domain Kits (delegates) | 1 + per-domain | Yes (applicability matrix auto-populates) |
-| G | 7 | Maintenance | 1–2 (default-defer) | Partial (age + drift signals) |
-| **Total** | | | **20–30** | |
+| ~~F~~ | ~~6~~ | ~~Domain Kits~~ | — | consumed (auditor agents) |
+| ~~G~~ | ~~7~~ | ~~Maintenance~~ | — | consumed (`saturday-ritual` skill) |
+| **Total** | | | **14–22** | |
 
 ### Batched super-questions for actual interview UX
 
-The 20–30 sub-questions can be grouped into ~7–10 super-questions per turn for conversational pacing:
+The 14–22 sub-questions can be grouped into ~4–6 super-questions per turn for conversational pacing:
 
 1. **Super-Q1** (Phase A1–A3): *"In one sentence — what is this and who's it for? Where does it ship? Production-user-facing or internal?"*
 2. **Super-Q2** (Phase A4–A6): *"Solo / team? Project maturity (rough age + user count)? Moat — what's hard for a competitor to catch up to?"*
 3. **Super-Q3** (Phase B): *"Confirm stack. Single-tier or multi? Any non-negotiable boundaries or constraints?"*
-4. **Super-Q4** (Phase C): *"Plan-driven discipline? Common task types? Memory system y/n? Verification ladder for UI surfaces?"*
-5. **Super-Q5** (Phase D): *"Demo audience. Tier 1 chrome benchmarks (2–3 apps). Tier 2 domain benchmarks (with dimension). Anti-references."*
-6. **Super-Q6** (Phase E): *"docs/ structure — keep default 7-subdir taxonomy or customize? Capability map y/n? Memory directory location?"*
-7. **Super-Q7** (Phase F1): *"Applicability matrix for Layer 6 — confirm or adjust."*
-8. **Super-Q8** (per applicable domain): each domain skill's interview runs here, with upstream Layers 1–5 context pre-loaded. The design skill is the deepest; others are shorter.
-9. **Super-Q9** (Phase G): *"Layer 7 maintenance — defer, activate, or skip?"*
+4. **Super-Q4** (Phase D): *"Demo audience. Tier 1 chrome benchmarks (2–3 apps). Tier 2 domain benchmarks (with dimension). Anti-references."*
+5. **Super-Q5** (Phase E): *"docs/ structure — keep default subdir taxonomy or customize? Spec/design naming? Capability map y/n? Memory directory location?"*
 
-7–9 super-questions × ~2–4 min each = ~20–30 min total interview. Add ~5–10 min for Layer 6 domain delegation. Total bootstrap session: ~25–40 min.
+4–6 super-questions × ~2–4 min each = ~18–30 min total interview. (Process / domain / maintenance are consumed from the plugin, so there's no per-domain delegation pass.) Total bootstrap session: ~22–35 min.
 
 ---
 
@@ -517,11 +345,11 @@ The 20–30 sub-questions can be grouped into ~7–10 super-questions per turn f
 
 - **One or two questions per turn**, conversational. The super-question batching above is fine for actual UX.
 - **Skip ruthlessly.** If Phase 1's project scan answered, confirm in one sentence rather than asking. Phase 1 reliably handles 30–40% of all questions in brownfield projects.
-- **Listen for off-script signal.** A user-volunteered *"our settings page got out of hand"* is gold for Layer 6 design's anti-patterns slot. Follow it.
-- **Push gently on D2/D3/D4** (benchmarks) — these are the most load-bearing answers. Without named benchmarks, the kit has no anchors.
-- **Honor skip / pause / go-back.** The user can interrupt at any layer. Don't barrel through.
-- **Don't ask Phase G if A5 said greenfield + solo + < 30 files.** Skip entirely; Layer 7 doesn't apply at that scale.
-- **End the interview when you have enough.** Don't grind through low-leverage questions if A–F already gave a rich picture; default sensibly and confirm in the summary.
+- **Listen for off-script signal.** A user-volunteered *"our settings page got out of hand"* is gold for the Quality Bar's anti-patterns slot. Follow it.
+- **Push gently on D2/D3/D4** (benchmarks) — these are the most load-bearing answers. Without named benchmarks, the consumed auditor agents have no anchors to grade against.
+- **Honor skip / pause / go-back.** The user can interrupt at any phase. Don't barrel through.
+- **Don't interview process / domain / maintenance.** They're consumed from the plugin (`operating-discipline`, the auditor agents, `saturday-ritual`) — bootstrap authors only the project-specific A/B/D/E layers.
+- **End the interview when you have enough.** Don't grind through low-leverage questions if A/B/D/E already gave a rich picture; default sensibly and confirm in the summary.
 - **The summary turn is the contract.** When you summarize back, the user should recognize THEIR project, not a templatized version of it. If they don't — go back and refine.
 
 ---
@@ -533,21 +361,19 @@ The 20–30 sub-questions can be grouped into ~7–10 super-questions per turn f
 - **Defaulting to design-heavy questions for non-UI projects.** A research prototype doesn't have a "primary surface" question. A CLI doesn't have a "demo to journalist" question. Adapt phase D to the project shape per Phase 1 signals.
 - **Asking the moat question to a 1-week-old greenfield project.** They don't have an answer yet. Defer with `<MOAT_TBD>` placeholder.
 - **Forcing maturity tag against project reality.** A project with 0 users is `[early]`, not `[shipped]`, even if the founder feels they've shipped. Be honest; the downstream layers calibrate against this answer.
-- **Skipping the Ambiguous row in C2.** It's mandatory per `task-classification.md` depth bar. Don't ask the user; just include it.
+- **Skipping the Ambiguous row in the task-classification table.** That table is authored into CLAUDE.md's "How You Work" (per SKILL.md) and its Ambiguous row is mandatory per `task-classification.md` depth bar. Don't ask the user; just include it.
 - **Layer 4 with no anchored benchmarks.** *"Looks good"* is unenforceable. Push for at least 1 Tier 1 + 1 Tier 2-with-dimension, or skip Layer 4 entirely (research / library) with the skip logged.
-- **Activating Layer 7 on a 2-week-old greenfield.** Premature activation produces empty registries; cadence runs against nothing; user loses trust in the ritual. Defer-and-stub or skip.
+- **Re-authoring a consumed layer.** Process discipline, the auditor agents, and the maintenance ritual come from the plugin. Don't interview for them or write local copies — that defeats consume-direct and creates drift.
 - **Implicit approval before authoring.** *"OK"* or silence is not approval. Wait for explicit *"go"* / *"ship it"* / *"yes proceed"*.
 
 ---
 
 ## Cross-references
 
-- `SKILL.md` (same directory) — the orchestrator. Each Phase A–G here corresponds to an authoring block in SKILL.md Phase 2.
+- `SKILL.md` (same directory) — the orchestrator. The kept phases here (A Identity, B Architecture, D Quality Bar, E Knowledge Graph) each correspond to an authoring block in SKILL.md Phase 2. Process / domain / maintenance are consumed from the plugin, not authored.
 - `../../principles/project-identity.md` — Layer 1 substance + depth signatures.
 - `../../principles/file-discipline.md` + `../../principles/decomposition.md` — Layer 2 file-size + decomposition discipline.
-- `../../principles/task-classification.md` + `../../principles/plan-driven-work.md` + `../../principles/memory-system.md` — Layer 3 substance.
 - `../../principles/quality-rubric.md` + `../../principles/design-benchmarking.md` — Layer 4 substance.
 - `../../principles/knowledge-graph.md` — Layer 5 substance.
-- `../../principles/audit-routing.md` + per-domain principles — Layer 6 routing + delegation.
-- `../../principles/saturday-ritual.md` — Layer 7 substance + applicability gates.
-- `../design/interview.md` — Layer 6 design domain's interview (the deepest — 17 questions, 53 knobs in v1). Bootstrap reuses it via delegation; doesn't restate.
+- `../../principles/task-classification.md` — the task-classification table authored into CLAUDE.md's "How You Work" (E5 / SKILL.md), including the mandatory Ambiguous row.
+- **Consumed from the plugin (not interviewed):** the `operating-discipline` skill (process discipline), the auditor agents (domain kits), and the `saturday-ritual` skill (maintenance ritual). Bootstrap does not re-author these.
