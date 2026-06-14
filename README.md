@@ -18,7 +18,7 @@ Not templates. Not a kit. A **methodology**.
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-cc785c?style=for-the-badge)](https://docs.anthropic.com/claude-code/plugins)
 [![License](https://img.shields.io/badge/license-MIT-cc785c?style=for-the-badge)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.1.0-cc785c?style=for-the-badge)](#)
+[![Version](https://img.shields.io/badge/version-1.2.0-cc785c?style=for-the-badge)](#)
 
 </div>
 
@@ -52,7 +52,7 @@ A Claude Code plugin that bootstraps your project's `CLAUDE.md`, `docs/` knowled
 | 🤖 `/dotclaude:ai-workflow` | LLM cost monitoring + eval discipline. |
 | 🪄 `/dotclaude:init` | v1 entry — Layer 6 only, skips upstream layers. |
 
-**Inside the plugin** — 35 methodology principles · 12 hook templates · 7 domain skills + 1 bootstrap orchestrator · 4 anonymized war stories. Cost: ~984 tokens always-on per session; 2.7–5.5k per skill invocation; ~12k for full bootstrap. Full architectural reference in [`docs/v2-vision.md`](./docs/v2-vision.md).
+**Inside the plugin** — 40 methodology principles · 14 hook templates · 7 domain skills + 1 bootstrap orchestrator · 4 anonymized war stories. Cost: ~984 tokens always-on per session; 2.7–5.5k per skill invocation; ~12k for full bootstrap. Full architectural reference in [`docs/v2-vision.md`](./docs/v2-vision.md).
 
 <br>
 

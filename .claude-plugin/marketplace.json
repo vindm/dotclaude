@@ -13,7 +13,7 @@
         "repo": "vindm/dotclaude"
       },
       "description": "AI dev infrastructure framework for any Claude Code project. /dotclaude:bootstrap walks 7 layers — project identity → architecture → process → quality bar → knowledge graph → domain kits → maintenance — and authors CLAUDE.md + docs/ + .claude/ derived from your project. Per-domain entries: /dotclaude:design (UX/IA/a11y showpiece), /dotclaude:coding, /dotclaude:planning, /dotclaude:testing, /dotclaude:data, /dotclaude:ai-workflow. /dotclaude:init is the v1 entry (Layer 6 only) for incremental adoption.",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "license": "MIT",
       "homepage": "https://github.com/vindm/dotclaude",
       "tags": ["ai-dev-infrastructure", "bootstrap", "claude-md", "design", "ux-audit", "a11y", "code-review", "design-tokens", "audit", "workflow", "agent-skills", "knowledge-graph"]

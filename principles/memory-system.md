@@ -144,7 +144,7 @@ Today's date is <YYYY-MM-DD>.
 
 ### Place 2 — Per-entry memory files
 
-Each file is named by type+slug. Body follows a consistent structure based on type:
+Each file is named by type+slug. **Keep each entry short — ≤ 40 lines.** A memory file is a single load-bearing fact, not an essay; past ~40 lines it's a doc wearing a memory's filename, and it should either be trimmed to its rule + why + how-to-apply or promoted to `docs/<topic>.md` with a one-line memory pointer. Short entries are cheap to load on relevance and keep the index honest. Body follows a consistent structure based on type:
 
 **For feedback entries**:
 
@@ -220,6 +220,10 @@ The authored memory system fails the depth bar if it lacks any of these signals.
 
 10. **The index lazy-loads.** Test: read MEMORY.md alone (without expanding entries); can you decide which entries to read next? If yes, lazy-loading works. If no, the index summaries are too thin.
 
+11. **Entries stay ≤ 40 lines.** Test: `wc -l` across the memory dir; anything over 40 is a doc wearing a memory's filename — trim it or promote to `docs/`. Bloated entries defeat lazy loading.
+
+12. **Self-healing runs.** At minimum a SessionStart git-state reconcile exists; for long-lived projects, a periodic headless audit too. Without reconciliation, project memory describes a git reality that drifted away weeks ago.
+
 If the authored memory system lacks any of these, redo. Typing without lifecycle is just labels.
 
 ## When to save / when to access / when to remove
@@ -252,6 +256,16 @@ If the authored memory system lacks any of these, redo. Typing without lifecycle
 - **Project memory whose work has shipped + been audited.** Archive to `docs/archive/memory/` after the project memory is no longer load-bearing.
 - **Feedback memory after promotion to rule.** Either archive (the rule is canonical now) or keep with a `**Status:** promoted` note (for historical context).
 
+## Self-healing — reconcile memory against reality
+
+Project memory drifts the moment reality moves and the entry doesn't: the branch gets merged, the worktree is removed, the "pending push" lands, the feature ships. A stale entry loaded as current context is worse than no entry — it actively misleads. Two cheap mechanisms keep memory honest without a human babysitting it.
+
+**At session start (the reconciliation checkpoint).** A SessionStart hook (see `hook-templates/git-context-sessionstart.sh`) injects real git state — branch, last commit, uncommitted count, ahead/behind upstream, live worktrees — plus a standing instruction: *if a memory entry claims a branch, worktree, or pending push this state contradicts, fix that memory file BEFORE starting work.* The session opens by reconciling, not by trusting. This catches the most common rot (project memory describing a git reality that no longer holds) at the one moment it's cheapest to fix.
+
+**Periodically, headless (the audit).** A scheduled local run (cron / launchd, no interactive context) audits the memory directory: reconcile active-work claims against git (branches, worktrees, pending push), spot-check load-bearing claims (do the cited paths / functions / scripts still exist?), flag entries over the ≤ 40-line ceiling, flag dangling `[[wikilinks]]`, and append a dated report to an audit log. Safety rails make it safe to run unattended: never touch a file edited in the last ~2 hours, never delete (archive only), never modify repo code. This is the same drift-detection instinct as `skill-vs-code-audit.md`, pointed at memory instead of skills.
+
+Both are optional for small projects and load-bearing for long-lived ones. Ship at least the SessionStart reconcile the moment project memory starts holding branch/worktree/ship state.
+
 ## Anti-patterns to avoid
 
 - **Letting all memory be "project" type.** Every entry becomes monotonic accumulation. The promotion / archive paths don't fire. After 12 months the directory has 200 entries and nobody knows which still apply.
@@ -283,3 +297,5 @@ If the authored memory system lacks any of these, redo. Typing without lifecycle
 - `task-classification.md` — Layer 3. The task classification routing references memory access: *"check feedback memory for prior decisions"* is part of how-you-work for several task types.
 - `plan-driven-work.md` — Layer 3. Conformance matrices live in `docs/audits/`; the plan's status is project memory until the matrix is final.
 - `maintenance-ritual.md` — Layer 7. Memory archive cadence is part of the Saturday-style ritual; without the ritual, memory bloats.
+- `handoff.md` — Layer 3. The handoff discipline routes durable facts INTO typed memory (and plan progress into docs, orphan WIP into ephemeral handoff docs). Memory typing is what makes the handoff's routing decision unambiguous.
+- `knowledge-layers.md` — the authority order (`.claude` → code → docs). The "don't save facts derivable from code" rule is the memory-side application of *code is truth*; self-healing is its enforcement.
