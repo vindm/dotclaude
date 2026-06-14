@@ -13,7 +13,7 @@
         "repo": "vindm/dotclaude"
       },
       "description": "AI dev infrastructure for Claude Code, delivered as a consumable base + a thin generator. Enable the plugin and a project gets a ready-made universal layer used as-is — the operating-discipline skill (how to work), 14 auditor/designer agents (code-review, ux-audit, a11y-audit, interaction-audit, flow-audit, pages-audit, design-token-audit, pre-flight, test-architect, data-integrity, skill-vs-code-audit, product-direction-validator, product-designer, flow-continuity-review), process/knowledge/UI skills, and universal guard hooks. /dotclaude:bootstrap then authors only the un-shareable project layer (identity, architecture, quality-bar, knowledge graph) and a thin CLAUDE.md that points at the consumed base. Agents derive project specifics at runtime, so the base adapts without per-project authoring.",
-      "version": "1.2.0",
+      "version": "2.0.0",
       "license": "MIT",
       "homepage": "https://github.com/vindm/dotclaude",
       "tags": ["ai-dev-infrastructure", "bootstrap", "claude-md", "design", "ux-audit", "a11y", "code-review", "design-tokens", "audit", "workflow", "agent-skills", "knowledge-graph"]

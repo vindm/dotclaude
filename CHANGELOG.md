@@ -4,7 +4,7 @@ All notable changes to dotclaude are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project loosely follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) — minor versions for new layers / skills / principles, patches for fixes and doc corrections.
 
-## [Unreleased] — v3: consume-direct base
+## [2.0.0] - 2026-06-14 — v3: consume-direct base
 
 The framework gains a **directly-consumable base** alongside the generator. Enabling the plugin now gives a project a ready-made universal layer used as-is — no per-project authoring — and `bootstrap` shrinks to a thin generator that authors only the un-shareable project layer on top. Full rationale + the verified plugin-mechanics constraints in `docs/v3-consume-direct-brainstorm.md`.
 
