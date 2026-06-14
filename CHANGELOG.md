@@ -4,6 +4,14 @@ All notable changes to dotclaude are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project loosely follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) — minor versions for new layers / skills / principles, patches for fixes and doc corrections.
 
+## [2.0.1] - 2026-06-14
+
+### Changed
+- **Hooks restructured for clarity (consume-direct hygiene).** The ready-to-run universal guard scripts moved from `hook-templates/` to **`hooks/scripts/`** — they are consumed as-is by `hooks/hooks.json`, not templates. `hook-templates/` now holds ONLY genuine `{{placeholder}}` generator templates (project-specific by nature: theme path, boundary rules, brand phrases, project commands). READMEs in both dirs make the split explicit. No consumer-facing behavior change beyond the addition below.
+
+### Added
+- **`check-bash-safety` wired into the base hooks** — warns on `rm -rf` / `cd` / `cp -r` / `mv` with an unquoted `$VAR` (which can expand empty/dangerous). Scoped to those commands; warn-only.
+
 ## [2.0.0] - 2026-06-14 — v3: consume-direct base
 
 The framework gains a **directly-consumable base** alongside the generator. Enabling the plugin now gives a project a ready-made universal layer used as-is — no per-project authoring — and `bootstrap` shrinks to a thin generator that authors only the un-shareable project layer on top. Full rationale + the verified plugin-mechanics constraints in `docs/v3-consume-direct-brainstorm.md`.
