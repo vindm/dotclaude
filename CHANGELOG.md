@@ -19,13 +19,19 @@ A re-audit of the battle-tested source codebase (the project dotclaude distills)
 - **2 new hook templates:**
   - `hook-templates/check-git-safety.sh` — PreToolUse hook blocking destructive git (force push, `reset --hard`, `clean -f`, `--no-verify`, history rewrites) by whole-command match, so flag reordering can't bypass a prefix deny rule.
   - `hook-templates/warn-uncommitted-on-clear.sh` — SessionEnd hook warning on uncommitted WIP before `/clear` (nudges a WIP commit over `git stash`).
+- **3 new anonymized war stories** in `examples/`:
+  - `the-doc-that-lied.md` — a stale reflection doc trusted over code; a second writer of the same state, found by grep too late. Paradigm for `knowledge-layers.md`.
+  - `the-stash-that-ate-the-afternoon.md` — `git stash` inside a killed pipeline stranded an afternoon's WIP. Paradigm for WIP-commit-not-stash (`handoff.md`).
+  - `the-commit-that-dropped-six-files.md` — `lint-staged` re-staged a subset; the message claimed seven files, one landed. Paradigm for commit-integrity verification.
 
 ### Changed
 
 - **`principles/memory-system.md`** — added the ≤ 40-line per-entry ceiling (entries are facts, not essays), a "Self-healing" section (SessionStart git-state reconcile + periodic headless audit), and two depth signatures. Cross-refs `handoff.md` + `knowledge-layers.md`.
 - **`hook-templates/git-context-sessionstart.sh`** — upgraded from a one-line branch/commit echo to full git state (uncommitted count, ahead/behind upstream, live worktrees) plus a memory self-healing instruction: reconcile any memory entry the git state contradicts before starting work.
 - **`skills/bootstrap/SKILL.md`** — Layer 3 now authors the named-principles-with-tests "How You Work" + Escalate table + handoff skill; Layer 5 authors the knowledge-layers doctrine + archive Read-deny; Layer 6 applies "point, don't mirror" to every authored skill. The principle → layer → artifact map and the universal-hooks set updated accordingly.
-- **README + plugin/marketplace descriptions** — inventory updated to 40 principles · 14 hook templates; version badge to 1.2.0.
+- **`principles/knowledge-graph.md`** — strengthened the `docs/archive/` section with the agent Read-deny (`docs/archive/**` permission deny) and added a "Reference discipline — stable anchors, never hard-cites" subsection (bind to indexes / capability IDs / folder conventions, not dated filenames).
+- **`principles/code-review.md`** — added a "Commit integrity" section: verify the staged set landed (`git show --stat HEAD`) after multi-file commits, since `lint-staged`-style hooks can silently desync the committed set from the message.
+- **README + plugin/marketplace descriptions** — inventory updated to 40 principles · 14 hook templates · 7 war stories; version badge to 1.2.0.
 
 ## [1.1.0] - 2026-05-21
 
