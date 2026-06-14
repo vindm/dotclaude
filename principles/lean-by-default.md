@@ -66,6 +66,15 @@ The always-loaded surface costs tokens on every session: `CLAUDE.md` + every aut
 - **Use a `.claudeignore`** to keep build artifacts, generated files, vendored code, and large fixtures out of context entirely.
 - **Cheapest tier that solves the problem wins.** This is the same cost ladder as `audit-routing.md`: Tier 0 hook (~0 tokens, deterministic) → Tier 1 rule (in-context only) → Tier 2 skill (~2-5k per dispatch) → Tier 3 agent (~tens of thousands per run). Don't reach for a Tier 3 agent when a Tier 0 hook or Tier 1 rule already covers it. (See that doc for the full ladder; don't restate it here.)
 
+### Idea 4 — Per-edit latency budget
+
+Context budget is paid once per session; **latency budget is paid on every single edit.** A `PostToolUse` hook on `Write|Edit` runs after *each* file write, so anything slow or redundant there taxes the whole session, compounded over hundreds of edits. Two rules keep it cheap:
+
+- **Don't run multi-second commands per edit.** Per-edit `eslint --fix` / type-check / test runs feel thorough but add seconds to every write, and they're usually *redundant* with a `lint-staged` pre-commit step plus the Definition-of-Done lint/test gate — the same check, run dozens of times instead of once. Lint at commit and at done, not on every keystroke-equivalent. (This is exactly why the `auto-lint-posttool.sh` template ships with a "when NOT to use" warning.)
+- **Consolidate `Write|Edit` checks into one dispatcher.** Each registered hook is a separate process spawn per edit; ten hooks mean ten spawns. Collapse them into a single `check-all.sh` dispatcher that reads the hook payload once and runs every check in-process, preserving per-violation blocking. One spawn, not N — the difference is felt on every edit.
+
+The deterministic guardrails that DO belong per-edit are the instant ones: file-size ceiling, token/hex sweep, forbidden-phrase scan, secret-leak check. Cheap and fast is the bar for the per-edit tier.
+
 ## How to derive THIS project's specifics
 
 Before authoring, gather:
@@ -126,6 +135,10 @@ The authored discipline fails the bar if it lacks any of these:
 
 8. **The context-budget note cross-references the cost ladder** in `audit-routing.md` rather than restating it.
 
+9. **No multi-second command runs per edit.** Test: read the `PostToolUse` `Write|Edit` hooks — none should invoke a linter/type-checker/test that takes seconds. Those belong in `lint-staged` + the Definition of Done, run once, not per edit.
+
+10. **`Write|Edit` checks are consolidated into one dispatcher.** Test: count registered `PostToolUse` `Write|Edit` hooks — many separate scripts mean many process spawns per edit; collapse to a single dispatcher.
+
 ## Anti-patterns to avoid
 
 - **Agents-by-reflex.** Dispatching the design pipeline / pre-flight / a conformance matrix on a one-line change because it "felt like a feature." Tens of thousands of tokens for nothing. The table is the gate; if no row fired, implement inline.
@@ -143,6 +156,10 @@ The authored discipline fails the bar if it lacks any of these:
 - **No `.claudeignore`.** Generated files, build output, and giant fixtures swept into context, taxing every read for zero benefit.
 
 - **"Just to be safe" as a trigger.** Safety comes from depth, not from spinning up agents. If you can't name the row that fired, the safe-feeling escalation is just waste.
+
+- **Heavy commands on every edit.** A per-edit `eslint --fix` / type-check / test run that's already covered by `lint-staged` + the Definition of Done: the same check paid dozens of times, seconds each. Run it at commit and at done, not per write.
+
+- **A pile of separate `Write|Edit` hooks.** Ten registered hooks = ten process spawns per edit. Consolidate into one dispatcher that runs every check in-process.
 
 ## Cross-references
 
