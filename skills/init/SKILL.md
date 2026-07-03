@@ -28,6 +28,7 @@ For an even more targeted setup, the user can invoke a single domain skill direc
 - `/dotclaude:testing` — test architecture + coverage
 - `/dotclaude:data` — DB integrity, query discipline, migrations
 - `/dotclaude:ai-workflow` — LLM workflow cost monitoring + eval discipline
+- `/dotclaude:worktree` — parallel-session isolation (blocking main-checkout hook + worktree lifecycle)
 
 `/dotclaude:init` is the meta over those domain skills — it picks which of them flow. It does NOT author the upstream-layer artifacts (`CLAUDE.md` identity / architecture sections, `docs/` knowledge graph, `quality-bar/SKILL.md` cross-cutting rubric, etc.) — those are bootstrap's lane.
 
@@ -56,6 +57,7 @@ For each domain, decide: does this project NEED this kind of discipline?
 | **testing** | Tests exist OR should exist | Pure exploration / one-off script |
 | **data** | Database / persistent state / migrations | Stateless app / pure-compute lib |
 | **ai-workflow** | LLM / AI calls in production or eval suites | No AI in scope |
+| **worktree** | Several concurrent sessions (interactive + background / scheduled agents), lock files or session-coordination sections in CLAUDE.md, a history of clobbered parallel work | Solo single-session work — recommend AGAINST it explicitly (enforcement without a collision to prevent is pure friction) |
 
 Default: apply most domains. Skip is the exception, with a stated reason.
 
@@ -83,6 +85,7 @@ For each domain in the confirmed list, read its `SKILL.md` and execute its instr
 4. `skills/testing/SKILL.md` (if applied)
 5. `skills/data/SKILL.md` (if applied)
 6. `skills/ai-workflow/SKILL.md` (if applied)
+7. `skills/worktree/SKILL.md` (if applied — run LAST: its smoke run should see the other domains' staged artifacts, and its restart + live-fire handoff naturally closes the whole init)
 
 Each domain skill is self-contained: it does its own interview (scoped to that domain), reads the relevant principles from `../../principles/`, and authors artifacts to `.claude-staging/` in the user's project.
 

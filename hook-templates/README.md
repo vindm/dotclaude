@@ -10,6 +10,8 @@ These are `{{placeholder}}` templates the **thin generator** (`/dotclaude:bootst
 | `check-no-console-log.sh` | allow-paths (and a block-vs-warn taste call) |
 | `check-no-todo-comments.sh` | ticket-reference convention (opinionated) |
 | `check-prebuild-required.sh` | which paths require a prebuild step |
+| `check-main-checkout-edit.sh` | the policed repo path + exempt paths + worktree naming/setup (`/dotclaude:worktree`) |
+| `test-check-main-checkout-edit.sh` | the harness for the above — blocked/allowed case lists; ships INTO the project next to the hook |
 | `regen-generated-artifacts.sh` | the regen command (e.g. `yarn db:types`) |
 | `auto-lint-posttool.sh` | the lint command (also: per-edit lint is usually an anti-pattern — prefer pre-commit + DoD) |
 
