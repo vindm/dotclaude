@@ -4,6 +4,15 @@ All notable changes to dotclaude are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project loosely follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) — minor versions for new layers / skills / principles, patches for fixes and doc corrections.
 
+## [2.1.0] - 2026-07-03
+
+### Added
+- **`/dotclaude:worktree` — parallel-session isolation domain** (`skills/worktree/` + `principles/worktree-discipline.md`). For projects where several AI sessions collide in one checkout (shared git index staging a sibling's WIP; simultaneous edits to one file): a generator that authors a blocking main-checkout PreToolUse hook, its test harness, and a project-specific worktree lifecycle skill. Distilled from a real two-project port (an RN monorepo's Metro/sim-registry discipline generalized, then re-landed on a bookkeeping-engine audit zone); the principle doc carries the five hard-won lessons: markdown-is-sometimes-code (never blanket-exempt `*.md` — runtime policies/prompts must be POLICED), git-ignored per-machine files break fresh worktrees (interviewed setup recipe), derived artifacts dirty the tree (mandatory live smoke-worktree run before handoff), hooks register at session start (restart + live-fire handoff), and the worktree's absolute path comes from git — never hand-built (`../<prefix><slug>` resolves against the `-C` repo dir, not the shell cwd; capture from `git worktree list`, assert, and use the literal path — a dropped segment silently misfiles work into a stray sibling dir). Strictly opt-in via the generator — deliberately NOT a plugin-level always-on guard (exempt lists are per-project judgment calls).
+- **`hook-templates/check-main-checkout-edit.sh` + `test-check-main-checkout-edit.sh`** — the debugged, consumed-not-rewritten enforcement pair (nearest-existing-dir walk for not-yet-created files, worktree detection via `--git-dir` ≠ `--git-common-dir`, other-repo pass-through, escape-hatch flag file, and a misplaced-worktree guard that blocks a write to a `<namePrefix>*` path which does not resolve into the policed repo). The harness ships INTO the project next to the hook so future hook edits stay guarded. Verified on both topologies: policed repo below the project root, and root-is-repo.
+
+### Changed
+- **`init`** — worktree domain added to the applicability matrix (apply on concurrency signals: lock files, session-coordination CLAUDE.md sections, clobbered-parallel-work history; recommend AGAINST for solo single-session projects) and to the Phase 3 run order (last — its smoke run sees the other domains' staged artifacts, its restart handoff closes the init).
+
 ## [2.0.1] - 2026-06-14
 
 ### Changed
