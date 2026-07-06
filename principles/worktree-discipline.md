@@ -51,7 +51,7 @@ placeholders.
   integrity checks) and merge etiquette.
 - *Out-of-repo shared resources.* See "worktrees don't solve everything".
 
-## The four hard-won lessons
+## The five hard-won lessons
 
 **1. Markdown is sometimes code — never blanket-exempt `*.md`.**
 The natural default ("docs are free, code is policed") is wrong for a growing
@@ -90,6 +90,24 @@ restart, then live-fire — ask for a trivial edit to a policed file and watch
 the block. Without this step the install *looks* finished while enforcing
 nothing; with parallel sessions it also means the discipline phases in as each
 session restarts, which the user should be told explicitly.
+
+**5. The worktree's absolute path comes from git — never hand-built.**
+`git -C <repo> worktree add ../<prefix><slug>` resolves `../` against the
+`-C <repo>` directory, NOT the shell's cwd — so the new tree lands beside the
+repo, which may be one level below the project root. An agent that then
+composes that path by eye (or "from the project root") drops a segment and
+writes into a stray sibling directory outside every repo; the build still
+"passes" because a `cd` inside one command finds the sources there, so the
+work silently lands in the wrong place (a real incident). Two reinforcing
+hazards make eyeballing fatal: file-writing tools need an ABSOLUTE path, and
+the harness resets cwd between separate tool calls (a `cd <wt> && ls` split
+across calls shows an empty dir and misleads diagnosis). The generated skill
+must therefore instruct: capture the absolute path from `git worktree list
+--porcelain`, assert it (`test -d "$WT/<build-marker>"`), and use that literal
+path for every subsequent write — never recompose it. The hook can back this
+with a guard that blocks a write to a `<prefix>*` path which does NOT resolve
+into the policed repo (the dropped-segment case), turning a silent misfile
+into an immediate block.
 
 ## Worktrees don't solve everything — the narrowed lease
 

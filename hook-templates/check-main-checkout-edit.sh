@@ -38,11 +38,33 @@ dir=$(dirname "$f")
 while [ ! -d "$dir" ] && [ "$dir" != "/" ]; do dir=$(dirname "$dir"); done
 
 tgt_common=$(git -C "$dir" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || echo "")
-[ -z "$tgt_common" ] && exit 0   # not in a git repo -> not ours
 
 # Only police the configured repo (it may sit BELOW the project root).
 proj="${CLAUDE_PROJECT_DIR:-$PWD}"
 policed_common=$(git -C "$proj/{{worktree.policedRepo}}" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || echo "")
+
+# Guard a MISPLACED worktree write (lesson 5): a path that looks like a worktree
+# (.../<namePrefix>*/...) but does NOT resolve into the policed repo. Root cause
+# of a real incident: a path segment was dropped and files landed in a stray
+# sibling dir outside every repo — which the plain "not in a repo -> allowed"
+# bail below would wave through. Stay silent if the policed repo itself can't be
+# resolved (avoid false positives).
+case "$f" in
+  */{{worktree.namePrefix}}*)
+    if [ -n "$policed_common" ] && [ "$tgt_common" != "$policed_common" ]; then
+      cat >&2 <<EOF
+BLOCKED: this path looks like a worktree but is NOT one: $f
+A real worktree resolves into the policed repo; this path resolves outside it —
+likely a path segment was dropped (files landing in a stray sibling dir). Get
+the real absolute path from git and use THAT:
+  git -C "$proj/{{worktree.policedRepo}}" worktree list
+EOF
+      exit 2
+    fi
+    ;;
+esac
+
+[ -z "$tgt_common" ] && exit 0   # not in a git repo -> not ours
 [ -z "$policed_common" ] && exit 0
 [ "$tgt_common" = "$policed_common" ] || exit 0
 

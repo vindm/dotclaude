@@ -7,7 +7,7 @@ description: Set up worktree-per-feature discipline for a project where several 
 You are setting up worktree-per-feature discipline: every substantive edit to
 the policed repo happens in a dedicated git worktree, enforced by a blocking
 PreToolUse hook. Read `../../principles/worktree-discipline.md` FIRST — it
-carries the doctrine and the four hard-won lessons this flow encodes; this
+carries the doctrine and the five hard-won lessons this flow encodes; this
 file is the procedure.
 
 The deliverable is not files — it is a **proven** install: the rendered hook
@@ -59,7 +59,7 @@ list / markdown-as-code)** — it is a judgment call only the user can make.
 
 `../../principles/worktree-discipline.md` — in particular the
 universal/project-specific split (what you substitute vs what you author) and
-the four lessons (each maps to a concrete step below).
+the five lessons (each maps to a concrete step below).
 
 ## Phase 4 — Author the kit (in `.claude-staging/`)
 
@@ -80,6 +80,9 @@ the four lessons (each maps to a concrete step below).
   - `{{worktree.allowedCases}}` — every exempt pattern gets a case; plus a
     path in each sibling repo that must stay untouched
   - `{{worktree.blockedSamplePath}}` — reuse one blocked path
+  - The template already ships a fixed **stray-worktree** case (lesson 5) built
+    from `{{worktree.namePrefix}}` — no authoring needed; just confirm the
+    prefix substituted so it reads e.g. `/tmp/<prefix>stray/...`.
 - Verify NO `{{` remains in either rendered file.
 
 ### Skill (in `.claude-staging/skills/worktree/SKILL.md`)
@@ -89,6 +92,13 @@ nature). Sections, each filled with THIS project's real commands:
 
 1. **Create + configure**: `git -C <repo> worktree add ../<prefix><slug> -b
    feat/<slug>` + the setup recipe (one line per per-machine file, real paths).
+   Then (lesson 5) author a **capture + assert** step: pull the worktree's
+   ABSOLUTE path from `git -C <repo> worktree list --porcelain` into a variable,
+   assert it (`test -d "$WT/<build-marker>"`), and tell the agent to use that
+   literal path for every later write — never recompose `../<prefix><slug>` by
+   eye. Include the path-discipline note: `../` resolves against the
+   `-C <repo>` dir (not the shell cwd), write tools need an absolute path, and
+   the harness resets cwd between tool calls.
 2. **Verify**: the project's verify command + expected output.
 3. **Close**: the project's gates → commit (with any project-specific
    pre-commit review the repo's conventions demand) → merge etiquette → 

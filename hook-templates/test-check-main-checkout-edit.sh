@@ -35,8 +35,11 @@ t() { # t <name> <file_path> <want-exit>
 rm -f "$ESC"
 {{worktree.blockedCases}}
 {{worktree.allowedCases}}
-t outside-repo-allowed     "/tmp/dc-wt-scratch.py"                 0
+t outside-repo-allowed     "/tmp/dc-scratch.py"                    0
 t empty-input-allowed      ""                                      0
+# Lesson 5: a path that looks like a worktree (matches namePrefix) but resolves
+# outside the policed repo (here: /tmp, not a repo) MUST be blocked.
+t stray-worktree-blocked   "/tmp/{{worktree.namePrefix}}stray/some-source-file" 2
 
 mkdir -p "$(dirname "$ESC")"; touch "$ESC"
 t escape-hatch-allowed     "$P/{{worktree.blockedSamplePath}}"     0
