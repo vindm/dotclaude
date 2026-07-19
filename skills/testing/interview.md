@@ -15,7 +15,7 @@ Lead with what Phase 1 already disclosed. If the framework is unambiguous from `
 > 2. 'We have a backlog of untested code — newer modules have coverage, older ones don't.'
 > 3. 'We have no real tests yet — bootstrapping from zero or near-zero.'"
 
-The answer shapes the tests-architect's first run:
+The answer shapes what the consumed `test-architect` agent's first run emphasizes — record it in the artifact so the agent doesn't have to guess:
 
 - **As-we-go** → Audit mode finds the small list of recent gaps + the stale-test sweep is more valuable than mass coverage adds.
 - **Backlog** → Audit mode produces a prioritized list of legacy untested modules to work through; Implement mode runs against them in priority order.
@@ -69,6 +69,6 @@ Skip this question if the project clearly only does behavior tests AND the user 
 
 Summarize back before authoring:
 
-> "Based on our chat: framework = `<X>`, coverage status = `<as-we-go / backlog / none>`, top risk priority = `<user's answer>`, depth = `<behavior-only / +property / +mutation>`. The audit mode will surface the top <N> untested-and-high-risk modules first. About to author the kit — confirm?"
+> "Based on our chat: framework = `<X>`, coverage status = `<as-we-go / backlog / none>`, top risk priority = `<user's answer>`, depth = `<behavior-only / +property / +mutation>`. This becomes the top entry in `.claude/dotclaude/test-risk-model.md`, which the `test-architect` agent's audit mode reads to prioritize its findings. About to write the artifact — confirm?"
 
-Wait for confirmation, then proceed to Phase 4 of `SKILL.md`.
+Wait for confirmation, then proceed to Phase 3 of `SKILL.md`.

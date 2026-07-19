@@ -1,12 +1,12 @@
 ---
-description: Set up test architecture + coverage discipline for a project. Authors a tests-architect agent (4 modes — audit / design / implement / maintain) tuned to the project's stack, test framework, risk model, and existing patterns. Plus a small "test discipline" rule when helpful. Invoke /dotclaude:testing in any project where tests exist OR should exist.
+description: Elicit test-coverage risk priorities for a project and write them to a thin artifact — `.claude/dotclaude/test-risk-model.md` plus a `dotclaude.yml` key — derived from the project's actual test/source ratio, its most-edited untested files, and the user's own sense of what scares them most. No agent, rule, or hook is authored: the consumed `test-architect` agent already reads this artifact at runtime. Invoke /dotclaude:testing in any project where tests exist OR should exist.
 ---
 
-# `/dotclaude:testing` — test architecture + coverage kit
+# `/dotclaude:testing` — test-risk elicitation
 
-You are setting up test-coverage discipline. The output is a `.claude/` subset focused on what to test, in what order, with what shape — calibrated to the project's stack, framework, and risk model.
+You are eliciting the project-specific test-coverage intent for the user's project: the coverage philosophy (as-we-go / backlog / none), the ONE module whose lack of coverage scares the user most, and the testing depth the project holds versus aspires to. The output is ONE thin artifact — `.claude/dotclaude/test-risk-model.md` — plus a key in `dotclaude.yml`. You do **not** author an agent, a rule file, or a hook: the consumed `test-architect` agent (shipped by the plugin — see `agents/test-architect.md`) already reads `dotclaude.yml`'s `artifacts.test-risk-model` path at runtime, seeds its risk-weighted priority table from the artifact's top entry, falls back to deriving priorities from runtime signals alone when the artifact is absent, and layers the artifact's entries on top of its own four-mode methodology (audit / design / implement / maintain) when it's present (full contract: `../../docs/artifact-contract.md`).
 
-The tests-architect agent is the showpiece. It operates in four modes (audit / design / implement / maintain) and produces risk-weighted coverage decisions, not test-file boilerplate.
+This elicitation is cheap and the consumed `test-architect` agent is useful even with an empty artifact — it falls back to its own generic risk tiers (auth → data-pipeline → billing → persistence → public API → algorithms → utilities) and to runtime signals (test/source ratio, most-edited untested files) when nothing has been elicited yet. What this skill adds is the part the codebase can't tell you: which module actually keeps the user up at night, and how far the team wants testing depth to go.
 
 ## Phase 1 — Read the project's test shape
 
@@ -42,7 +42,7 @@ Before any question:
    find . -path "*test-utils*" -o -path "*test-helpers*" -o -path "*fixtures*" \
      -o -path "*mocks*" -o -name "conftest.py" 2>/dev/null | head -20
    ```
-   The presence (or absence) of these signals discipline maturity. A project with `test-utils/mocks.ts` has invested in shared infrastructure; the agent should USE it, not invent parallel patterns.
+   The presence (or absence) of these signals discipline maturity — useful context for the interview, even though the consumed agent (not this artifact) is what actually uses shared infrastructure at runtime.
 
 4. **Coverage gap analysis** — source vs tests:
    ```bash
@@ -53,15 +53,11 @@ Before any question:
    # Look at most-edited source files vs whether tests exist for them
    git log --format=format: --name-only | grep -v '^$' | sort | uniq -c | sort -rn | head -20
    ```
-   The ratio (source files to test files) + the most-edited untested files give the audit's headline finding.
+   The ratio (source files to test files) + the most-edited untested files feed straight into the interview's T3 — use them to jog the user's memory rather than asking cold.
 
-5. **Representative test files** — read 3-5 of them:
-   - Pick from different modules
-   - Note: describe / it shape, fixture conventions, mock placement, what testability tier the existing tests target
+5. **Existing CI / coverage gates** — `.github/workflows/`, `circle.yml`, etc., for test scripts; look for coverage thresholds.
 
-6. **Existing CI / coverage gates** — `.github/workflows/`, `circle.yml`, etc., for test scripts; look for coverage thresholds.
-
-Build mental model of: what framework + idioms, what's currently tested vs untested, what shared infrastructure exists, what risk categories the project carries.
+Build mental model of: what framework + idioms, what's currently tested vs untested, what shared infrastructure exists, what risk categories the project carries. This scan grounds the interview questions in data instead of asking the user to recall facts you can already see.
 
 ## Phase 2 — Interview
 
@@ -69,105 +65,68 @@ Open `interview.md` (same directory). 3-4 questions. Adaptive — skip what Phas
 
 - **Test framework** — usually obvious; only ask if Phase 1 didn't resolve.
 - **Coverage status** — current felt-sense (as-we-go / backlog / none).
-- **Highest-risk untested code** — for the audit mode's first-priority entry.
-- **Testing depth** — behavior-only or richer (property / mutation / integration / E2E)?
+- **Highest-risk untested code** — THE most important question; its answer becomes the artifact's top priority entry.
+- **Testing depth** — behavior-only or richer (property / mutation / integration / E2E), current vs aspired.
 
-## Phase 3 — Read the principles
+## Phase 3 — Write the artifact
 
-Read these from `../../principles/` SELECTIVELY:
+After the interview, write ONLY the elicited human intent. Nothing in this phase authors an agent, a rule file, a skill, or a hook — the consumed `test-architect` agent already carries the four-mode methodology, the five-tier testability classification, and the generic risk ordering, and reads what you write here at runtime. Do NOT author a `tests-architect.md` (or `test-architect.md`) agent copy — that would duplicate the consumed agent and drift the moment either side changes.
 
-**Always read**:
-- `test-architect.md` — the four-mode methodology, the five testability tiers, the risk-weighted priority pattern
-- `quality-rubric.md` — coverage decisions inherit the rubric's risk language
+### 1. `.claude/dotclaude/test-risk-model.md`
 
-**Read if project has DB write paths** (will overlap with `/dotclaude:data`):
-- `data-integrity.md` — the data-auditor handles persistent-state correctness; the tests-architect handles unit / integration coverage. Boundary needs to be clear.
+One top-priority entry from T3, plus the coverage-status and testing-depth framing from T2 and T4. This is a short, human-readable statement of intent — not a coverage report and not a copy of the agent's tier table:
 
-**Cross-reference** (link from the tests-architect agent, do not re-author):
-- `code-review.md` — code-review surfaces coverage gaps; routes to tests-architect for the design
-- `pre-flight.md` — pre-flight asks "what tests verify this?"; tests-architect operationalizes the answer
+```markdown
+# Test risk model
 
-**Read the war-story example**:
-- `../examples/the-test-passed-for-the-wrong-reason.md` — the canonical "test exercises a path that bypasses the real code" failure. The audit mode's stale-test check should explicitly look for this.
+Project-specific risk priorities the `test-architect` agent weighs on top of
+its generic four-mode methodology and risk-tier ordering.
 
-## Phase 4 — Author the kit
+**Coverage status:** <as-we-go / backlog / none>
+**Testing depth today:** <behavior-only / +property / +mutation / +contract>
+**Testing depth aspired:** <same as today / richer — name what>
 
-### Agents (in `.claude-staging/agents/`)
+## Risk-weighted priorities
 
-- **`tests-architect.md`** — the four-mode test-coverage agent
-  - Frontmatter: `description:` — derived from `test-architect.md` principle, tuned to THE user's framework
-  - Tool surface: `Read, Grep, Glob, Bash, Write, Edit` — this agent legitimately needs write access (testing IS creating code), unlike code-review / pre-flight
-  - Body sections:
-    - The four modes (audit / design / implement / maintain) — each with its trigger phrases, process, and report format
-    - **Project-specific five-tier classification** — Tier A (pure functions), B (state stores), C (hooks / composables), D (thin wrappers — SKIP), E (UI rendering — SKIP). For each tier, name the project's actual file path patterns. E.g., "Tier A: `lib/<domain>/operations/*.ts`" — substitute with what the user's codebase actually shows.
-    - **Project-specific risk-weighted priority** — populated with this project's risk categories. Examples to ground from but NOT to copy: auth, data-pipeline, money / billing, persistence write paths, public API contracts. Reorder + edit based on the user's interview answer to Q T3.
-    - **Test infrastructure inventory** — names of THIS project's actual `test-utils/`, mock factories, wrappers, fixtures. If the project lacks shared infrastructure, the agent's first run should propose creating one (`test-utils/mocks.ts`) before sprinkling inline mocks.
-    - **Gold-standard reference tests** — paths to 1-3 existing well-written tests in THIS project that the agent should model new tests on. (Read 5-10 existing tests in Phase 1; pick the cleanest 2-3.)
-    - The "test behavior, not implementation" injunction — explicit and prominent
-    - The "always run after writing" rule — implement mode must end with a successful run
-  - Model: mid-tier reasoning model. Test writing is methodical work; doesn't require the heaviest reasoning. Save top-tier for code-review and pre-flight.
+1. **<name, e.g. "auth / identity / session">**
+   - **Why:** <the worst failure mode, in the user's own words from T3>
+   - **Where:** `<path, if the user named one or Phase 1 surfaced it>`
 
-### Rules (in `.claude-staging/rules/`)
-
-- **`test-discipline.md`** (small rule — author only if helpful)
-  - Test what BEHAVIOR, not implementation. Examples specific to the project's stack.
-  - What to skip for E2E coverage (typically UI rendering tier E — explicit list of what NOT to unit-test)
-  - The "tests run after writing" rule
-  - Cross-reference to the `tests-architect` agent for design / authoring
-  - Skip authoring this rule entirely if the user has clear conventions documented elsewhere — pointing AT the existing doc is better than competing with it.
-
-### Hooks
-
-The testing kit doesn't typically ship hooks. Test-quality is the wrong shape for an edit-time hook (linters already catch syntax; the value of tests is in design, not enforcement). One exception: if the project enforces "no untested module shipped," a CI hook (not edit-time) might be wanted — but that's CI config, not `.claude/` scope.
-
-If `/dotclaude:coding` has shipped `check-no-console-log.sh` already and the project's test files use `console.log` legitimately, ensure the hook's `consoleLog.allowPaths` includes `__tests__/` / `tests/` / `*.test.*`. Coordinate, don't duplicate.
-
-## Phase 5 — Stage + present + commit
-
-### Staging
-
-Write everything to `.claude-staging/` first, organized by artifact type.
-
-### Present
-
-Walk the user through:
-
-1. **The kit overview** — what landed (typically 1 agent + maybe 1 rule)
-2. **Top 2-3 highlight artifacts** — concrete reasoning. NOT "I added a test-architect" but: "The tests-architect's audit mode will run against your <N> source files vs <M> test files. The top-3 risk-weighted untested modules I identified from your git history: `<path1>` (auth-adjacent, edited <X> times in last 90 days), `<path2>` (the cascade pipeline, written but no tests), `<path3>` (the API contract handlers). The agent's first audit will surface these."
-3. **Gold-standard references** — quote the 2-3 reference tests you picked from the project. Be explicit: "New tests model after `<path-to-good-test>` — clean fixtures, behavior-focused assertions, no implementation coupling."
-4. **What got SKIPPED** — and why. "Skipped tier-D and tier-E coverage — your thin wrappers in `<path>` and your UI rendering in `<path>` are correctly out of unit-test scope. Address those via E2E."
-5. **Model + token-cost note** — tests-architect uses the mid-tier reasoning model and is moderately expensive (especially in Implement mode, which writes files). Audit mode is cheap; Implement mode scales with the count of tests being authored.
-
-### Approve → commit
-
-After explicit user approval, move `.claude-staging/` → `.claude/` and commit with structured message:
-
+2. **<second priority, only if the user named one>**
+   - **Why:** <...>
 ```
-feat(.claude): testing discipline (dotclaude:testing)
 
-Authored:
-- agents:  tests-architect
-- rules:   [test-discipline]
+If T3 came up empty or hesitant (see `interview.md`'s guidance on hesitation-as-data), it's fine to ship a single lightly-populated entry flagged `evolving` rather than inventing a confident-sounding priority the user didn't actually state. A thin, honest artifact beats a padded one.
 
-Test framework: <jest / vitest / pytest / etc.>
-Risk-weighted priorities: <list of top 3>
-Gold-standard reference tests: <paths>
+### 2. `dotclaude.yml` — artifact path
+
+Record the `artifacts.test-risk-model` path so `test-architect` can locate the file without a hardcoded convention:
+
+```yaml
+artifacts:
+  test-risk-model: .claude/dotclaude/test-risk-model.md
 ```
+
+Merge into an existing `dotclaude.yml` if one already exists (from `/dotclaude:coding` or another domain elicitation) — never overwrite unrelated keys, in particular an existing `artifacts.code-anti-patterns` entry.
+
+### Present + confirm
+
+Show the drafted `test-risk-model.md` and the `dotclaude.yml` diff. Walk through the top-priority entry with real reasoning — "you named the auth callback as the module that scares you most; a bug there means everyone's locked out or worse, cross-session leakage — that's now the agent's priority-1 audit target" — and note the coverage-status and depth framing you recorded. Wait for explicit confirmation before writing. This is a two-file change, not a multi-file kit, so no `.claude-staging/` review pass is needed: write directly to `.claude/dotclaude/test-risk-model.md` and merge into `dotclaude.yml` on approval.
 
 ## Non-negotiable rules for this flow
 
-1. **Tier classification anchored on the project's actual files.** If you say "Tier A = pure functions" without naming where the user's pure functions actually live (`lib/utils/`? `src/helpers/`? `internal/algorithm/`?), the agent has no concrete grounding and will produce generic advice. Read Phase 1 carefully; encode the actual paths.
+1. **The top priority comes from the user, not from the principle doc.** `principles/test-architect.md` lists a generic risk ordering (auth → data-pipeline → billing → persistence → public API → algorithms → utilities) as a fallback for when no artifact exists. This artifact's job is to override that generic ordering with the user's actual answer to T3 — ask, and encode their answer verbatim.
 
-2. **Risk-weighted priority comes from the user, not from the principle doc.** The principle doc lists auth, billing, persistence, etc. as example categories. The user's project may not have billing (free product) and may have a different top concern (e.g., a content-pipeline project's top risk is ingestion-correctness). Ask. Encode their answer.
+2. **Don't invent a priority the user didn't state.** If T3 comes up hesitant or empty, populate the artifact lightly and flag it `evolving` rather than dressing up a guess as a confident risk model.
 
-3. **Gold-standard reference tests are mandatory.** If the project has any tests at all, pick 2-3 of the cleanest as references the agent should model new tests on. WITHOUT references, the agent invents its own style and drifts from the project's idioms. WITH references, new tests look like existing tests and the codebase stays coherent.
+3. **Do NOT author an agent, a rule, or a hook.** The consumed `test-architect` agent already owns the four-mode methodology, the five-tier classification, the mock-infrastructure discipline, and the "run what you write" rule. Writing a project-local `tests-architect.md` (or `test-architect.md`) copy duplicates what the plugin already ships and creates drift the moment either side changes. If a project genuinely needs to override the consumed agent's behavior, that's a deliberate same-name shadow, not this skill's default output.
 
-4. **Tier D / Tier E are SKIPS, not low-priority.** The agent should refuse to write unit tests for thin wrappers (test the underlying function instead) and for UI rendering (use E2E). Be explicit: "These categories should NOT be unit-tested. If the user asks, redirect." Otherwise the agent generates noise.
+4. **Coverage status shapes framing, not action.** Whether the project is as-we-go, backlog, or near-zero changes what the `test-architect` agent's audit mode will emphasize at runtime — this skill's job is only to record which one it is, not to run an audit itself.
 
-5. **Implement mode MUST run the tests it writes.** Untested tests are not tests — they're text. The agent's Implement mode workflow is: write test → run test → fix failures → confirm green. If a test can't be run (missing infrastructure, broken setup), that's a finding to report, not a reason to skip the run.
+5. **Match the project's framework, don't introduce a new one.** Note the framework in Phase 1 for interview context, but the artifact itself doesn't need to restate it — the consumed agent reads the project's own manifests for that.
 
-6. **Don't sprinkle inline mocks.** If the project lacks shared mock infrastructure, the agent's first action on Implement mode should be to PROPOSE creating `test-utils/mocks.ts` (or equivalent) before writing any test that needs mocks. Inline mocks drift; centralized factories stay correct as type shapes evolve.
+## See also
 
-7. **Match the project's framework, don't introduce a new one.** If the project uses Vitest, write Vitest imports. If pytest, write pytest. Never introduce a new test runner because "this one is better." The cost of the new runner exceeds any incremental quality gain.
-
-8. **Audit mode is the cheap, frequent invocation.** Make sure the audit mode's output is actionable (prioritized list, not a flat 50-file dump). The user will run audit much more often than Implement; the audit's report is the agent's day-to-day surface.
+- `interview.md` — the short interview (T1 framework, T2 coverage status, T3 highest-risk untested code, T4 testing depth).
+- `../../docs/artifact-contract.md` — the full elicit → artifact → consumed-agent contract.
+- `../../agents/test-architect.md` — the consumed agent that reads `test-risk-model.md` at runtime.
