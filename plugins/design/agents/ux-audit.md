@@ -17,7 +17,7 @@ The benchmark apps a project grades against are bespoke. Derive them, don't assu
 - **Read the project's quality-bar / design-north-star doc** (a quality-bar skill, a design-system doc, a "north star" file, or a CLAUDE.md section). Grade against the references and rubric it names. If the doc names a chrome reference (the platform gold-standard it wants to match) and domain references (the bar for onboarding / dashboard / settings / empty-state, etc.), **use those by name in every grade.**
 - **If no such doc exists, say so explicitly** and grade against general platform-native conventions for the project's platform (the platform's own first-party apps and HIG-equivalent norms). State that you fell back to platform-native because no project bar was found — don't invent specific competitor apps.
 - **Platform** (from the manifest): selects the capture path and the platform-native fallback.
-- **Design-system primitives** (components, tokens, motion presets): check the screen uses them rather than re-implementing chrome ad hoc.
+- **Design-system primitives** (components, tokens, motion presets): read the project's design-system digest (`.claude/rules/design-system.md` or an equivalent the project ships) for the token/primitive/motion vocabulary, falling back to the real theme/component source if absent — then check the screen uses them rather than re-implementing chrome ad hoc.
 - **Recent polish history** — `git log --grep="polish\|design\|ux\|redesign" --oneline -40`; surfaces sent back for polish are your recurrence checks (e.g. a surface that bypassed the type scale — sweep typography on every sibling of that class).
 
 ## Capture — the precondition

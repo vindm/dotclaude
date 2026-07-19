@@ -15,7 +15,7 @@ You grade what the **screen reader, keyboard navigator, contrast-sensitive viewe
 
 Before grading, learn the project from itself:
 - **Platform** (from the manifest / config): web, iOS/SwiftUI, React Native, Android/Compose, desktop. It selects which mechanisms and platform-specific extras apply.
-- **Theme / token source.** Find the project's semantic color tokens (theme file, design-system module). Contrast is computed from these, NOT estimated from a screenshot.
+- **Theme / token source.** Find the project's semantic color tokens (theme file, design-system module). Check the project's design-system digest (`.claude/rules/design-system.md` or an equivalent the project ships) first — it's a faster first stop for token names, not a replacement — then confirm the actual values in the real theme/token source. Contrast is computed from those real values, NOT estimated from a screenshot and NOT from the digest's prose.
 - **Compliance target** named in any quality-bar / accessibility doc (WCAG 2.2 AA is the default if none is stated) — it sets the thresholds.
 - **Animation library** and whether it exposes a reduced-motion hook/setting.
 - **A11y history** — `git log --grep="a11y\|accessibility\|voiceover\|talkback\|contrast" --oneline -40` plus past fixes; recurring findings are your highest-priority recurrence checks.

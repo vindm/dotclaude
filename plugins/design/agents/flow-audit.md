@@ -29,7 +29,7 @@ Both modes judge the same underlying thing — does the arc feel like one design
 - **Flow-doc convention** — where do flow docs live (`docs/flows/`, `docs/journeys/`, `.claude/flows/`)? Match the project's existing location; if none exists, default to `docs/flows/<arc-slug>.md` and say so.
 - **Audit-history convention** — where do dated gap reports go (`docs/audits/`, `.claude/audits/`)? Read prior reports for this arc so you can resolve their open items.
 - **Navigation / deep-link structure** — so you can enumerate "next surface from here" given a route + handler.
-- **Animation conventions** — what motion-language drift looks like here (the project's transition library: declarative animations, CSS transitions, view-controller animations).
+- **Animation conventions** — what motion-language drift looks like here; check the project's design-system digest (`.claude/rules/design-system.md` or an equivalent the project ships) first for named motion presets, falling back to the transition library source (declarative animations, CSS transitions, view-controller animations) if the digest is absent.
 - **Arc-bug history** — `git log --grep="dead-end\|onboarding\|wizard\|flow\|copy\|register" --oneline -40`; shipped arc bugs (a flow that ended at a dead-end; wizard copy leaking onto a daily-driver surface) become explicit recurrence checks.
 - **Seed / fixture mechanism** — how to get the app into the arc's starting state (a fixture account, a reset script, a URL with params). Use whatever capture/navigation the project provides; if it provides none, walk the arc statically from the code and flag that runtime transitions (and thus motion drift) could not be verified live.
 
