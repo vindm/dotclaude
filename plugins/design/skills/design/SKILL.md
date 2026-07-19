@@ -134,7 +134,7 @@ Read these from `../../principles/` SELECTIVELY based on what the project actual
 - `design-benchmarking.md` — picks Tier 1 + Tier 2 references + per-surface chrome reference table convention
 - `visual-verification.md` — see-what-you-built discipline
 - `quality-rubric.md` — S/A/B/C/D anchored on the user's benchmarks + claim-of-done preconditions (5-item checklist)
-- **Canonical audit order** (mechanical token sweep → semantic/interaction + a11y in parallel → visual/pages polish last, since token and semantic fixes shift layout before visual grading locks it in) — the ordering the `core` plugin's `audit-routing.md` would otherwise supply; kept here inline since that principle lives outside this plugin
+- `audit-routing.md` — canonical audit order (mechanical token sweep → semantic/interaction + a11y in parallel → visual/pages polish last, since token and semantic fixes shift layout before visual grading locks it in)
 - `design-system-reference-skill.md` — design-system entry-point skill the project ships (always read; the broad reference for tokens / primitives / motion / status / gotchas)
 
 **Read if project is in design / spec / IA phase** (new features incoming):

@@ -40,7 +40,7 @@ Before grading anything, capture the screen. Per `visual-verification.md`:
 ### Layer 2 — Journey classification
 
 Per `journey-mapping.md`, classify the target screen's type: first-touch / daily-driver / settings / error / promotional / bridge. This is mandatory before grading because:
-- The banned-patterns matrix depends on the type.
+- The forbidden-patterns matrix depends on the type.
 - The bar differs by type — a wizard screen is graded against onboarding references; a daily-driver against daily-driver references.
 - "Hi — I'm <assistant>" is correct on a first-touch surface and wrong on a daily-driver surface.
 
@@ -189,7 +189,7 @@ If the authored `ux-reviewer.md` lacks any of these, redo. Battle-tested ≠ opt
 
 - **Tier 1 reference unspecified.** "Apple-tier" is vibes. "Apple iOS 26 Settings + Telegram on iOS 26" is enforceable. Specify the references.
 
-- **Skipping the journey map.** Without surface-type classification, the banned-patterns don't apply correctly. The agent should stop if classification isn't done.
+- **Skipping the journey map.** Without surface-type classification, the forbidden-patterns don't apply correctly. The agent should stop if classification isn't done.
 
 - **Grading per-element instead of per-composition.** A screen full of individually-fine elements can still be a B-tier composition if there's duplication / orphan / hierarchy chaos. The audit looks at the screen as a whole.
 

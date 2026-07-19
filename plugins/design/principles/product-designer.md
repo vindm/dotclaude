@@ -57,7 +57,7 @@ Plus topic-specific area reads (relevant domain skills, area CLAUDE.md files, ke
 
 ### Step 1.5 — Journey audit (MANDATORY)
 
-Run `journey-mapping`. It produces Section 0 of the spec — the prior-surfaces map + target classification + banned-pattern matrix.
+Run `journey-mapping`. It produces Section 0 of the spec — the prior-surfaces map + target classification + forbidden-pattern matrix.
 
 This is the single most common cause of design failure. A real product designer would never propose "put intro copy on the daily home" — but a screen-generator would, and has. Step 1.5 separates the two.
 
@@ -264,7 +264,7 @@ If the authored agent lacks any of these, redo. Battle-tested ≠ optional polis
 
 - **No refusal — try to do polish anyway.** The agent must refuse single-screen polish and route. Trying to do it produces a mediocre IA spec for a problem that didn't need one.
 
-- **Skip the journey-audit gate when "the surface is obvious."** No surface is obvious. The banned-pattern matrix depends on the type. Skipping Step 1.5 is the single most common failure mode.
+- **Skip the journey-audit gate when "the surface is obvious."** No surface is obvious. The forbidden-pattern matrix depends on the type. Skipping Step 1.5 is the single most common failure mode.
 
 - **Write the spec first, audit later.** The self-audit (Step 6.5) gates spec-writing, not the other way around. Writing first and auditing later is mechanical-template-execution, not design.
 

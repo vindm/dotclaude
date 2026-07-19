@@ -1,6 +1,6 @@
 ---
 name: journey-mapping
-description: Build the prior-surface inventory before designing OR auditing any screen — walk every surface the user touched before reaching this one, classify each by type, and apply the banned-pattern matrix so first-touch copy/voice/chrome never leaks onto a daily-driver surface. Load before any new design spec or any single-screen / flow audit.
+description: Build the prior-surface inventory before designing OR auditing any screen — walk every surface the user touched before reaching this one, classify each by type, and apply the forbidden-pattern matrix so first-touch copy/voice/chrome never leaks onto a daily-driver surface. Load before any new design spec or any single-screen / flow audit.
 ---
 
 # Journey mapping
@@ -45,7 +45,7 @@ A linear table, one row per surface, ending with the target:
 
 Two rules: **fill every row** (no stubs, no "…and so on"), and use **verbatim copy only** — paraphrasing hides cross-surface duplication, which is the entire point of the map.
 
-### Step 4 — Apply the banned-pattern matrix
+### Step 4 — Apply the forbidden-pattern matrix
 
 Once the target's type is fixed, certain patterns are categorically disallowed for that type:
 

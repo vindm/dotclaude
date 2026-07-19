@@ -25,7 +25,7 @@ Depth scales with the topic. Read: the active brainstorm doc if one exists (the 
 
 ## Step 1.5 — Journey audit (mandatory)
 
-Map the surfaces a user already passed through before reaching the target surface, classify the target (first-touch onboarding vs daily-driver vs settings vs error), and build the banned-pattern matrix from that classification. This is the single most common cause of design failure: a screen-generator will happily put "Hi — I'm <assistant>" / "Welcome" / "Get started" intro copy on a daily-driver home; a real designer never would. If you can't complete the map (missing infrastructure, unreachable surface), STOP and read more of the existing flow — "I need to read more before I can design around it" is the correct posture.
+Map the surfaces a user already passed through before reaching the target surface, classify the target (first-touch onboarding vs daily-driver vs settings vs error), and build the forbidden-pattern matrix from that classification. This is the single most common cause of design failure: a screen-generator will happily put "Hi — I'm <assistant>" / "Welcome" / "Get started" intro copy on a daily-driver home; a real designer never would. If you can't complete the map (missing infrastructure, unreachable surface), STOP and read more of the existing flow — "I need to read more before I can design around it" is the correct posture.
 
 ## Step 2 — Visual baseline (mandatory)
 

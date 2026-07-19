@@ -94,5 +94,5 @@ A comprehensive existing project is often a `/distill` candidate (push its unive
 ## See also
 
 - `interview.md` — the short interview (identity / architecture / quality-bar / knowledge-graph only; process / domain / maintenance are consumed, not interviewed).
-- `../../docs/v3-consume-direct-brainstorm.md` — why bootstrap shrank: the consume-direct model, the balanced split, the plugin-mechanics constraints (rules aren't pluggable → methodology is the `operating-discipline` skill).
+- Why bootstrap shrank: the consume-direct model, the balanced split, and the plugin-mechanics constraints (rules aren't pluggable → methodology is the `operating-discipline` skill).
 - The consumable base lives in `../` (the plugin's `agents/`, `skills/`, `hooks/`).
