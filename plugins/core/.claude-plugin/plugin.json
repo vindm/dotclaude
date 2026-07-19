@@ -1,0 +1,9 @@
+{
+  "name": "dotclaude",
+  "description": "A senior who won't let you shoot your own foot: parallel-session worktree isolation, blast-radius pre-flight, guard hooks, graded code review, coverage by risk. Consumed as-is; adapts at runtime; run the coding/testing setup to elicit your bar.",
+  "version": "3.0.0",
+  "author": { "name": "Dima Vinokurov" },
+  "homepage": "https://github.com/vindm/dotclaude",
+  "repository": "https://github.com/vindm/dotclaude",
+  "license": "MIT"
+}
