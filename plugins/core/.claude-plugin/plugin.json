@@ -1,6 +1,6 @@
 {
   "name": "dotclaude",
-  "description": "Senior-engineer discipline for Claude Code: worktree isolation, pre-flight, guard hooks, graded code review, risk-weighted test coverage. Consumed as-is; /dotclaude:coding and /dotclaude:testing elicit your project's bar.",
+  "description": "Code review, pre-flight, worktree isolation, guard hooks, and risk-weighted test coverage for Claude Code. Consumed as-is; /dotclaude:coding and /dotclaude:testing elicit your project's bar.",
   "version": "3.0.0",
   "author": { "name": "Dima Vinokurov" },
   "homepage": "https://github.com/vindm/dotclaude",

@@ -1,8 +1,7 @@
 # dotclaude
 
-Senior-engineer discipline for Claude Code: worktree isolation, pre-flight,
-guard hooks, graded code review, and risk-weighted test coverage. Consumed
-as-is — it works the moment you install.
+Code review, pre-flight, worktree isolation, guard hooks, and risk-weighted
+testing for Claude Code. Consumed as-is — it works the moment you install.
 
     claude plugin marketplace add vindm/dotclaude
     claude plugin install dotclaude@dotclaude
