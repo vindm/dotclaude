@@ -45,7 +45,13 @@ Vision (one sentence), `ICP (wedge)`, production-vs-internal, stage, `## Moat` (
 
 ### Architecture → `CLAUDE.md.draft` + project hooks + `dotclaude.yml`
 - CLAUDE.md "Architecture": layer model, one-line-per-layer, boundary statements, constraints — each constraint with WHY + WHERE-ENFORCED. Add the trailing anchor comment: *"new constraints accrue here as one bullet with WHY + WHERE-ENFORCED; graduate recurring memory lessons into constraints when they fire repeatedly."*
-- **`dotclaude.yml`** — config for the base's config-needing guard templates the project opts into (file-size ceiling, design-token theme path, import-boundary rules, console-log allow-paths, forbidden-phrase list). The universal guards already fire from the plugin; here you only configure the project-tunable ones.
+- **`dotclaude.yml`** — config for the base's config-needing guard templates the project opts into (file-size ceiling, design-token theme path, import-boundary rules, console-log allow-paths, forbidden-phrase list). The universal guards already fire from the plugin; here you only configure the project-tunable ones. The file also carries an `artifacts:` map recording paths to domain-specific elicitations that consumed agents read at runtime:
+  ```yaml
+  artifacts:
+    code-anti-patterns: .claude/dotclaude/code-anti-patterns.md
+    test-risk-model: .claude/dotclaude/test-risk-model.md
+    design-north-star: .claude/dotclaude/design-north-star.md
+  ```
 - **Project boundary hooks** — copy the relevant config-needing templates from the plugin's `hook-templates/` into `.claude-staging/hooks/` with the project's values (these are project-specific, so they're authored locally, not consumed). Do NOT re-author the universal guards — they come from the plugin.
 
 ### Quality bar → `.claude-staging/rules/<domain>-north-star.md`
