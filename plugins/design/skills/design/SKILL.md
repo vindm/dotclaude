@@ -174,6 +174,8 @@ The binding statement of what "good" means on this project — the doc every con
 - **Per-surface chrome reference table** — the row-per-surface convention from `design-benchmarking.md`: one row per named surface, its Tier 1 reference, its Tier 2 reference
 - **Voice / banned phrases** (Q-C4) — the elicited `BRAND_BANNED_PHRASES` deny-list plus the voice/anti-reference signal, so `persona-testing` and the taste audits have a home for it at runtime
 - **Project-specific anti-patterns mined from git** (Phase 1.8 SHAs, confirmed in Q-I1) — 3-5 concrete "this shipped wrong before, here's the commit" entries, not generic anti-patterns lifted from a principle doc
+- **The demo test** — one line, instantiated from `quality-rubric.md`'s Component 1: "would I show this screen to \<the named audience/benchmark peer>?" Anchor the audience to a real person, role, or the Tier 1/Tier 2 benchmark the user named — this is the reproducible check that closes a grading debate without re-litigating taste.
+- **Claim-of-done checklist** — the design-specific definition-of-done, instantiated from `quality-rubric.md`'s canonical 5-item checklist: fresh screenshot captured / lint clean / tests pass / 5-pitfall composition scan done / Tier 1+Tier 2 benchmark named in the grade. A UI change isn't "done," only "in progress," until all five hold.
 
 ### `.claude/rules/design-system.md`
 
@@ -182,6 +184,7 @@ The design-system reference digest, per the `design-system-reference-skill.md` p
 - Include the **post-edit command rule** ("after editing `<tokens source>`, run `<command>`") inside this doc — without it, generated tokens drift from source.
 - Include the **library gotchas** as a dedicated, easy-to-extend subsection, not buried in prose.
 - Include the S-tier quality-tier table (per-surface grade targets) here rather than as a separate skill — it reads the Tier 1/2 names from `design-north-star.md` and pairs them with the generic rubric mechanics already covered by the always-read `quality-rubric.md` principle.
+- Include the **fast-vs-careful decision rule**, instantiated from `quality-rubric.md`'s Component 5: name which of THIS project's actual change shapes need the full audit pass (UI surface changes, copy/voice changes, cross-module refactors) versus which are trivial enough to skip it (typo fixes, isolated renames, type-only diffs). When in doubt, default to careful.
 
 ### Hooks (in `.claude-staging/hooks/` — render from `../../hook-templates/`)
 
