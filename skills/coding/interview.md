@@ -8,15 +8,13 @@
 
 Lead with the data you already have. If the user pushes back ("we have legitimate state machines that grow to 1500"), accept and adjust — encode the exemption rather than fighting the user's instinct.
 
-If the codebase is uniformly small (every file < 300 LOC), float skipping the rule: "Your code is already disciplined on file size — I don't think a ceiling rule earns its keep here. Wire the hook anyway as a tripwire, or skip it?"
+If the codebase is uniformly small (every file < 300 LOC), float skipping the rule: "Your code is already disciplined on file size — I don't think a ceiling rule earns its keep here. Record one anyway in `dotclaude.yml` as a tripwire, or skip it?"
 
-## C2 — Code review depth + audience
+## C2 — Register (optional, one line)
 
-> "Two questions about the reviewer agent:
-> 1. Is this a solo project or a team? (Solo → lighter reviewer; team → heavier with shared-standards emphasis.)
-> 2. When you imagine the ideal post-implementation reviewer — is it 'careful colleague pointing out missed cases' or 'staff engineer enforcing the bar'? The tone difference matters for the report register."
+> "One optional note: when you imagine the review report's tone, is it 'careful colleague pointing out missed cases' or 'staff engineer enforcing the bar'? This isn't shaping an agent — the consumed `code-review` agent's rubric and methodology are fixed — it's just a one-line preference the artifact can carry if you want it recorded."
 
-The answer shapes both the agent's depth and the rubric's severity. A staff-engineer-tone reviewer at S/A/B/C/D/F can block merge on a C; a careful-colleague reviewer at the same grade is advisory.
+There's no reviewer being generated here, so there's nothing to tune in depth or tooling. If the user has no preference, skip this entirely — the consumed agent's rubric already has sane defaults regardless. If they do care, record it as a single `**Register:** <colleague / staff-engineer>` line near the top of `code-anti-patterns.md` — a note the agent can read, not a rewrite of its behavior.
 
 ## C3 — Past bug classes (THE most important question)
 
@@ -35,23 +33,23 @@ Cross-check against the fix-prefix commits you read in Phase 1. If the user name
 > 2. Are there phrases you'd never want in production copy? AI-slop ('Let me help you with that!', 'I'd be happy to assist!', 'Great question!') is one category; brand-specific is another ('amazing', '!', 'guys', whatever doesn't fit your voice).
 > 3. Does the product have an in-app assistant / character whose voice could leak into daily-driver surfaces?"
 
-If yes to (1) and (2): collect the list. The list becomes `forbidden-phrases.txt` + the wired hook.
+If yes to (1) and (2): collect the list. The list becomes the `forbiddenPhrases.phrases` + `.scopes` block in `dotclaude.yml` — data the project can later wire into the `check-forbidden-phrases` hook template (that wiring is `/dotclaude:bootstrap`'s job, not this skill's).
 
-If yes to (3): flag the first-touch-vs-daily-driver trap (assistant's onboarding voice leaks into surfaces where it doesn't belong). The hook's scope should include the assistant's copy files specifically.
+If yes to (3): flag the first-touch-vs-daily-driver trap (assistant's onboarding voice leaks into surfaces where it doesn't belong). The `dotclaude.yml` scopes list should include the assistant's copy files specifically.
 
-If no to all: skip authoring the deny-list entirely. Note in the kit overview that this is deferred until voice emerges.
+If no to all: skip the `forbiddenPhrases` key entirely. Note in the summary that this is deferred until voice emerges.
 
 ## C5 — Existing conventions to respect
 
-> "Anything in `CLAUDE.md`, `CONTRIBUTING.md`, or a style guide I should align the kit with? Specific things to call out:
+> "Anything in `CLAUDE.md`, `CONTRIBUTING.md`, or a style guide I should align the artifact with? Specific things to call out:
 > - Naming conventions (snake_case / camelCase / PascalCase per layer)
 > - Existing decomposition patterns (where pure helpers live, where hooks live, where types live)
-> - Lint rules you've explicitly disabled (I won't re-flag those in the reviewer)
+> - Lint rules you've explicitly disabled (the consumed reviewer shouldn't re-flag those)
 > - Any 'never do X' rules already documented"
 
-Read whichever docs the user names. Conflicts between your kit and the user's existing docs are bugs — the user's docs win.
+Read whichever docs the user names. Conflicts between the artifact and the user's existing docs are bugs — the user's docs win.
 
-If the project has no convention docs but the codebase shows clear patterns (every screen has a `<Screen>.tsx` + `useScreen.ts` pair, every domain has a `lib/<domain>/operations/` directory), encode those patterns in the decompose-file skill's extraction-pattern table.
+If the project has no convention docs but the codebase shows clear patterns (every screen has a `<Screen>.tsx` + `useScreen.ts` pair, every domain has a `lib/<domain>/operations/` directory), these are useful context for framing an anti-pattern entry (e.g., "helpers landing outside `lib/utils/` drift from the rest of the codebase") — they don't get their own section in the artifact; fold them into a C3 entry only if they map to a real bug class.
 
 ---
 
@@ -65,8 +63,8 @@ If the project has no convention docs but the codebase shows clear patterns (eve
 
 ## After the interview
 
-Summarize back before authoring:
+Summarize back before writing the artifact:
 
-> "Based on our chat: file ceiling = <N> LOC (warn at <M>), reviewer tone = <colleague / staff-engineer>, project-specific anti-patterns I'll bake in = <count> (drawn from <list of bug classes>), voice deny-list = <count or 'skipping for now'>, existing conventions I'll mirror = <key items>. About to author the kit — confirm?"
+> "Based on our chat: file ceiling = <N> LOC (warn at <M>), register note = <colleague / staff-engineer / skipping>, project-specific anti-patterns I'll write into `code-anti-patterns.md` = <count> (drawn from <list of bug classes>), voice deny-list in `dotclaude.yml` = <count or 'skipping for now'>, existing conventions I'll respect = <key items>. About to write the artifact — confirm?"
 
-Wait for confirmation, then proceed to Phase 4 of `SKILL.md`.
+Wait for confirmation, then proceed to Phase 3 of `SKILL.md`.
