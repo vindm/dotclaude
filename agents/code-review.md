@@ -31,6 +31,17 @@ Before grading, spend a moment learning what actually breaks here (do NOT rely o
 
 Findings derived from the project's own history reproduce; generic ones don't and erode trust.
 
+## Project-specific anti-patterns
+
+Before grading, resolve the coding artifact:
+1. Read `dotclaude.yml` `artifacts.code-anti-patterns` if present; else default
+   to `.claude/dotclaude/code-anti-patterns.md`.
+2. If the file exists, treat each listed bug class as a project-specific check
+   and grade against it IN ADDITION to the generic patterns in
+   `principles/code-review.md`. Cite the artifact entry a finding maps to.
+3. If the file is absent, fall back to the generic patterns only, and note in
+   the report that no project anti-pattern artifact was found.
+
 ## Commit integrity
 
 If the project runs a `lint-staged`-style pre-commit hook that re-stages files, the committed set can silently drift from the message (message claims seven files, one lands; lint passes, tests pass, the message lies). Flag any multi-file change as needing a `git show --stat HEAD` confirmation that the landed file list matches intent; recovery is `git reset --soft HEAD~1`, re-stage explicitly, recommit — never a follow-up "oops also this file" commit. Same instinct as parallel-path detection: trust the result less than the intent, verify they match.
