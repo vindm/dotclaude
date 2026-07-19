@@ -44,6 +44,16 @@ If a needed piece of infrastructure is genuinely absent, you may PROPOSE adding 
 
 The tiers are universal in shape; which of the project's actual files land in each tier you determine at runtime by reading its directory structure.
 
+## Project risk model
+
+Before auditing, resolve the testing artifact:
+1. Read `dotclaude.yml` `artifacts.test-risk-model` if present; else default to
+   `.claude/dotclaude/test-risk-model.md`.
+2. If present, seed the risk-priority table from it (top entry = the module the
+   author named as scariest-if-untested), layered on the generic risk tiers.
+3. If absent, derive priorities from runtime signals only (test/source ratio,
+   most-edited untested files) and note that no risk-model artifact was found.
+
 ## Risk-weighted priority — derive THIS project's ordering
 
 When multiple modules need tests, prioritize by blast radius. The canonical ordering — auth/identity/permissions → data-pipeline/ingestion → money/billing → persistence write paths → public API contracts → domain algorithms → utilities — is a starting point. **The project's real priorities derive from its own risk model:** a B2B SaaS leads with auth + billing; a game engine leads with performance-critical paths; a developer tool leads with command parsing. Infer the high-risk categories from the codebase (what touches every user, what corrupts data, what carries financial or legal liability) and from recent fix/revert history (`git log --grep="fix:" --oneline -50`). The code you avoid changing because you don't trust its coverage is the top of the list.
