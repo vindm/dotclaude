@@ -42,7 +42,6 @@ Example structure (placeholders — the user's table fills with their actual age
 | "Does this chrome promise what its handler does?" | interaction-audit | Semantic affordance-vs-behavior. |
 | "Is this accessible?" | a11y-audit | Accessibility dimensions (labels / hit-size / contrast / scaling / motion). |
 | "Sweep for raw hex / non-token color across the codebase" | design-token-audit | Token-discipline regex sweep. |
-| "Database integrity / orphan detection" | data-integrity (data-auditor) | DB query patterns specific to the schema. |
 | "Test coverage gaps on this change" | test-architect | Coverage / testability classification. |
 
 The table is THIS project's actual agents and THIS project's typical questions. Don't write rows for agents that don't exist.
@@ -127,7 +126,7 @@ The cheapest finding is one prevented by an edit-time hook. Before dispatching a
 
 | Hook | Catches | Override convention |
 |---|---|---|
-| `check-token-only.sh` | Raw hex / rgba color literals outside theme files | Per-line: `// allow-color: <reason>` |
+| `check-design-tokens.sh` | Raw hex / rgba color literals outside theme files | Per-line: `// allow-color: <reason>` |
 | `check-file-size.sh` | Files > ceiling LOC | Decomposition required, no inline override |
 | (project-specific) | (project-specific) | (project-specific) |
 
@@ -148,7 +147,7 @@ If a class of finding is fully prevented by a hook, dispatching an audit agent t
 
 Concrete applications:
 
-- **Don't dispatch `design-token-audit` to find raw hex if `check-token-only.sh` already blocks it on edit.** If raw hex is slipping past, the hook is broken — fix the hook (cheaper). Then run the agent only to sweep accumulated drift before the hook landed.
+- **Don't dispatch `design-token-audit` to find raw hex if `check-design-tokens.sh` already blocks it on edit.** If raw hex is slipping past, the hook is broken — fix the hook (cheaper). Then run the agent only to sweep accumulated drift before the hook landed.
 - **Don't dispatch `flow-audit` to find IA gaps that `product-designer`'s self-audit (run at design time) would catch.** If specs are drifting, fix the designer's gate discipline; the flow-auditor's whole-arc audit is too expensive for "the designer skipped Section 0a."
 
 This shapes the dispatching mental model: ask which tier should catch the finding, and operate at THAT tier — not the highest one available. The audit-routing rule's existence is itself a Tier 1 mechanism preventing Tier 3 wastes.

@@ -158,7 +158,7 @@ If the user names ≥ 1 boundary: confirm greppability (*"can this boundary be e
 
 ### B5 — External integrations (no separate interview)
 
-Don't ask here. The integrations (Supabase, Stripe, OpenAI, AI SDK) get caught by Phase 1 §1.7 + §1.8 + §1.9. They inform which of the plugin's consumed auditor agents the project will actually dispatch (e.g. a DB triggers `dotclaude:data-integrity`) — but the auditors are consumed from the plugin, so there's no per-domain interview to feed.
+Don't ask here. The integrations (Supabase, Stripe, OpenAI, AI SDK) get caught by Phase 1 §1.7 + §1.8 + §1.9. They inform which of the plugin's consumed auditor agents the project will actually dispatch (e.g. a DB may warrant the deferred data domain, once it ships) — but the auditors are consumed from the plugin, so there's no per-domain interview to feed.
 
 ---
 

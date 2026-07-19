@@ -4,7 +4,7 @@ description: Set up a project's AI dev infrastructure the consume-direct way —
 
 # `/dotclaude:bootstrap` — thin generator over the consumable base
 
-The base is **consumed, not authored.** Enabling the dotclaude plugin already gives the project the universal layer: the `operating-discipline` skill (how to work), the auditor agents (`code-review`, `pre-flight`, `test-architect`, `data-integrity`, `a11y-audit`, `ux-audit`, … dispatchable as `dotclaude:<name>`), the process/knowledge skills (`knowledge-layers`, `decomposition`, `journey-mapping`, `persona-testing`, `element-reuse`, `iterative-polish-autoloop`), and the universal guard hooks (git-safety, secret-leak, file-size, session-start git context, uncommitted-on-clear). **Bootstrap does NOT re-author any of these.**
+The base is **consumed, not authored.** Enabling the dotclaude plugin already gives the project the universal layer: the `operating-discipline` skill (how to work), the auditor agents (`code-review`, `pre-flight`, `test-architect`, `skill-vs-code-audit`, `product-direction-validator`, dispatchable as `dotclaude:<name>`), the process/knowledge skills (`knowledge-layers`, `decomposition`), and the universal guard hooks (git-safety, secret-leak, file-size, session-start git context, uncommitted-on-clear). The companion **dotclaude-design** plugin adds the design/UX auditors (`a11y-audit`, `ux-audit`, `interaction-audit`, `flow-audit`, `pages-audit`, `design-token-audit`, `product-designer`) and design-focused skills for projects with a human-facing surface. **Bootstrap does NOT re-author any of these.**
 
 Bootstrap authors only what a shared file cannot carry — the project-specific layer:
 

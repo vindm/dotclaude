@@ -6,7 +6,7 @@ description: Elicit coding hygiene intent for a project and write it to a thin a
 
 You are eliciting the project-specific coding-discipline intent for the user's project: the right file-size ceiling and the bug classes a reviewer should specifically watch for. The output is ONE thin artifact — `.claude/dotclaude/code-anti-patterns.md` — plus a handful of keys in `dotclaude.yml`. You do **not** author an agent, a rule file, or a hook: the consumed `code-review` agent (shipped by the plugin — see `agents/code-review.md`) already reads `dotclaude.yml`'s `artifacts.code-anti-patterns` path at runtime, falls back to its own generic methodology when the artifact is absent, and grades new changes against each entry in addition to the generic pass when it's present (full contract: `docs/artifact-contract.md`).
 
-This is the layer the user wants set up FIRST on any project — the elicitation is cheap, and the consumed `code-review` agent is useful even with an empty artifact. The other domain skills (`/dotclaude:design`, `/dotclaude:data`, `/dotclaude:testing`, `/dotclaude:ai-workflow`) layer on top.
+This is the layer the user wants set up FIRST on any project — the elicitation is cheap, and the consumed `code-review` agent is useful even with an empty artifact. The companion `/dotclaude:testing` setup layers on top for test discipline, and the separate **dotclaude-design** plugin covers design / UX / a11y discipline for projects with a human-facing surface.
 
 ## Phase 1 — Read the project's code shape
 

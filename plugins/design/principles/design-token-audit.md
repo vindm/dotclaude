@@ -27,7 +27,7 @@ Token discipline is the invisible foundation of dark-mode support, design-system
 
 What this catches that linters typically don't: lint rules CAN be configured to ban raw colors, but in practice they're often disabled for "just this one case" exceptions that compound. A periodic audit run by an LLM-callable agent surfaces the accumulated debt and proposes specific token replacements per finding — easier to action than a raw lint report.
 
-The companion hook (`hook-templates/check-token-only.sh`) is the edit-time enforcement; this agent is the periodic sweep that catches what the hook missed (older code, overridden lines, edge cases the hook's regex doesn't cover).
+The companion hook (`hook-templates/check-design-tokens.sh`) is the edit-time enforcement; this agent is the periodic sweep that catches what the hook missed (older code, overridden lines, edge cases the hook's regex doesn't cover).
 
 ## Core methodology — the four-step sweep
 
@@ -95,7 +95,7 @@ Before authoring the agent, gather:
 
 5. **Token-discipline rules the project holds.** Does the project have an "only one accent color" rule? Does it differentiate semantic from palette colors? Encode the project's design-system philosophy so the agent's recommendations align.
 
-6. **Whether the hook is wired.** If `hook-templates/check-token-only.sh` is configured, the agent is the periodic sweep behind the hook. If not, the agent does the work the hook would have done — and the user should be told to wire the hook for cheaper edit-time enforcement.
+6. **Whether the hook is wired.** If `hook-templates/check-design-tokens.sh` is configured, the agent is the periodic sweep behind the hook. If not, the agent does the work the hook would have done — and the user should be told to wire the hook for cheaper edit-time enforcement.
 
 ## Authoring the agent
 
@@ -156,7 +156,7 @@ The authored `design-token-auditor.md` agent is the lightweight, periodic sweep 
 2. **5+ inspection dimensions** — raw hex (`#[0-9a-fA-F]{3,8}`), raw rgba/rgb/hsl/hsla functions, inline style color literals, Tailwind arbitrary values (`bg-[#abc]`), style-object color properties (`StyleSheet.create({ x: { color: '#...' } })`). Optionally: raw spacing pixels, raw font sizes (only if user opted in to spacing/typography discipline).
 3. **Rubric anchored per grade** — `S = 0 raw color literals outside theme file (Linear-grade) / A = <5 hits, all S2 internal / B = <20 hits with S0 hits zero / C = S0 hits present on user-facing chrome / D = pervasive S0 violations across chrome / F = theme system effectively bypassed`. Grade names cite the file count and severity tier.
 4. **Report-format sections** — `## Summary (files scanned, violations by tier) / ## S0 (must-fix, user-facing chrome) / ## S1 (should-fix, visible content) / ## S2 (low-priority, internal) / ## Token gaps (propose adding to <theme file>) / ## Exempt (no fix recommended, with rationale)`. Tiered grouping is what makes the report actionable rather than a flat 200-item list.
-5. **Cross-references** — composes with `hook-templates/check-token-only.sh` (edit-time enforcement; the agent is the periodic catch behind the hook), `audit-routing.md` (token audit is STEP 1 in canonical UI-audit pipeline — cheapest, widest impact), `ux-audit.md` (runs AFTER token audit; token fixes may shift color semantics).
+5. **Cross-references** — composes with `hook-templates/check-design-tokens.sh` (edit-time enforcement; the agent is the periodic catch behind the hook), `audit-routing.md` (token audit is STEP 1 in canonical UI-audit pipeline — cheapest, widest impact), `ux-audit.md` (runs AFTER token audit; token fixes may shift color semantics).
 6. **Numbered non-negotiable rules** — minimum 6: *(1) Never auto-apply replacements — agent reports; user decides. (2) Use word-bounded hex regex `#[0-9a-fA-F]{3,8}\b` — bare `#[0-9a-f]+` matches `id123abc`. (3) Exempt the theme file itself (it DEFINES tokens; raw values are correct there). (4) Read the theme file BEFORE proposing replacements — recommendations to non-existent tokens are noise. (5) Severity tiers (S0/S1/S2) are mandatory — flat lists get ignored. (6) Stay in lane — token audit is for colors (optionally spacing/typography); not motion, not copy, not chrome composition.*
 7. **Project-specific anti-patterns from git** — 3-5 from interview Phase D. E.g. *"Settings page used inline `style={{ color: '#1a1a1a' }}` instead of `colors.text.primary` (commit `abc1234`) — sweep `style=` props on every Settings-class file."* *"Tailwind arbitrary `bg-[#0ac8fa]` snuck in across 7 files before the linter caught it (PR #123) — flag every `\[#` literal in `className=`."*
 8. **Edge cases + abort conditions** — *"Skip the project's theme file (cite path). Skip generated files (`*.generated.ts`, `dist/`, `node_modules/`). Skip native asset directories (`ios/*.xcassets`, `android/res/values/colors.xml`) — colors live there legitimately. Skip test fixtures and snapshots. Skip visualization heatmap files where gradients ARE the data (flag in Exempt section)."*
@@ -167,7 +167,7 @@ If the authored `design-token-auditor.md` lacks any of these, redo. Token discip
 
 ## Cross-references
 
-- `hook-templates/check-token-only.sh` — edit-time enforcement. The agent is the periodic sweep behind the hook.
+- `hook-templates/check-design-tokens.sh` — edit-time enforcement. The agent is the periodic sweep behind the hook.
 - `audit-routing.md` — token audit is step 1 in the canonical UI-audit pipeline (cheapest, fixes wide-scale violations first).
 - `ux-audit.md` — runs AFTER token audit, because token fixes may shift layout / color semantics.
 
