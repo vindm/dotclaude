@@ -370,22 +370,21 @@ mkdir -p plugins/design/agents plugins/design/skills plugins/design/principles
 # CORE agents
 git mv agents/code-review.md agents/pre-flight.md agents/test-architect.md \
        agents/skill-vs-code-audit.md agents/product-direction-validator.md plugins/core/agents/
-# CORE skills
+# CORE skills (knowledge-layers included — a knowledge-authority discipline, CORE)
 git mv skills/worktree skills/decomposition skills/coding skills/testing \
-       skills/operating-discipline skills/bootstrap plugins/core/skills/
+       skills/operating-discipline skills/bootstrap skills/knowledge-layers plugins/core/skills/
 # CORE hooks (active guards) + templates
 git mv hooks/* plugins/core/hooks/ && rmdir hooks
 git mv hook-templates/* plugins/core/hook-templates/ && rmdir hook-templates
 # CORE principles: move the ones owned by CORE tools (see Step 4 for the mapping)
 # DEFERRED domains — move straight to deferred/ now so no root dir is orphaned
+# (skills + agent here; their 4 principles are moved in Step 4's DEFERRED block)
 mkdir -p deferred/skills deferred/agents deferred/principles
 git mv skills/data skills/ai-workflow skills/migration-create deferred/skills/
 git mv agents/data-integrity.md deferred/agents/
-git mv principles/data-integrity.md principles/migration-create.md \
-       principles/database-query-discipline.md principles/ai-cost-monitoring.md deferred/principles/
 ```
 
-(The deferred domains are relocated here as part of the single big move; Task 11 only writes the deferral note and verifies. Their principles go to `deferred/principles/`, never into CORE.)
+(The deferred domains are relocated here as part of the single big move; Task 11 only writes the deferral note and verifies. Their principles go to `deferred/principles/` in Step 4, never into CORE.)
 
 - [ ] **Step 3: Move DESIGN members**
 
@@ -399,9 +398,44 @@ git mv skills/design skills/element-reuse skills/journey-mapping \
        skills/persona-testing skills/iterative-polish-autoloop plugins/design/skills/
 ```
 
-- [ ] **Step 4: Split `principles/` by owning plugin**
+- [ ] **Step 4: Split `principles/` by owning plugin (precise mapping, reconciled against the live list)**
 
-Move each `principles/<name>.md` next to the plugin that owns it. CORE gets: `code-review, pre-flight, test-architect, skill-vs-code-audit, product-direction-validator, worktree-discipline, decomposition, file-discipline, operating-principles, lean-by-default, task-classification, audit-routing, knowledge-graph, knowledge-layers, project-identity, quality-rubric, forbidden-phrases, database-query-discipline, migration-create, data-integrity, ai-cost-monitoring, pre-flight, README, visual-verification` (verification-shared docs stay with CORE). DESIGN gets: `ux-audit, a11y-audit, interaction-audit, flow-audit, pages-audit, design-token-audit, product-designer, design-benchmarking, design-system-reference-skill, element-reuse, journey-mapping, persona-testing`. Run the moves, then in Step 5 re-point every `../../principles/<name>.md` cite that crossed a plugin boundary.
+The 36 principle files map as follows.
+
+**CORE (17):** `code-review, pre-flight, test-architect, skill-vs-code-audit, product-direction-validator, worktree-discipline, decomposition, file-discipline, operating-principles, lean-by-default, task-classification, audit-routing, knowledge-graph, knowledge-layers, project-identity, forbidden-phrases, README`
+
+**DESIGN (14):** `ux-audit, a11y-audit, interaction-audit, flow-audit, pages-audit, design-token-audit, product-designer, design-benchmarking, design-system-reference-skill, element-reuse, journey-mapping, persona-testing, visual-verification, iterative-polish-autoloop`
+
+**DEFERRED (4) → `deferred/principles/`:** `data-integrity, migration-create, database-query-discipline, ai-cost-monitoring`
+
+**SHARED (1) → COPY into BOTH plugins:** `quality-rubric` — the S/A/B/C/D grading anchors are used by both `code-review` (CORE) and the design audits (DESIGN). Because the two plugins must be independent (no cross-plugin path may resolve), copy `quality-rubric.md` into `plugins/core/principles/` AND `plugins/design/principles/` rather than moving it to one.
+
+```bash
+# CORE principles
+git mv principles/code-review.md principles/pre-flight.md principles/test-architect.md \
+  principles/skill-vs-code-audit.md principles/product-direction-validator.md \
+  principles/worktree-discipline.md principles/decomposition.md principles/file-discipline.md \
+  principles/operating-principles.md principles/lean-by-default.md principles/task-classification.md \
+  principles/audit-routing.md principles/knowledge-graph.md principles/knowledge-layers.md \
+  principles/project-identity.md principles/forbidden-phrases.md principles/README.md \
+  plugins/core/principles/
+# DESIGN principles
+git mv principles/ux-audit.md principles/a11y-audit.md principles/interaction-audit.md \
+  principles/flow-audit.md principles/pages-audit.md principles/design-token-audit.md \
+  principles/product-designer.md principles/design-benchmarking.md principles/design-system-reference-skill.md \
+  principles/element-reuse.md principles/journey-mapping.md principles/persona-testing.md \
+  principles/visual-verification.md principles/iterative-polish-autoloop.md \
+  plugins/design/principles/
+# DEFERRED principles
+git mv principles/data-integrity.md principles/migration-create.md \
+  principles/database-query-discipline.md principles/ai-cost-monitoring.md deferred/principles/
+# SHARED — copy into both, then remove the root original
+cp principles/quality-rubric.md plugins/core/principles/quality-rubric.md
+git mv principles/quality-rubric.md plugins/design/principles/quality-rubric.md
+git add plugins/core/principles/quality-rubric.md
+rmdir principles 2>/dev/null || true   # should now be empty
+```
+Then in Step 5 re-point every `../../principles/<name>.md` cite that crossed a plugin boundary. DESIGN's index has no README yet — create a one-line `plugins/design/principles/README.md` listing the design principles (or note it for Task 10).
 
 - [ ] **Step 5: Re-point cross-plugin principle references**
 
