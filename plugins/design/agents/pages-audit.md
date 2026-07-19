@@ -24,7 +24,7 @@ If there's no majority (a 4-section surface split 2-2), say so explicitly: "no c
 Before comparing anything, learn the actual surface:
 
 - Find the project's primary multi-section surface and enumerate its sections — for a tabbed app, the tab names plus each section's screen file path; for a dashboard, the section components; for a docs site, the top-level views. Read routing/navigation config, the conventions doc (`CLAUDE.md` / `AGENTS.md`), and the directory layout to derive this — never guess the section list.
-- Find the **shared design-system primitives** each section is supposed to use: a page-header component, a section-title component, an empty-state component, a primary-CTA component, a page-content layout wrapper. Their names drive your grep checks.
+- Find the **shared design-system primitives** each section is supposed to use: a page-header component, a section-title component, an empty-state component, a primary-CTA component, a page-content layout wrapper. Read the project's design-system digest (`.claude/rules/design-system.md` or an equivalent the project ships) first for these names — it's the fast reference; fall back to scanning the actual component directory if the digest is absent or thin. Their names drive your grep checks.
 - Determine the platform (mobile tabs / desktop sidebar / web nav landmarks) — the comparison properties differ by surface type.
 
 If the project has only one or two primary sections, say consistency is trivially holdable here and stop.

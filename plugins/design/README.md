@@ -7,7 +7,7 @@ claude plugin install dotclaude-design@dotclaude
 
 ## Start here: tell it what "good" means
 
-Before any audit is worth running, run `/dotclaude:design` once. It reads your stack, your existing screens, and the design-flavored commits in your git history, then interviews you: which apps set your visual bar (a platform-chrome reference plus a domain reference), your voice and banned phrases, whether your surfaces form multi-screen arcs or a multi-section dashboard. The output is a north-star doc — your named benchmarks, not "make it look nice" — that the taste audits below read and grade every screen against.
+Before any audit is worth running, run `/dotclaude:design` once. It reads your stack, your existing screens, and the design-flavored commits in your git history, then interviews you: which apps set your visual bar (a platform-chrome reference plus a domain reference), your voice and banned phrases, whether your surfaces form multi-screen arcs or a multi-section dashboard. It writes two thin artifacts to `.claude/rules/` — no agents are authored: `design-north-star.md` (your named benchmarks, voice, and project-specific anti-patterns — not "make it look nice") and `design-system.md` (a reference digest of your tokens, primitives, and motion vocabulary). The audits below read both directly, at runtime, and grade every screen against them.
 
 Skip this step and the taste audits still run, but they fall back to general platform-native conventions and say so explicitly in every report. Useful, but generic — the north-star is what turns "S-tier" from a vibe into something two people can agree on.
 

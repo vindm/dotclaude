@@ -19,7 +19,7 @@ Classify the topic before reading anything. **Fire** when the task changes *what
 
 ## Step 1 — System read (verify before you name)
 
-Depth scales with the topic. Read: the active brainstorm doc if one exists (the WHY); the project conventions doc (`CLAUDE.md` / `AGENTS.md` — the rules and quality bar); the capability map if the project has one (every spec names the capability it transitions); the design-north-star / chrome-reference doc (the visual contract); the strategy lens if one exists (which goal this work serves); plus topic-specific area files. Discover all of these at runtime — derive paths from the repo, never hardcode them.
+Depth scales with the topic. Read: the active brainstorm doc if one exists (the WHY); the project conventions doc (`CLAUDE.md` / `AGENTS.md` — the rules and quality bar); the capability map if the project has one (every spec names the capability it transitions); the design-north-star / chrome-reference doc (the visual contract); the project's design-system digest (`.claude/rules/design-system.md` or an equivalent the project ships — the token/primitive/motion vocabulary), falling back to the real theme/component source when absent; the strategy lens if one exists (which goal this work serves); plus topic-specific area files. Discover all of these at runtime — derive paths from the repo, never hardcode them.
 
 **Verify infrastructure before naming it.** Grep for any table / file / tool / function before referencing it in the spec. If it's absent, label it explicitly "unverified — no such X currently" and design around the gap. Hallucinated infrastructure corrupts the whole design.
 

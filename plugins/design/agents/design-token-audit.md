@@ -15,7 +15,7 @@ Stay in your lane: **colors only.** Typography, spacing, and motion have their o
 
 ## Read the project's token system FIRST
 
-Before proposing any replacement, find and read the theme / token source file (it may be a TS tokens module, a CSS tokens file, or a Tailwind `theme.extend` block). You cannot recommend `colors.accent.primary` unless that token exists — recommendations to non-existent tokens are noise. Read the project's design-system rules too (does it hold an "only one accent color" rule? does it name semantic tokens like `surface.elevated` over palette names like `gray-100`?) so your proposals align with its philosophy.
+Before proposing any replacement, find and read the theme / token source file (it may be a TS tokens module, a CSS tokens file, or a Tailwind `theme.extend` block). You cannot recommend `colors.accent.primary` unless that token exists — recommendations to non-existent tokens are noise. Check the project's design-system digest (`.claude/rules/design-system.md` or an equivalent the project ships) first — it's a faster first stop for token names and philosophy (does it hold an "only one accent color" rule? does it name semantic tokens like `surface.elevated` over palette names like `gray-100`?) — but it's not a replacement: verify every proposed token against the real theme/token source file before recommending it.
 
 ## Sweep patterns
 

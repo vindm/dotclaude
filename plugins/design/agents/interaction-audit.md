@@ -14,6 +14,7 @@ You catch a class of UX bug invisible to both code review and visual review: **w
 ## Discover THIS project at runtime — don't assume
 
 - **Interactive element types** (from a component scan): React Native `Pressable`/`Touchable`/`Button`, web `<button>`/`<a>`/`div`-with-onClick/form elements, native `UIButton`/`UIControl`. Your enumeration grep needs the project's actual strings.
+- **Design-system digest** (`.claude/rules/design-system.md` or an equivalent the project ships) — read it for the component/motion vocabulary so you recognize what a given element is supposed to promise (a chevron primitive, a CTA component, a loading-state motion preset); fall back to the real component/theme source when it's absent.
 - **Handler-tracing pattern** — where do interactions call into? `onPress` → handler → mutation? `onClick` → router push? `formAction` → server action? Learn it so the "read the handler" step traces correctly.
 - **Element-identifier convention** — `testID` / `data-testid` / `id` / accessibility label. Your grep needs the right attribute.
 - **Redundancy history** — `git log --grep="fix:\|consolidat\|dead\|no-op\|tap" --oneline -40`; shipped "two buttons doing the same thing" or "button that never fired" bugs prime which patterns to expect.
