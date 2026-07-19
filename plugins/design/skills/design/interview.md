@@ -1,10 +1,10 @@
 # `/dotclaude:design` interview
 
-19 questions across 7 phases (A–G), capturing the **46 configuration knobs that feed the two written artifacts** — `.claude/rules/design-north-star.md` and `.claude/rules/design-system.md`. This is a reduced subset of the original 53-knob design-stack analysis (`docs/design-stack-analysis.md`): the knobs that only existed to tune a per-project agent copy's internals (depth, tool surface, model tier, doc-path conventions, "which agents to author") are gone now that the 7 design audits ship with the plugin and are consumed as-is at runtime. Adaptive: skip ruthlessly when Phase 1 (project scan) already answered. The interview's job is to surface the **design DNA Claude Code cannot read from code** — named benchmarks, voice character, war-story bugs, surface inventories, native primitives, and capture commands — so the two artifacts grade against *real anchors* instead of vibes.
+19 questions across 7 phases (A–G), capturing the **47 configuration knobs that feed the two written artifacts** — `.claude/rules/design-north-star.md` and `.claude/rules/design-system.md`. This is a reduced subset of the original 53-knob design-stack analysis (`docs/design-stack-analysis.md`): the knobs that only existed to tune a per-project agent copy's internals (depth, tool surface, model tier, doc-path conventions, "which agents to author") are gone now that the 7 design audits ship with the plugin and are consumed as-is at runtime. Adaptive: skip ruthlessly when Phase 1 (project scan) already answered. The interview's job is to surface the **design DNA Claude Code cannot read from code** — named benchmarks, voice character, war-story bugs, surface inventories, native primitives, and capture commands — so the two artifacts grade against *real anchors* instead of vibes.
 
 **Pacing rule**: 1–2 questions per turn, conversational. Never fire-hose all the questions at once. Listen for off-script signal ("our settings page got out of hand") — that's gold for `design-north-star.md`'s anti-patterns section.
 
-**Skip discipline**: if a question's answer is obvious from Phase 1's scan, do NOT ask — confirm in one sentence and move on. The cost of asking a redundant question is real (it signals "you weren't paying attention to my code"). Phase 1 reliably auto-discovers ~20 of the 46 knobs; the interview drives the remaining ~26.
+**Skip discipline**: if a question's answer is obvious from Phase 1's scan, do NOT ask — confirm in one sentence and move on. The cost of asking a redundant question is real (it signals "you weren't paying attention to my code"). Phase 1 reliably auto-discovers ~20 of the 47 knobs; the interview drives the remaining ~27.
 
 **Batching guidance**: questions can be batched into ~5 super-questions per turn for actual interview UX. The numbered Q-A1 / Q-B2 / etc. are the underlying knob drivers; the turns can group several.
 
@@ -138,7 +138,7 @@ Determines whether `design-north-star.md`'s per-surface chrome table needs a sec
 
 ---
 
-## Phase E — Product posture (3 Qs, 5 knobs)
+## Phase E — Product posture (3 Qs, 6 knobs)
 
 ### Q-E1 — User persona
 
@@ -154,11 +154,11 @@ Determines whether `design-north-star.md`'s per-surface chrome table needs a sec
 
 ### Q-E3 — Demo test audience + quality posture
 
-> "Who would you demo a polished change to — be specific. Name the role or person. ('A friend's customer I'm recruiting as customer #2', 'a journalist writing about us', 'a CTO at a target enterprise', 'a designer whose taste I respect'.) And — is your quality posture defensive ('block if not S-tier') or offensive ('ship and iterate')?"
+> "Who would you demo a polished change to — be specific. Name the role or person. ('A friend's customer I'm recruiting as customer #2', 'a journalist writing about us', 'a CTO at a target enterprise', 'a designer whose taste I respect'.) And — is your quality posture defensive ('block if not S-tier') or offensive ('ship and iterate')? Plus: what accessibility compliance bar does this project target — WCAG 2.2 AA (the default if you're not sure), AAA, Section 508, or none/internal-only?"
 
-**Drives knobs**: `DEMO_TEST_AUDIENCE`, `QUALITY_BAR_REGISTER` (defensive / offensive / bar-by-surface), `QUALITY_GRADE_TARGETS_BY_SURFACE` (which surface categories target which grade).
+**Drives knobs**: `DEMO_TEST_AUDIENCE`, `QUALITY_BAR_REGISTER` (defensive / offensive / bar-by-surface), `QUALITY_GRADE_TARGETS_BY_SURFACE` (which surface categories target which grade), `A11Y_COMPLIANCE_TARGET` (WCAG 2.2 AA / AAA / Section 508 / none-internal).
 
-`DEMO_TEST_AUDIENCE` becomes `design-north-star.md`'s demo-test line verbatim. `QUALITY_GRADE_TARGETS_BY_SURFACE` feeds `design-system.md`'s quality-tier table.
+`DEMO_TEST_AUDIENCE` becomes `design-north-star.md`'s demo-test line verbatim. `QUALITY_GRADE_TARGETS_BY_SURFACE` feeds `design-system.md`'s quality-tier table. `A11Y_COMPLIANCE_TARGET` lands in `design-north-star.md` too — the consumed `a11y-audit` agent reads it at runtime to set its contrast/scaling thresholds, defaulting to WCAG 2.2 AA only when the doc states nothing.
 
 ---
 
@@ -237,10 +237,10 @@ These are often the highest-value answers — bugs that bothered the user but ne
 | B | Benchmarks | 3 | 4 | No |
 | C | Voice + persona | 4 | 6 | Partial (Phase G mining) |
 | D | Surfaces + product context | 3 | 5 | Yes (file path discovery) |
-| E | Product posture | 3 | 5 | No |
+| E | Product posture | 3 | 6 | No |
 | F | Design system | 2 | 10 | Yes (heavy) |
 | G | Git mining | 1 (confirm) + 1 (off-record) | 5 | Yes (mining-automated) |
-| **Total** | | **19 questions** | **46 knobs** | |
+| **Total** | | **19 questions** | **47 knobs** | |
 
 ### Batched super-questions for actual interview UX
 
@@ -294,7 +294,7 @@ Wait for confirmation, then proceed to Phase 4 of `SKILL.md`.
 ## How to use this script
 
 - **One or two questions per turn**, conversational. The super-question batching above is fine for actual UX.
-- **Skip ruthlessly.** If Phase 1's scan already answered, confirm in one sentence rather than asking. Phase 1 reliably handles ~20 of the 46 knobs.
+- **Skip ruthlessly.** If Phase 1's scan already answered, confirm in one sentence rather than asking. Phase 1 reliably handles ~20 of the 47 knobs.
 - **Listen for off-script signal.** A user-volunteered "our settings page got out of hand" is more valuable than 5 in-script questions answered tersely. Follow it.
 - **Push gently on B1/B2/B3** — these are the most load-bearing answers. Without named benchmarks, `design-north-star.md` has no anchors.
 - **Mine git in Phase G no matter what.** Even if the user has prepared their war stories, the SHA + subject-line specificity makes the conversation 2-3× more concrete.
