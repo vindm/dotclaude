@@ -1,6 +1,6 @@
 {
   "name": "dotclaude-design",
-  "description": "The AI design/UX auditor nobody else has: elicits what 'good' means for your product (the north-star), then holds every screen to it — ux, flow, pages, a11y, interaction, and design-token audits, plus the product-designer IA/flow spec.",
+  "description": "A design/UX audit layer for Claude Code. /dotclaude:design elicits your design north-star; ux, flow, pages, a11y, interaction, and design-token audits grade every screen against it, plus a product-designer IA/flow spec.",
   "version": "3.0.0",
   "author": { "name": "Dima Vinokurov" },
   "homepage": "https://github.com/vindm/dotclaude",

@@ -1,36 +1,36 @@
-# dotclaude — a senior who won't let you shoot your own foot
+# dotclaude
 
-Parallel-session worktree isolation. Blast-radius pre-flight before you touch anything risky. Guard hooks that block the foot-guns automatically. Graded code review that catches what passed every test and shipped anyway. Test coverage designed and implemented by risk, not by vibes.
+Senior-engineer discipline for Claude Code: worktree isolation, pre-flight,
+guard hooks, graded code review, and risk-weighted test coverage. Consumed
+as-is — it works the moment you install.
 
-```bash
-claude plugin marketplace add vindm/dotclaude
-claude plugin install dotclaude@dotclaude
-```
+    claude plugin marketplace add vindm/dotclaude
+    claude plugin install dotclaude@dotclaude
 
 ## What's inside
 
-Everything below is *consumed* — it works the moment you install, nothing to configure:
+The bold names are what you invoke; none of it needs configuration.
 
-- **`operating-discipline`** — the always-on "how to work" layer underneath every task: understand before building, weigh real alternatives instead of grabbing idea #1, never call a job done that isn't verified.
-- **Guard hooks** — block a force-push or history rewrite, a secret sliding into a committed file, a file past the size ceiling — before you ever ask, no setup required.
-- **`pre-flight`** — maps integration points, parallel paths, and cross-boundary risk before a line of code is written; returns a Clear-for-Takeoff / Caution / Abort verdict with a risk matrix.
+- **`operating-discipline`** — the always-on layer under every task: understand before building, weigh real alternatives, never call a job done that isn't verified.
+- **Guard hooks** — block a force-push or history rewrite, a secret sliding into a commit, a file past the size ceiling — before you ask, no setup.
+- **`pre-flight`** — maps integration points, parallel paths, and cross-boundary risk before a line of code is written; returns a Clear / Caution / Abort verdict with a risk matrix.
 - **`code-review`** — post-implementation review for blast-radius, parallel-path drift, and trust-boundary no-ops that per-file linters miss. Graded S through F.
 - **`decomposition`** — splits a file that has outgrown itself at the right seams, behind a plan you approve first.
-- **`test-architect`** — audits coverage gaps weighted by risk, designs the suite, and writes the tests in your own runner.
+- **`test-architect`** — audits coverage gaps weighted by risk, designs the suite, and writes the tests in your runner.
 
-One tool needs a one-time setup instead of working out of the box:
+One tool takes a one-time setup:
 
-- **`/dotclaude:worktree`** — for projects where several AI sessions (or humans + agents) work concurrently and collide in one checkout. Interviews your repo's concurrency shape, authors a blocking main-checkout hook from a tested template, and proves it with a live smoke worktree before handing off.
+- **`/dotclaude:worktree`** — for repos where several sessions (or humans + agents) work concurrently and collide in one checkout. Interviews the concurrency shape, authors a blocking main-checkout hook from a tested template, and proves it with a live smoke worktree.
 
 ## Calibrating the bar
 
-Two of the agents above read a project-specific artifact at runtime when one exists, and fall back to generic methodology when it doesn't:
+Two agents read a project-specific file at runtime when it exists, and fall back to generic methodology when it doesn't:
 
-- **`/dotclaude:coding`** — a short interview on your file-size ceiling and the bug classes your git history actually repeats; writes `.claude/dotclaude/code-anti-patterns.md`. `code-review` reads it on every run.
-- **`/dotclaude:testing`** — a short interview on which module scares you most and how deep testing should go; writes `.claude/dotclaude/test-risk-model.md`. `test-architect` seeds its risk-weighted priorities from it.
+- **`/dotclaude:coding`** — a short interview on your file-size ceiling and the bug classes your git history repeats; writes `.claude/dotclaude/code-anti-patterns.md`, which `code-review` reads on every run.
+- **`/dotclaude:testing`** — a short interview on which module scares you most and how deep testing should go; writes `.claude/dotclaude/test-risk-model.md`, which `test-architect` seeds its priorities from.
 
-Run either once per project. Skip them and the agents still work — just against generic priors instead of yours.
+Run either once per project. Skip them and the agents still work — against generic priors instead of yours.
 
 ---
 
-Part of the [dotclaude](../../README.md) marketplace. Companion plugin: [dotclaude-design](../design/README.md), the design/UX audit layer.
+Part of the [dotclaude](../../README.md) marketplace. Companion: [dotclaude-design](../design/README.md), the design/UX audit layer.
