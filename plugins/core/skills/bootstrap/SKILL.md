@@ -12,7 +12,7 @@ Bootstrap authors only what a shared file cannot carry — the project-specific 
 |---|---|
 | **Identity** — vision / ICP / moat / stage (CLAUDE.md opening) | Process discipline (`operating-discipline` skill) |
 | **Architecture** — layers / boundaries + project boundary hooks + `dotclaude.yml` config for the config-needing guard templates | The universal guard hooks (`hooks/hooks.json`) |
-| **Quality bar** — the project's *named* benchmarks (`design-north-star.md`) | The auditor agents (they read the north-star at runtime) |
+| **Quality bar** — a non-design quality bar where one applies (e.g. `api-north-star.md`) | Design's north-star + design-system reference — authored by the companion `dotclaude-design` plugin's `/dotclaude:design`, not by bootstrap |
 | **Knowledge graph** — `docs/` structure + the project's task-classification routing table + capability map | The domain skills |
 | **A THIN local `CLAUDE.md`** — identity + architecture + task table + DoD (project verification commands) + a pointer to the consumed methodology | — |
 
@@ -53,8 +53,10 @@ Vision (one sentence), `ICP (wedge)`, production-vs-internal, stage, `## Moat` (
   ```
 - **Project boundary hooks** — copy the relevant config-needing templates from the plugin's `hook-templates/` into `.claude-staging/hooks/` with the project's values (these are project-specific, so they're authored locally, not consumed). Do NOT re-author the universal guards — they come from the plugin.
 
-### Quality bar → `.claude-staging/rules/<domain>-north-star.md`
-The project's *named* benchmarks: Tier-1 chrome reference + Tier-2 domain references (each with its specific dimension — "X for keyboard speed," not "X is good") + anti-references + the demo test. This is the one input the consumed auditor agents (`ux-audit`, `a11y-audit`, …) read at runtime to grade against — without it they fall back to platform-native. No UI → ship `api-north-star.md` or skip (log the reason).
+### Quality bar → `.claude-staging/rules/<domain>-north-star.md` (non-design only)
+Bootstrap does NOT author the design north-star or the design-system reference — eliciting named visual/UX benchmarks (Tier-1 chrome reference + Tier-2 domain references + anti-references) is the companion **dotclaude-design** plugin's job, run via `/dotclaude:design`. It writes both `.claude/rules/design-north-star.md` and `.claude/rules/design-system.md`, which the design audit agents (`ux-audit`, `a11y-audit`, …) read at runtime. If Phase 1 found a human-facing UI surface, point the user at `/dotclaude:design` here rather than interviewing for visual benchmarks yourself.
+
+Bootstrap still authors a **non-design** quality bar where one applies and the project has no UI to benchmark — e.g. `api-north-star.md` with named comparable-API references (React Query for hook ergonomics, Stripe for API design, etc.) + the demo test. No applicable non-design quality bar → skip (log the reason).
 
 ### Knowledge graph → `docs-staging/` + the task table
 - `docs-staging/README.md` — reading order + authority hierarchy + naming/archive conventions (the conventions are universal; the instance is the project's). Make `docs/archive/**` Read-denied via `.claude/settings.json`.

@@ -116,7 +116,7 @@ This is the substrate the interview adapts to. Skip questions whose answer is al
 
 ## Phase 2 — Interview
 
-Open `interview.md` (same directory). The interview is structured as **10 phases (A–J) driving 53 configuration knobs** — the calibration target inherited from `docs/design-stack-analysis.md`. Adaptive: ~25 knobs auto-populate from Phase 1's scan; the interview drives the remaining ~28 via ~17-18 sub-questions batchable into 5-6 super-questions per turn.
+Open `interview.md` (same directory). The interview is structured as **7 phases (A–G) driving 47 configuration knobs** — a reduced subset of the original 53-knob calibration target inherited from `docs/design-stack-analysis.md`, after dropping the knobs that only existed to tune a per-project agent copy's internals (gone now that the 7 design audits ship with the plugin and are consumed as-is). Adaptive: ~20 knobs auto-populate from Phase 1's scan; the interview drives the remaining ~27 via 19 sub-questions batchable into ~5 super-questions per turn.
 
 The most important questions (the ones to fight for if the user resists):
 
