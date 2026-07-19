@@ -168,7 +168,6 @@ This belongs to code review because it's the same instinct as parallel-path dete
 
 - `pre-flight.md` — the pre-implementation companion. Run `pre-flight` before writing code; run `code-review` after. They share the parallel-path methodology but operate at different points in the loop.
 - `test-architect.md` — when code review surfaces "missing test coverage," route to test-architect for the design.
-- `data-integrity.md` — when code review surfaces a write-path concern on persistent state, the data-integrity agent does the deeper sweep.
 - `../examples/the-write-that-returned-success.md` — paradigm example of a bug code-review catches: silent no-op at a trust boundary.
 - `../examples/the-bug-surfaced-five-screens-later.md` — paradigm example of cascade-through-valid: code review catches this by tracing the operation back across all entry points, not by debugging the symptom.
 - `../examples/the-commit-that-dropped-six-files.md` — paradigm example of commit-integrity drift: the message claimed seven files, lint-staged landed one, and the gap shipped silently.

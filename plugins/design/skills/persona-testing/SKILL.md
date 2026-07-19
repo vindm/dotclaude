@@ -53,7 +53,7 @@ PASS = treats the user as someone who already knows the assistant and the contex
 
 3. **Apply the verdict.** All three PASS → ship. Any FAIL → REWRITE; do not ship a spec or claim audit-clean with a failing string.
 
-4. **Hard-bound deny-list check (independent of the three tests).** Some phrases are categorically forbidden on certain surface types. Mirror the project's deny-list (read it at runtime if present) as a mechanical backstop — those phrases never ship on the wrong surface regardless of how charitably the three interpretive tests were run.
+4. **Hard-bound deny-list check (independent of the three tests).** Some phrases are categorically banned on certain surface types. Mirror the project's deny-list (read it at runtime if present) as a mechanical backstop — those phrases never ship on the wrong surface regardless of how charitably the three interpretive tests were run.
 
 ## Non-negotiables
 

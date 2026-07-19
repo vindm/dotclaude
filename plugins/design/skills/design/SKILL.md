@@ -121,7 +121,7 @@ Open `interview.md` (same directory). The interview is structured as **10 phases
 The most important questions (the ones to fight for if the user resists):
 
 - **Q-B1 / Q-B2 / Q-B3** — Tier 1 (chrome) + Tier 2 (domain, with dimension) + anti-references. Without named benchmarks, every authored agent grades on vibes.
-- **Q-C1 → Q-C4** — voice + assistant character + brand voice reference + forbidden phrases. Gates whether `persona-testing` + `forbidden-phrases` ship.
+- **Q-C1 → Q-C4** — voice + assistant character + brand voice reference + banned phrases. Gates whether `persona-testing` ships.
 - **Q-D1 / Q-D2** — multi-screen arcs + multi-section primary surface. Gates whether `flow-audit` / `iterative-polish-autoloop` / `pages-audit` apply.
 - **Q-I1** — git-mined commit confirmation. Transforms generic textbook anti-patterns into project-specific ones.
 - **Q-E3** — demo audience + quality posture. Defines what "shipped well" means.
@@ -157,12 +157,6 @@ Read these from `../../principles/` SELECTIVELY based on what the project actual
 
 **Read if user wants iterative polish to award-tier** (capture harness + reviewer + fixture reset all present):
 - `iterative-polish-autoloop.md` — continuous polish loop with 3-layer scrutiny (reviewer / composition scan / backend-truth probe)
-
-**Read if project has a CLAUDE.md / vision doc** (drift detection wanted):
-- `product-direction-validator.md` — vision-alignment guardian / drift detector / agent coordinator
-
-**Read if project has product voice** (any user-facing copy):
-- `forbidden-phrases.md` — voice discipline
 
 ## Phase 4 — Author the kit
 
@@ -208,9 +202,6 @@ Based on what applied + the interview answers, author these in `.claude-staging/
   - Reference THEIR spec doc convention (Q-H1), capability map path if any (Q-J1), prototype gates if any (Q-J1)
   - Self-audit checklist verbatim
 
-- **`product-compass.md`** (if vision docs exist — Q-J1)
-  - Per `product-direction-validator.md` principle — Vision Health verdict + drift detection + agent coordination
-
 ### Skills (in `.claude-staging/skills/`)
 
 - **`design-system/SKILL.md`** — design-system entry-point skill per `design-system-reference-skill.md` principle (11 sections — north-star / native primitives / tokens / styling API / semantic colors / surface hierarchy / motion / shadows / status / quality tiers / library gotchas + i18n)
@@ -225,12 +216,10 @@ Based on what applied + the interview answers, author these in `.claude-staging/
 - **`design-north-star.md`** — explicitly names THEIR Tier 1 + Tier 2 benchmarks; quotes specific anti-patterns the user mentioned in interview; **per-surface chrome reference table** (the row-per-surface convention from `design-benchmarking.md`)
 - **`audit-routing.md`** — the pipeline order + when-to-dispatch table, scoped to the agents you just authored; **cheapest-tier-wins discipline** explicit (hook < rule < skill < agent in token cost)
 - **`visual-verification.md`** — see-what-you-built discipline, with THEIR device-screenshot commands
-- **`forbidden-phrases.txt`** — if the project has voice; populate with the universal AI-slop list + the brand-specific phrases the user provided in interview (Q-C4)
 
 ### Hooks (in `.claude-staging/hooks/` — render from `../../hook-templates/`)
 
 - **`check-design-tokens.sh`** — substitute `THEME_PATH` with the user's actual theme source file path
-- **`check-forbidden-phrases.sh`** (if rules/forbidden-phrases.txt is shipped) — substitute scopes with the user's actual user-copy paths
 - **`check-no-legacy-blur.sh`** (if iOS / Expo + has modern glass primitive) — block legacy blur API imports
 - **`check-platform-icons.sh`** (if iOS + native tabs use SF Symbols) — block native-tab icons without system-symbol prop
 
@@ -242,7 +231,6 @@ When you ship a major artifact, also ship its companion(s):
 - **`iterative-polish-autoloop.md` skill** ships with the **iteration-cap rule** (hard cap N, soft cap N-4) + the **safety invariants list** (do-not-edit migrations / fixtures / harness YAML).
 - **`flow-auditor.md` agent's mode (b)** ships with the **manifest schema** definition — `{step, name, path, context}` shape stated explicitly so the capture skill produces compatible output.
 - **`design-system/SKILL.md`** ships with the **post-edit command rule** (*"After editing `<tokens>`, run `<command>`"*) — without it, generated tokens drift from source.
-- **`product-compass.md` agent** ships with the **agent coordination table** (situation → recommended-agent), not just prose.
 
 ## Depth checklist (MANDATORY per authored agent)
 
@@ -318,12 +306,11 @@ feat(.claude): design discipline (dotclaude:design)
 Authored:
 - agents: ux-reviewer, a11y-audit, interaction-audit, design-token-auditor[, flow-auditor, pages-audit]
 - skills: journey-audit, element-reuse-check, persona-lens, quality-bar
-- rules:  design-north-star (Linear + Stripe + Things 3 anchors), audit-routing, visual-verification[, forbidden-phrases]
-- hooks:  check-design-tokens, check-forbidden-phrases
+- rules:  design-north-star (Linear + Stripe + Things 3 anchors), audit-routing, visual-verification
+- hooks:  check-design-tokens
 
 Tier 1 benchmarks (chrome): <list>
 Tier 2 benchmarks (domain): <list>
-Voice forbidden phrases: <count>
 ```
 
 ## Non-negotiable rules for this flow

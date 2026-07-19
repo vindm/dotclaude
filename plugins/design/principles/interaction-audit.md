@@ -18,7 +18,7 @@ Skip when:
 
 ## Why it matters — what this catches that nothing else does
 
-Three failure modes that survive both `code-review.md` and `ux-audit.md`:
+Three failure modes that survive both correctness-focused code review and `ux-audit.md`:
 
 1. **Dead chrome.** A button / pressable / card visually promises action — chevron, solid CTA color, hover state — but its handler never fires on the primary user path. The user taps; nothing happens (or worse, something happens that the user didn't expect). See `../examples/the-button-that-never-fired.md` for the canonical paradigm.
 

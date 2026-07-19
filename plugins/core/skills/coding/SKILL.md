@@ -1,10 +1,10 @@
 ---
-description: Elicit coding hygiene + voice intent for a project and write it to a thin artifact — `.claude/dotclaude/code-anti-patterns.md` plus a few `dotclaude.yml` keys — derived from the project's actual file-size distribution, the bug classes visible in git history, and any project-specific voice. No agent, rule, or hook is authored: the consumed `code-review` agent already reads this artifact at runtime. Invoke /dotclaude:coding in any project root with source code.
+description: Elicit coding hygiene intent for a project and write it to a thin artifact — `.claude/dotclaude/code-anti-patterns.md` plus a few `dotclaude.yml` keys — derived from the project's actual file-size distribution and the bug classes visible in git history. No agent, rule, or hook is authored: the consumed `code-review` agent already reads this artifact at runtime. Invoke /dotclaude:coding in any project root with source code.
 ---
 
-# `/dotclaude:coding` — coding hygiene + voice elicitation
+# `/dotclaude:coding` — coding hygiene elicitation
 
-You are eliciting the project-specific coding-discipline intent for the user's project: the right file-size ceiling, the bug classes a reviewer should specifically watch for, and (if the project has user-facing copy) voice phrases to forbid. The output is ONE thin artifact — `.claude/dotclaude/code-anti-patterns.md` — plus a handful of keys in `dotclaude.yml`. You do **not** author an agent, a rule file, or a hook: the consumed `code-review` agent (shipped by the plugin — see `agents/code-review.md`) already reads `dotclaude.yml`'s `artifacts.code-anti-patterns` path at runtime, falls back to its own generic methodology when the artifact is absent, and grades new changes against each entry in addition to the generic pass when it's present (full contract: `docs/artifact-contract.md`).
+You are eliciting the project-specific coding-discipline intent for the user's project: the right file-size ceiling and the bug classes a reviewer should specifically watch for. The output is ONE thin artifact — `.claude/dotclaude/code-anti-patterns.md` — plus a handful of keys in `dotclaude.yml`. You do **not** author an agent, a rule file, or a hook: the consumed `code-review` agent (shipped by the plugin — see `agents/code-review.md`) already reads `dotclaude.yml`'s `artifacts.code-anti-patterns` path at runtime, falls back to its own generic methodology when the artifact is absent, and grades new changes against each entry in addition to the generic pass when it's present (full contract: `docs/artifact-contract.md`).
 
 This is the layer the user wants set up FIRST on any project — the elicitation is cheap, and the consumed `code-review` agent is useful even with an empty artifact. The other domain skills (`/dotclaude:design`, `/dotclaude:data`, `/dotclaude:testing`, `/dotclaude:ai-workflow`) layer on top.
 
@@ -44,18 +44,7 @@ Before any question:
    - The project's lint config (`.eslintrc*`, `ruff.toml`, `clippy.toml`)
    - Any `docs/architecture.md` or sub-module READMEs
 
-5. **Voice signal** — does any user-facing copy exist?
-   ```bash
-   find . -path ./node_modules -prune -o \
-     \( -name "translations.*" -o -name "copy.*" -o -name "*.locale.*" \
-        -o -path "*/i18n/*" -o -path "*/translations/*" -o -path "*/copy/*" \) \
-     -print 2>/dev/null | head -20
-   grep -rE "amazing|awesome|love|exciting|!" --include="*.ts" \
-     <copy-dir> 2>/dev/null | head -20
-   ```
-   If voice files exist, the project may want the forbidden-phrases guard. If only error-message strings exist, voice is probably out of scope.
-
-Build mental model of: what stack, what the right file ceiling is, what bug classes recur, whether voice discipline applies.
+Build mental model of: what stack, what the right file ceiling is, what bug classes recur.
 
 ## Phase 2 — Interview
 
@@ -63,7 +52,6 @@ Open `interview.md` (same directory). 4-5 questions. Adaptive — skip what Phas
 
 - **File ceiling** — propose the number you derived from Phase 1; confirm or adjust.
 - **Past bug classes** — for project-specific anti-patterns the reviewer should catch.
-- **Voice / brand phrases** — only if the project has user-facing copy.
 - **Existing conventions** — anything in `CLAUDE.md` or contributing docs the artifact must respect.
 
 ## Phase 3 — Write the artifact
@@ -108,27 +96,9 @@ artifacts:
 
 Merge into an existing `dotclaude.yml` if one already exists (from `/dotclaude:bootstrap` or another domain elicitation) — never overwrite unrelated keys.
 
-### 3. Voice deny-list (only if C4 applied) — into `dotclaude.yml`, not a hook
-
-If the project has user-facing copy and the user named phrases to forbid, record them as data, not as a generated hook:
-
-```yaml
-forbiddenPhrases:
-  phrases:
-    - "Let me help you with that"
-    - "amazing"
-  scopes:
-    - "src/copy/**"
-    - "src/i18n/**"
-```
-
-Do NOT author `check-forbidden-phrases.sh` here. That hook is a project-specific *template* (`hook-templates/check-forbidden-phrases.sh`) wired by `/dotclaude:bootstrap`'s architecture phase, not by this elicitation — this skill's job stops at recording the deny-list.
-
-If C4 came up empty (no user-facing copy), skip the `forbiddenPhrases` key entirely and say so when presenting.
-
 ### Present + confirm
 
-Show the drafted `code-anti-patterns.md` and the `dotclaude.yml` diff. Walk through 2-3 concrete entries with real reasoning — "I mapped the cache-invalidation bug you named to `src/cache.ts:88`, seen in `a1b2c3d`; the reviewer will now grade against it" — and note anything skipped and why ("no `forbiddenPhrases` block — no user-facing copy in this project yet"). Wait for explicit confirmation before writing. This is a two-file change, not a multi-file kit, so no `.claude-staging/` review pass is needed: write directly to `.claude/dotclaude/code-anti-patterns.md` and merge into `dotclaude.yml` on approval.
+Show the drafted `code-anti-patterns.md` and the `dotclaude.yml` diff. Walk through 2-3 concrete entries with real reasoning — "I mapped the cache-invalidation bug you named to `src/cache.ts:88`, seen in `a1b2c3d`; the reviewer will now grade against it" — and note anything skipped and why. Wait for explicit confirmation before writing. This is a two-file change, not a multi-file kit, so no `.claude-staging/` review pass is needed: write directly to `.claude/dotclaude/code-anti-patterns.md` and merge into `dotclaude.yml` on approval.
 
 ## Non-negotiable rules for this flow
 
@@ -136,14 +106,12 @@ Show the drafted `code-anti-patterns.md` and the `dotclaude.yml` diff. Walk thro
 
 2. **Calibrate the ceiling against the codebase, not stack defaults.** A 1000 LOC default on a project where the 95th percentile is 320 LOC never fires — pick a number where the warning threshold catches drift. Don't pick a number the codebase already routinely violates; the ceiling stops being trusted the moment it's decorative.
 
-3. **Voice discipline is opt-in.** No user-facing copy → skip the `forbiddenPhrases` key entirely and log the skip. A deny-list with only "Hi / Hello / Welcome" on a backend-only library is friction without value.
+3. **Do NOT author an agent, a rule, or a hook.** The consumed `code-review` agent already owns the reviewer methodology, the tool restrictions, and the rubric. Writing a project-local `code-review.md` copy — or a `file-discipline.md` rule, or a hook script — duplicates what the plugin already ships and creates drift the moment either side changes. If a project genuinely needs to override the consumed agent's behavior, that's a deliberate same-name shadow, not this skill's default output.
 
-4. **Do NOT author an agent, a rule, or a hook.** The consumed `code-review` agent already owns the reviewer methodology, the tool restrictions, and the rubric. Writing a project-local `code-review.md` copy — or a `file-discipline.md` rule, or a hook script — duplicates what the plugin already ships and creates drift the moment either side changes. If a project genuinely needs to override the consumed agent's behavior, that's a deliberate same-name shadow, not this skill's default output.
-
-5. **Show, don't tell.** When presenting the artifact, quote at least one real entry so the user sees the level of specificity before approving. If every entry reads generic, the interview didn't extract enough — go back to C3.
+4. **Show, don't tell.** When presenting the artifact, quote at least one real entry so the user sees the level of specificity before approving. If every entry reads generic, the interview didn't extract enough — go back to C3.
 
 ## See also
 
-- `interview.md` — the short interview (C1 ceiling, C2 optional register note, C3 bug classes, C4 voice, C5 existing conventions).
+- `interview.md` — the short interview (C1 ceiling, C2 optional register note, C3 bug classes, C4 existing conventions).
 - `../../docs/artifact-contract.md` — the full elicit → artifact → consumed-agent contract.
 - `../../agents/code-review.md` — the consumed agent that reads `code-anti-patterns.md` at runtime.

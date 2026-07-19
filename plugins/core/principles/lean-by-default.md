@@ -73,7 +73,7 @@ Context budget is paid once per session; **latency budget is paid on every singl
 - **Don't run multi-second commands per edit.** Per-edit `eslint --fix` / type-check / test runs feel thorough but add seconds to every write, and they're usually *redundant* with a `lint-staged` pre-commit step plus the Definition-of-Done lint/test gate — the same check, run dozens of times instead of once. Lint at commit and at done, not on every keystroke-equivalent. (This is exactly why the `auto-lint-posttool.sh` template ships with a "when NOT to use" warning.)
 - **Consolidate `Write|Edit` checks into one dispatcher.** Each registered hook is a separate process spawn per edit; ten hooks mean ten spawns. Collapse them into a single `check-all.sh` dispatcher that reads the hook payload once and runs every check in-process, preserving per-violation blocking. One spawn, not N — the difference is felt on every edit.
 
-The deterministic guardrails that DO belong per-edit are the instant ones: file-size ceiling, token/hex sweep, forbidden-phrase scan, secret-leak check. Cheap and fast is the bar for the per-edit tier.
+The deterministic guardrails that DO belong per-edit are the instant ones: file-size ceiling, token/hex sweep, secret-leak check. Cheap and fast is the bar for the per-edit tier.
 
 ## How to derive THIS project's specifics
 

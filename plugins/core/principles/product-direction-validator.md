@@ -214,12 +214,10 @@ If the authored agent lacks any of these, redo.
 ## Cross-references
 
 - This agent **coordinates** other agents — it's the meta-coordinator. Cross-references:
-  - `product-designer.md` — recommend for IA / multi-screen flow work.
   - `code-review.md` — recommend after implementation.
   - `pre-flight.md` — recommend before non-trivial changes.
-  - `ux-audit.md` / `interaction-audit.md` / `a11y-audit.md` / `flow-audit.md` — recommend per design-audit-routing.md.
-  - `data-integrity.md` — recommend after pipeline changes.
   - `decomposition.md` — recommend when files exceed size budget.
+  - Domain plugins (design / data / …) contribute their own agents to the coordination table when installed — this core copy names only the agents core itself ships.
 
 - This agent **reads** but does not produce:
   - Project vision docs (`PRODUCT_VISION_DOCS`).

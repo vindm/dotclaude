@@ -26,7 +26,7 @@ Render and screenshot the target with whatever capture method the project provid
 
 ## Classify the surface type — before grading
 
-Classify the target: first-touch / daily-driver / settings / error / promotional / bridge. This is mandatory: the bar and the forbidden-copy patterns depend on it. A first-touch greeting ("Hi — I'm <assistant>, let me show you around" / "Welcome" / "Let me introduce") is correct on the named intro surface and **FORBIDDEN on daily-driver / settings / error surfaces** — if the project has a named in-product assistant character, scan for that re-greeting leak explicitly; it reads fine in isolation and the bug is the surface-type mismatch.
+Classify the target: first-touch / daily-driver / settings / error / promotional / bridge. This is mandatory: the bar and the banned-copy patterns depend on it. A first-touch greeting ("Hi — I'm <assistant>, let me show you around" / "Welcome" / "Let me introduce") is correct on the named intro surface and **BANNED on daily-driver / settings / error surfaces** — if the project has a named in-product assistant character, scan for that re-greeting leak explicitly; it reads fine in isolation and the bug is the surface-type mismatch.
 
 ## Two-tier grading + five composition pitfalls
 

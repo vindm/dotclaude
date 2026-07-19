@@ -45,7 +45,7 @@ Vision (one sentence), `ICP (wedge)`, production-vs-internal, stage, `## Moat` (
 
 ### Architecture → `CLAUDE.md.draft` + project hooks + `dotclaude.yml`
 - CLAUDE.md "Architecture": layer model, one-line-per-layer, boundary statements, constraints — each constraint with WHY + WHERE-ENFORCED. Add the trailing anchor comment: *"new constraints accrue here as one bullet with WHY + WHERE-ENFORCED; graduate recurring memory lessons into constraints when they fire repeatedly."*
-- **`dotclaude.yml`** — config for the base's config-needing guard templates the project opts into (file-size ceiling, design-token theme path, import-boundary rules, console-log allow-paths, forbidden-phrase list). The universal guards already fire from the plugin; here you only configure the project-tunable ones. The file also carries an `artifacts:` map recording paths to domain-specific elicitations that consumed agents read at runtime:
+- **`dotclaude.yml`** — config for the base's config-needing guard templates the project opts into (file-size ceiling, design-token theme path, import-boundary rules, console-log allow-paths). The universal guards already fire from the plugin; here you only configure the project-tunable ones. The file also carries an `artifacts:` map recording paths to domain-specific elicitations that consumed agents read at runtime:
   ```yaml
   artifacts:
     code-anti-patterns: .claude/dotclaude/code-anti-patterns.md

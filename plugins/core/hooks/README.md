@@ -19,4 +19,4 @@
 
 - **`jq` dependency.** The scripts parse the hook payload with `jq` — consumers need it on PATH.
 - **Per-edit latency.** Two PostToolUse Write/Edit hooks = two spawns per edit (plus the consumer's own). Both are fast deterministic guards. A future optimization is one consolidated dispatcher (per the `operating-discipline` lean guidance).
-- **Want a project-tunable guard** (design-token sweep, import-boundary, forbidden-phrases, console-log, regen-on-migration)? Those live in `../hook-templates/` and are authored locally by the thin generator with the project's config — they're not safe-as-is in an arbitrary consumer.
+- **Want a project-tunable guard** (design-token sweep, import-boundary, console-log, regen-on-migration)? Those live in `../hook-templates/` and are authored locally by the thin generator with the project's config — they're not safe-as-is in an arbitrary consumer.

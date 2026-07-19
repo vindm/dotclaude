@@ -6,7 +6,6 @@ These are `{{placeholder}}` templates the **thin generator** (`/dotclaude:bootst
 |---|---|
 | `check-design-tokens.sh` | the theme/token source path (where raw color is allowed) |
 | `check-import-boundary.sh` | the project's one-way import boundary rules |
-| `check-forbidden-phrases.sh` | the project's brand/voice phrase list + scopes |
 | `check-no-console-log.sh` | allow-paths (and a block-vs-warn taste call) |
 | `check-no-todo-comments.sh` | ticket-reference convention (opinionated) |
 | `check-prebuild-required.sh` | which paths require a prebuild step |
@@ -17,4 +16,4 @@ These are `{{placeholder}}` templates the **thin generator** (`/dotclaude:bootst
 
 **The ready-to-run universal guards moved to `../hooks/scripts/`** (consumed as-is via `../hooks/hooks.json`). Keep this directory for genuine templates only; if a script here loses its `{{placeholders}}`, it belongs in `../hooks/scripts/`, not here.
 
-*Some of these (e.g. `check-forbidden-phrases` with a universal AI-slop base list, `check-no-console-log` with default allow-paths) could be promoted to consumable base hooks with sensible universal defaults + an optional project-extension — a deliberate per-hook taste call, deferred.*
+*Some of these (e.g. `check-no-console-log` with default allow-paths) could be promoted to consumable base hooks with sensible universal defaults + an optional project-extension — a deliberate per-hook taste call, deferred.*

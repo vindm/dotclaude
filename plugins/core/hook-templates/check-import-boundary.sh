@@ -10,7 +10,7 @@ case "$file" in *.ts|*.tsx|*.js|*.jsx) ;; *) exit 0 ;; esac
 
 violations=()
 {{#importBoundary.rules}}
-# Rule: from {{from}} -> {{to}} forbidden ({{message}})
+# Rule: from {{from}} -> {{to}} blocked ({{message}})
 if [[ "$file" == *{{from}}* ]]; then
   if grep -n "from '.*{{to}}" "$file" 2>/dev/null | grep -v 'allow-import' > /tmp/.dc-imp.$$; then
     while IFS= read -r line; do

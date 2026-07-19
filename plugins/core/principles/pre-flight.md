@@ -177,8 +177,6 @@ Do NOT write these as placeholders ("TABLES_HERE"). The agent should reference r
 ## Cross-references
 
 - `code-review.md` — the post-implementation companion. Pre-flight catches design gaps; code-review catches implementation gaps. They share the parallel-path methodology.
-- `migration-create.md` — when pre-flight flags a migration in scope, that's where the migration discipline lives.
-- `data-integrity.md` — when pre-flight surfaces concerns about persistent-state writes.
 - `../examples/the-test-passed-for-the-wrong-reason.md` — a canonical case where pre-flight's "list every entry point" question would have caught the bug.
 - `../examples/the-write-that-returned-success.md` — pre-flight's "trust boundary" question is the question that catches RLS no-ops.
 

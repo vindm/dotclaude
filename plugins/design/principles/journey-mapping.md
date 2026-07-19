@@ -88,20 +88,20 @@ Two rules:
 - **Fill every row.** Do not abbreviate or stub.
 - **Verbatim copy only.** Paraphrasing hides duplication.
 
-### Step 4 — Apply the forbidden-pattern matrix
+### Step 4 — Apply the banned-pattern matrix
 
 Once the target's type is known, certain patterns are categorically disallowed:
 
-| Target type | Forbidden patterns |
+| Target type | Banned patterns |
 |---|---|
 | **first-touch** | None — this IS the introduction surface. |
-| **daily-driver** | Greetings, introductions, "welcome," "let me show you," "let's get started." (Project-specific deny-list — see `forbidden-phrases.md`.) |
+| **daily-driver** | Greetings, introductions, "welcome," "let me show you," "let's get started." (Project-specific deny-list.) |
 | **settings** | Same as daily-driver + re-introducing concepts the user has configured. |
 | **error** | Apologies, "sorry," "oops," "I'm here to help." State the situation; offer one path forward. |
 | **promotional** | Re-introducing concepts. Celebrations are not re-greetings. |
 | **bridge** | Hard-cut into the next arc without acknowledging the transition. |
 
-If the target exhibits a forbidden pattern, it's a critical gap for audits, or a rewrite-required mark for designs. No softening. The pattern is wrong for the type; the type is fixed.
+If the target exhibits a banned pattern, it's a critical gap for audits, or a rewrite-required mark for designs. No softening. The pattern is wrong for the type; the type is fixed.
 
 ### Step 5 — Cross-surface duplication check
 
@@ -121,11 +121,11 @@ Before authoring the skill, gather:
 
 2. **The project's copy file locations.** Where do translation / narration / copy files live? The cross-surface duplication grep needs these paths.
 
-3. **The project's assistant / persona (if any).** Is there a named assistant? An on-brand voice? The forbidden-pattern matrix's daily-driver row depends on what voice signals "introduction" in this project.
+3. **The project's assistant / persona (if any).** Is there a named assistant? An on-brand voice? The banned-pattern matrix's daily-driver row depends on what voice signals "introduction" in this project.
 
 4. **The project's surface types in use.** Not every project has all six categories. A B2B SaaS might have wizard + dashboard + settings only; no promotional, no bridge. Configure the skill to enumerate only the categories that exist.
 
-5. **The deny-list** (typically `forbidden-phrases.md` ships alongside) — the forbidden-pattern matrix references the deny-list for daily-driver violations.
+5. **The deny-list** (the project's own phrase deny-list, if one exists) — the banned-pattern matrix references the deny-list for daily-driver violations.
 
 ## Authoring the skill
 
@@ -135,7 +135,7 @@ The final skill (typically `.claude/skills/journey-audit/SKILL.md`) should speci
 2. **When NOT to use** — pure visual-polish or single-screen code-only refactors.
 3. **The five-step procedure** — with project-specific glob commands.
 4. **The surface-type taxonomy** — with project-specific examples for each row.
-5. **The forbidden-pattern matrix** — populated for THIS project's deny-list.
+5. **The banned-pattern matrix** — populated for THIS project's deny-list.
 6. **The output shape** — Section 0 of a design / audit doc, OR an inline preamble before the gap table.
 7. **Non-negotiables** — the map is mandatory; verbatim only; classification is binding; if you can't complete the map, stop.
 
@@ -153,7 +153,6 @@ When `product-designer`, `ux-audit`, `flow-audit`, `interaction-audit` agents ar
 
 - `element-reuse.md` — Gate A. When reusing an existing string, journey-mapping is the input to "what does the user already associate with this string?"
 - `persona-testing.md` — Gate B. Every copy element passes outside-eyes tests; persona-testing operates on the surfaces named in the journey map.
-- `forbidden-phrases.md` — the authoritative deny-list. Journey-mapping's Step 4 matrix references it.
 - `flow-audit.md` — audits the whole arc; the journey map IS the arc inventory.
 - `ux-audit.md` — single-screen visual polish; the journey map provides surface-type classification that shapes the grading.
 
@@ -163,9 +162,9 @@ When `product-designer`, `ux-audit`, `flow-audit`, `interaction-audit` agents ar
 
 - **Allowing paraphrased copy in the map.** Paraphrase hides duplication. The verbatim rule isn't a stylistic preference; it's the only way to detect cross-surface drift.
 
-- **Letting classification slip ("kind of a daily-driver but also kind of first-touch").** Surfaces have one type. If genuinely ambiguous, the skill should force a decision and document the rationale; it should NOT enable both-and answers that defeat the forbidden-pattern matrix.
+- **Letting classification slip ("kind of a daily-driver but also kind of first-touch").** Surfaces have one type. If genuinely ambiguous, the skill should force a decision and document the rationale; it should NOT enable both-and answers that defeat the banned-pattern matrix.
 
-- **Forbidden-pattern matrix copied from this principle doc.** The patterns are project-specific. The daily-driver forbidden list comes from the user's voice and the deny-list. Don't ship a generic list; derive from the project.
+- **Banned-pattern matrix copied from this principle doc.** The patterns are project-specific. The daily-driver banned list comes from the user's voice and the deny-list. Don't ship a generic list; derive from the project.
 
 - **No "STOP if you can't complete the map" clause.** When the user can't enumerate prior surfaces because they're unfamiliar with the codebase, the right action is to read more — not to proceed with a partial map. The skill should encode the stop signal.
 

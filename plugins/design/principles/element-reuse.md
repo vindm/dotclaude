@@ -123,7 +123,7 @@ Before authoring the skill, gather:
 
 2. **The project's existing reuse hot-spots.** Look at `grep -rn "useTranslation\|i18n.t\|t('" <code-dirs> | wc -l` for translation usage; high usage suggests many reuse decisions. Look at component imports — which components have the most call sites? These are the high-reuse-frequency elements where the gate is most useful.
 
-3. **The project's deny-list.** The gate's REJECT rationale often points to deny-list violations (see `forbidden-phrases.md`). The skill should reference the deny-list.
+3. **The project's deny-list.** The gate's REJECT rationale often points to deny-list violations. The skill should reference the deny-list.
 
 4. **Whether the project has a journey map convention.** The gate depends on journey-mapping being available. If the user is shipping both skills (recommended), encode the cross-reference; if only one, decide whether reuse-gate is viable without the journey map (it usually isn't).
 
@@ -152,7 +152,6 @@ If a design / audit skips this gate, the failure mode it exists to prevent ships
 
 - `journey-mapping.md` — provides the type classification this gate depends on. Required upstream input.
 - `persona-testing.md` — Gate B. Independent test of each copy element against outside-eyes lenses. Reuse-gate is Gate A (context fit); persona-testing is Gate B (voice fit). Both run; both bind.
-- `forbidden-phrases.md` — REJECT rationale often references deny-list violations.
 - `quality-rubric.md` — reuse violations typically register as the rubric's "tone mismatch" pitfall.
 
 ## Anti-patterns in the skill you write

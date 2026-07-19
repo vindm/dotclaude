@@ -217,7 +217,6 @@ If the authored skill lacks any of these, redo.
 - `audit-routing.md` — cross-rubric translation table (S ↔ Crit ↔ S0).
 - `visual-verification.md` — capture discipline (`FIXTURE_RESET_COMMAND` + `FLOW_CAPTURE_HARNESS` discipline).
 - `design-benchmarking.md` — Tier 1 / Tier 2 benchmarks inherited via the L1 reviewer.
-- `forbidden-phrases.md` — hooks that pre-empt copy-register findings before iterations spend on them.
 
 ## Anti-patterns in the skill you write
 

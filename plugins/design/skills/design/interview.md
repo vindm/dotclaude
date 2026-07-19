@@ -80,7 +80,7 @@ Skip entirely if Q-E2 said "internal-only" OR product has no user-facing copy be
 
 **Drives knobs**: `PRODUCT_HAS_VOICE` (boolean, gates all of Phase C remainder), the adjective triad for downstream calibration.
 
-The third part — the real example — is highest-signal. Adjectives are too vague; a real phrase from a real surface anchors voice for every authored copy / forbidden-phrases artifact.
+The third part — the real example — is highest-signal. Adjectives are too vague; a real phrase from a real surface anchors voice for every authored copy artifact.
 
 If `PRODUCT_HAS_VOICE = false`, **skip C2 / C3 / C4** and move to Phase D.
 
@@ -90,7 +90,7 @@ If `PRODUCT_HAS_VOICE = false`, **skip C2 / C3 / C4** and move to Phase D.
 
 **Drives knob**: `IN_PRODUCT_ASSISTANT_CHARACTER` (boolean + name + intro-surface-path).
 
-If **yes**, flag the **daily-driver-vs-first-touch trap** — a class of bug where the assistant's onboarding voice ("Hi — I'm <name>, let me show you around!") leaks onto daily-driver surfaces. The combination of `interaction-audit` + `forbidden-phrases.txt` + `element-reuse-check` is the structural guard.
+If **yes**, flag the **daily-driver-vs-first-touch trap** — a class of bug where the assistant's onboarding voice ("Hi — I'm <name>, let me show you around!") leaks onto daily-driver surfaces. The combination of `interaction-audit` + the project's phrase deny-list + `element-reuse-check` is the structural guard.
 
 ### Q-C3 — Brand voice reference
 
@@ -100,13 +100,13 @@ If **yes**, flag the **daily-driver-vs-first-touch trap** — a class of bug whe
 
 Examples: `"Apple Photos empty-state voice"` / `"Telegram product voice"` / `"Stripe docs voice"` / `"the partner-companion from Her"` / `"GitHub CLI voice"`.
 
-### Q-C4 — Voice anti-references + forbidden phrases + usage frequency
+### Q-C4 — Voice anti-references + banned phrases + usage frequency
 
 > "What tones do you actively reject? Customer-service register ('I'm here to help'), apology, performance ('crushing it!'), tutorial-explainer? And — any phrases you'd NEVER want in user-facing copy?"
 
-**Drives knobs**: `VOICE_ANTI_REFERENCES`, `BRAND_FORBIDDEN_PHRASES`, `USAGE_FREQUENCY_FRAMING` (inferred from how often a typical user opens the product — daily-driver / weekly-tool / transactional / power-user).
+**Drives knobs**: `VOICE_ANTI_REFERENCES`, `BRAND_BANNED_PHRASES`, `USAGE_FREQUENCY_FRAMING` (inferred from how often a typical user opens the product — daily-driver / weekly-tool / transactional / power-user).
 
-Backfill `BRAND_FORBIDDEN_PHRASES` with Phase I git-mining for revert-copy commits.
+Backfill `BRAND_BANNED_PHRASES` with Phase I git-mining for revert-copy commits.
 
 ---
 
@@ -132,7 +132,7 @@ Gates whether `pages-audit` ships. Phase 1 scan can pre-populate from `(tabs)/`,
 
 > "Where do screens / routes / pages live in the codebase? Where do copy / translation / narration files live?"
 
-**Drives knobs**: `SURFACE_DIR_STRUCTURE` (glob paths for journey-audit to enumerate), `TRANSLATION_FILE_LOCATIONS` (for `forbidden-phrases` hook + `persona-testing` skill).
+**Drives knobs**: `SURFACE_DIR_STRUCTURE` (glob paths for journey-audit to enumerate), `TRANSLATION_FILE_LOCATIONS` (for the `persona-testing` skill's deny-list check).
 
 **Phase 1 scan pre-populates this** — confirm in one sentence if scan found `app/wizard/**`, `lib/i18n/**`, `lib/*/translations/**` patterns. Otherwise ask.
 
@@ -321,7 +321,7 @@ The 18 sub-questions can be grouped into ~5-6 super-questions per turn:
 
 1. **Super-Q1** (Phases A + E): *"What does this project ship on, who are the users, and how do you currently capture + test rendered output?"*
 2. **Super-Q2** (Phase B + part of E): *"Name your benchmarks — Tier 1 chrome, Tier 2 with dimension, anti-references — and the demo audience."*
-3. **Super-Q3** (Phase C): *"Does the product have a voice? If yes — character / reference / anti-references / forbidden phrases."*
+3. **Super-Q3** (Phase C): *"Does the product have a voice? If yes — character / reference / anti-references / banned phrases."*
 4. **Super-Q4** (Phases D + F + H): *"Tell me about your design system + surface structure — tokens path, primitives, screen dirs, copy file locations, seed mechanism, doc-path conventions."*
 5. **Super-Q5** (Phases G + J + K): *"Compliance bar + vision/strategy lens (optional) + model tier."*
 6. **Super-Q6** (Phase I, automated then confirmed): *"Here are commit SHAs I mined as anti-pattern candidates — mark the 3-5 most representative."*
@@ -354,10 +354,10 @@ Before invoking Phase 4 of `SKILL.md`, summarize back what you captured + what y
 > **War-story anti-patterns to bake in** (Phase I mining): <N items, briefly>
 >
 > About to author the kit:
-> - **Agents**: <list — ux-reviewer, a11y-audit, interaction-audit, design-token-auditor, [flow-auditor], [pages-audit], [product-designer], [flow-ux-reviewer], [product-compass]>
+> - **Agents**: <list — ux-reviewer, a11y-audit, interaction-audit, design-token-auditor, [flow-auditor], [pages-audit], [product-designer], [flow-ux-reviewer]>
 > - **Skills**: <list — journey-audit, element-reuse-check, persona-lens, quality-bar, design-system, [iterative-polish-autoloop]>
-> - **Rules**: <list — design-north-star, audit-routing, visual-verification, [forbidden-phrases]>
-> - **Hooks**: <list — check-design-tokens, [check-forbidden-phrases], [check-no-legacy-blur], [check-platform-icons]>
+> - **Rules**: <list — design-north-star, audit-routing, visual-verification>
+> - **Hooks**: <list — check-design-tokens, [check-no-legacy-blur], [check-platform-icons]>
 >
 > Confirm to proceed?"
 

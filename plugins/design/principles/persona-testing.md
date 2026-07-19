@@ -27,7 +27,7 @@ Skip when:
 
 ## Why it matters — what this catches that nothing else does
 
-`forbidden-phrases.md` catches binary violations (specific phrases that shouldn't appear). `element-reuse.md` catches context-mismatch reuse. But strings can pass both and still feel wrong:
+A phrase deny-list catches binary violations (specific phrases that shouldn't appear). `element-reuse.md` catches context-mismatch reuse. But strings can pass both and still feel wrong:
 
 - A string written for day-1 enthusiasm ("Welcome back!") reads as condescending on day 30.
 - A string written in customer-service register ("I'm here to help") reads as performative when the assistant is supposed to feel like a peer.
@@ -120,9 +120,9 @@ Build the audit table:
 - **All three PASS** → ship the string.
 - **Any FAIL** → REWRITE. Do not ship a spec or claim audit-clean with failing strings.
 
-### Step 4 — Hard-bound forbidden phrases (independent of the three tests)
+### Step 4 — Hard-bound banned phrases (independent of the three tests)
 
-Some phrases are categorically forbidden on certain surface types (see `forbidden-phrases.md`). The persona skill mirrors that deny-list as a hard-bound check independent of the three tests — these phrases never ship on the wrong surface, regardless of what the tests say.
+Some phrases are categorically banned on certain surface types. The persona skill mirrors the project's deny-list as a hard-bound check independent of the three tests — these phrases never ship on the wrong surface, regardless of what the tests say.
 
 ## How to derive THIS project's specifics
 
@@ -132,7 +132,7 @@ Before authoring the skill, gather:
 
 2. **The project's anti-references.** Customer-service tone is usually anti-reference. Are there others? "We don't want to sound like enterprise SaaS X" — that's actionable.
 
-3. **The project's deny-list path.** The hard-bound forbidden-phrases check needs the path to the deny-list.
+3. **The project's deny-list path.** The hard-bound banned-phrases check needs the path to the deny-list.
 
 4. **The project's copy file locations.** Grep paths for Step 1 enumeration.
 
@@ -159,7 +159,6 @@ The final skill (typically `.claude/skills/persona-lens/SKILL.md`) should specif
 
 - `journey-mapping.md` — provides surface-type classification needed for the stranger test.
 - `element-reuse.md` — Gate A (context fit). Persona-lens is Gate B (voice fit). Both run; both bind.
-- `forbidden-phrases.md` — the authoritative deny-list. Persona-lens's hard-bound check references it.
 - `flow-audit.md` / `ux-audit.md` / `interaction-audit.md` — these agents run persona-lens on visible copy at audit time.
 - `quality-rubric.md` — persona-lens failures register against the "tone mismatch" pitfall.
 

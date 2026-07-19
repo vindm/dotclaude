@@ -165,11 +165,7 @@ Skip auto-loading for:
 
 ## Cross-references
 
-- `design-benchmarking.md` — the "name your benchmarks" principle. The rubric's Tier 1/Tier 2 tables are an instance of that broader discipline.
 - `audit-routing.md` — when multiple audit agents apply, the rubric's grades cross-translate to those agents' rubrics.
-- `ux-audit.md` / `flow-audit.md` / `interaction-audit.md` — these agents grade against the rubric; the rubric is their reference.
-- `forbidden-phrases.md` — voice / tone discipline. The rubric's "tone mismatch" pitfall is enforced upstream by the phrase-deny list.
-- `visual-verification.md` — capture is a precondition to applying the rubric; you can't grade what you haven't seen.
 
 ## Anti-patterns in the rubric you write
 

@@ -155,8 +155,9 @@ This shapes the dispatching mental model: ask which tier should catch the findin
 
 ## Cross-references
 
-- `code-review.md` / `pre-flight.md` — non-UI audit agents. The routing table should include them.
+- `ux-audit.md`, `a11y-audit.md`, `interaction-audit.md`, `pages-audit.md`, `flow-audit.md`, `design-token-audit.md` — the typical UI-audit inventory; each row in the routing table maps to one.
 - `quality-rubric.md` — the cross-rubric translation table relies on rubric anchors; if those move, the translation updates.
+- `visual-verification.md` — every visual audit assumes a captured artifact to grade. The rule should remind dispatchers to capture before invoking.
 
 ## Anti-patterns in the rule you write
 

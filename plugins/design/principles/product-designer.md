@@ -57,7 +57,7 @@ Plus topic-specific area reads (relevant domain skills, area CLAUDE.md files, ke
 
 ### Step 1.5 — Journey audit (MANDATORY)
 
-Run `journey-mapping`. It produces Section 0 of the spec — the prior-surfaces map + target classification + forbidden-pattern matrix.
+Run `journey-mapping`. It produces Section 0 of the spec — the prior-surfaces map + target classification + banned-pattern matrix.
 
 This is the single most common cause of design failure. A real product designer would never propose "put intro copy on the daily home" — but a screen-generator would, and has. Step 1.5 separates the two.
 
@@ -117,7 +117,7 @@ Checklist (every box must be checked; if any unchecked, STOP — iterate, do not
 - [ ] Journey map (Section 0) complete via `journey-mapping`.
 - [ ] Element-reuse audit (Section 0a) complete via `element-reuse-check` — no first-touch → daily-driver reuses.
 - [ ] Persona-lens audit (Section 0b) complete via `persona-testing` — every copy element passed all three tests.
-- [ ] No forbidden phrases (per the project's forbidden-phrases deny-list) on daily-driver / settings / error surfaces.
+- [ ] No banned phrases (per the project's phrase deny-list) on daily-driver / settings / error surfaces.
 - [ ] No string in the spec duplicates an onboarding string (verified by grep, not assumption).
 - [ ] IA decisions reference the journey explicitly.
 - [ ] State inventory covers empty / typical / overflow per screen — no TBDs.
@@ -244,7 +244,7 @@ The authored `product-designer.md` agent fails the depth bar if it lacks any of 
 7. **Self-audit checklist verbatim** — Step 6.5 lists all 9 boxes. Without this, designers write specs first and audit later (or never).
 8. **Spec template verbatim** — Sections 0 / 0a / 0b / 1–10 appear. Skipping section numbering is shallow.
 9. **Project-specific examples threaded** — *"the X tab inherits the Settings-row pattern, not the Music-card pattern, because the user is scanning, not browsing"* — concrete example from the project's actual surfaces.
-10. **Non-negotiable rules (12-15) with rationale clauses** — each rule says *what* + *why*. *"NO FIRST-TOUCH COPY ON DAILY SURFACES — 'Hi — I'm X' / 'Welcome' / 'Get started' patterns are forbidden on daily-driver / settings / error surfaces. The 'Hi — I'm <assistant> on daily home' bug comes from skipping Step 1.5."*
+10. **Non-negotiable rules (12-15) with rationale clauses** — each rule says *what* + *why*. *"NO FIRST-TOUCH COPY ON DAILY SURFACES — 'Hi — I'm X' / 'Welcome' / 'Get started' patterns are banned on daily-driver / settings / error surfaces. The 'Hi — I'm <assistant> on daily home' bug comes from skipping Step 1.5."*
 
 If the authored agent lacks any of these, redo. Battle-tested ≠ optional polish.
 
@@ -257,7 +257,6 @@ If the authored agent lacks any of these, redo. Battle-tested ≠ optional polis
 - `quality-rubric.md` — S/A/B/C/D/F anchors + composition pitfalls + claim-of-done preconditions.
 - `visual-verification.md` — capture discipline for Step 2 (baseline read).
 - `audit-routing.md` — where ux-reviewer / interaction-audit / a11y-audit / pages-audit fit relative to this agent.
-- `forbidden-phrases.md` — the deny-list the self-audit checks against.
 
 ## Anti-patterns in the agent you write
 
@@ -265,7 +264,7 @@ If the authored agent lacks any of these, redo. Battle-tested ≠ optional polis
 
 - **No refusal — try to do polish anyway.** The agent must refuse single-screen polish and route. Trying to do it produces a mediocre IA spec for a problem that didn't need one.
 
-- **Skip the journey-audit gate when "the surface is obvious."** No surface is obvious. The forbidden-pattern matrix depends on the type. Skipping Step 1.5 is the single most common failure mode.
+- **Skip the journey-audit gate when "the surface is obvious."** No surface is obvious. The banned-pattern matrix depends on the type. Skipping Step 1.5 is the single most common failure mode.
 
 - **Write the spec first, audit later.** The self-audit (Step 6.5) gates spec-writing, not the other way around. Writing first and auditing later is mechanical-template-execution, not design.
 

@@ -40,7 +40,7 @@ Before grading anything, capture the screen. Per `visual-verification.md`:
 ### Layer 2 — Journey classification
 
 Per `journey-mapping.md`, classify the target screen's type: first-touch / daily-driver / settings / error / promotional / bridge. This is mandatory before grading because:
-- The forbidden-patterns matrix depends on the type.
+- The banned-patterns matrix depends on the type.
 - The bar differs by type — a wizard screen is graded against onboarding references; a daily-driver against daily-driver references.
 - "Hi — I'm <assistant>" is correct on a first-touch surface and wrong on a daily-driver surface.
 
@@ -169,7 +169,7 @@ The authored `ux-reviewer.md` agent fails the depth bar if it lacks any of these
 9. **Calibration text** — `S-tier looks like: <Linear-quality screen sitting next to a Linear screen with no visible drop in chrome rigor; hierarchy reads at 1m; empty state teaches>. F-tier looks like: <default-Material rendering, type-scale violations, apologetic empty state, hierarchy noise>.`
 10. **Operational specifics** — capture commands derived from Phase 1 (Playwright? Maestro? `xcrun simctl io`? manual + Cmd-Shift-3?). File paths to the user's theme tokens. The user's actual component-library directory. Names of the user's primary chrome surfaces (e.g. settings sheet, dashboard cards, modal headers).
 
-11. **`IN_PRODUCT_ASSISTANT_CHARACTER` daily-driver trap check** — if the project has a named in-product assistant character (`IN_PRODUCT_ASSISTANT_CHARACTER = true` per interview Q-C2), the agent body MUST include an explicit anti-pattern: *"The 'Hi — I'm <assistant>, let me show you around' / 'Welcome' / 'Let me introduce' patterns are FORBIDDEN on daily-driver / settings / error surfaces — first-touch register is correct ONLY on the named intro surface."* Without this rule threaded into the agent body, the daily-driver re-greeting bug class slips past visual review (the copy reads fine in isolation; the bug is the *surface-type mismatch* the journey-mapping classification was supposed to prevent). Cross-ref `forbidden-phrases.md` + `interaction-audit.md`.
+11. **`IN_PRODUCT_ASSISTANT_CHARACTER` daily-driver trap check** — if the project has a named in-product assistant character (`IN_PRODUCT_ASSISTANT_CHARACTER = true` per interview Q-C2), the agent body MUST include an explicit anti-pattern: *"The 'Hi — I'm <assistant>, let me show you around' / 'Welcome' / 'Let me introduce' patterns are BANNED on daily-driver / settings / error surfaces — first-touch register is correct ONLY on the named intro surface."* Without this rule threaded into the agent body, the daily-driver re-greeting bug class slips past visual review (the copy reads fine in isolation; the bug is the *surface-type mismatch* the journey-mapping classification was supposed to prevent). Cross-ref `interaction-audit.md`.
 
 If the authored `ux-reviewer.md` lacks any of these, redo. Battle-tested ≠ optional polish.
 
@@ -189,7 +189,7 @@ If the authored `ux-reviewer.md` lacks any of these, redo. Battle-tested ≠ opt
 
 - **Tier 1 reference unspecified.** "Apple-tier" is vibes. "Apple iOS 26 Settings + Telegram on iOS 26" is enforceable. Specify the references.
 
-- **Skipping the journey map.** Without surface-type classification, the forbidden-patterns don't apply correctly. The agent should stop if classification isn't done.
+- **Skipping the journey map.** Without surface-type classification, the banned-patterns don't apply correctly. The agent should stop if classification isn't done.
 
 - **Grading per-element instead of per-composition.** A screen full of individually-fine elements can still be a B-tier composition if there's duplication / orphan / hierarchy chaos. The audit looks at the screen as a whole.
 
@@ -201,7 +201,7 @@ If the authored `ux-reviewer.md` lacks any of these, redo. Battle-tested ≠ opt
 
 - **Lossy summaries.** "Grade B, some issues" — useless. The audit's value is in specific findings with screenshot anchors and exact fixes. Pad-to-look-thorough loses signal.
 
-- **Daily-driver trap (anti-pattern #7).** If the project has a named in-product assistant character, first-touch copy ("Hi — I'm X, let me show you around" / "Welcome" / "Let me introduce") leaking onto daily-driver / settings / error surfaces is the single most common UX bug in product-voice products. The copy reads fine in isolation — the bug is *surface-type mismatch* (first-touch register on a surface the user revisits dozens of times). Every visual audit on a product with `IN_PRODUCT_ASSISTANT_CHARACTER = true` must explicitly scan for this. Cross-refs `forbidden-phrases.md` (the deny-list the hook enforces) + `interaction-audit.md` (the semantic-chrome reviewer that pairs with this audit) + `journey-mapping.md` (the prior-surfaces classification this trap violates).
+- **Daily-driver trap (anti-pattern #7).** If the project has a named in-product assistant character, first-touch copy ("Hi — I'm X, let me show you around" / "Welcome" / "Let me introduce") leaking onto daily-driver / settings / error surfaces is the single most common UX bug in product-voice products. The copy reads fine in isolation — the bug is *surface-type mismatch* (first-touch register on a surface the user revisits dozens of times). Every visual audit on a product with `IN_PRODUCT_ASSISTANT_CHARACTER = true` must explicitly scan for this. Cross-refs `interaction-audit.md` (the semantic-chrome reviewer that pairs with this audit) + `journey-mapping.md` (the prior-surfaces classification this trap violates).
 
 ## Tool surface
 

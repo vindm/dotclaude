@@ -11,7 +11,7 @@
 #     EVERY write; a slow command here taxes the whole session, compounded.
 # Prefer linting at commit (lint-staged) + at done (DoD), not on every edit.
 # Keep the per-edit tier for INSTANT, deterministic checks only (file-size,
-# token/hex sweep, forbidden phrases, secret-leak). Ship this hook only if the
+# token/hex sweep, secret-leak). Ship this hook only if the
 # project has NO lint-staged AND the formatter is genuinely fast (e.g. dprint).
 set -euo pipefail
 input=$(cat)

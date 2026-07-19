@@ -73,7 +73,7 @@ For each extracted claim:
 | File path | Glob — does it exist? |
 | Function / hook / method | Grep — is it defined? Does the signature match? |
 | Type / class | Grep for the definition; check the declared shape. |
-| Table / column | Grep schema / migration files OR consult the live DB (CLI, not LLM-callable tool — see `database-query-discipline.md`). |
+| Table / column | Grep schema / migration files OR consult the live DB (CLI, not LLM-callable tool — cheap beats expensive). |
 | Constant | Grep for the value; flag mismatches. |
 | Flow | Read the actual code; verify the sequence matches the doc. |
 | Trigger / hook | Grep the migration / config files for the named trigger. |
@@ -171,8 +171,6 @@ The final agent (typically `.claude/agents/skill-auditor.md`) should specify:
 ## Cross-references
 
 - `code-review.md` — should flag changes to documented files / functions that didn't update the corresponding skill doc. Skill audit is the periodic sweep; code review is the per-change guard.
-- `journey-mapping.md` — design / journey audits assume docs describe current flows; if the audit says the docs are stale, journey-mapping inherits the staleness.
-- `database-query-discipline.md` — schema-claim verification should use CLI (cheap) not LLM-callable tools (expensive).
 
 ## Anti-patterns in the agent you write
 

@@ -167,7 +167,6 @@ The final agent (typically `.claude/agents/tests-architect.md`) should encode:
 
 - `code-review.md` — finds untested changes; refers test-architect for the design work.
 - `pre-flight.md` — should ask "what tests will verify this change?" before code is written; test-architect operationalizes the answer.
-- `data-integrity.md` — for projects with DB write paths, integrity tests overlap; test-architect handles the unit / integration layer while data-integrity audits the persistent-state layer.
 - `../examples/the-test-passed-for-the-wrong-reason.md` — paradigm for "test against the wrong code path." Test-architect's job is to ensure tests exercise the real entry points, not just the convenient ones.
 
 ## Anti-patterns in the agent you write

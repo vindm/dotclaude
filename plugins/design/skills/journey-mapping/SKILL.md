@@ -1,6 +1,6 @@
 ---
 name: journey-mapping
-description: Build the prior-surface inventory before designing OR auditing any screen — walk every surface the user touched before reaching this one, classify each by type, and apply the forbidden-pattern matrix so first-touch copy/voice/chrome never leaks onto a daily-driver surface. Load before any new design spec or any single-screen / flow audit.
+description: Build the prior-surface inventory before designing OR auditing any screen — walk every surface the user touched before reaching this one, classify each by type, and apply the banned-pattern matrix so first-touch copy/voice/chrome never leaks onto a daily-driver surface. Load before any new design spec or any single-screen / flow audit.
 ---
 
 # Journey mapping
@@ -45,20 +45,20 @@ A linear table, one row per surface, ending with the target:
 
 Two rules: **fill every row** (no stubs, no "…and so on"), and use **verbatim copy only** — paraphrasing hides cross-surface duplication, which is the entire point of the map.
 
-### Step 4 — Apply the forbidden-pattern matrix
+### Step 4 — Apply the banned-pattern matrix
 
 Once the target's type is fixed, certain patterns are categorically disallowed for that type:
 
-| Target type | Forbidden patterns |
+| Target type | Banned patterns |
 |---|---|
 | **first-touch** | None — this IS the introduction surface. |
 | **daily-driver** | Greetings, introductions, "welcome", "let me show you", "let's get started", plus any phrase on this project's deny-list. |
-| **settings** | Daily-driver forbidden set + re-introducing concepts the user has already configured. |
+| **settings** | Daily-driver banned set + re-introducing concepts the user has already configured. |
 | **error** | Apologies — "sorry", "oops", "I'm here to help". State the situation; offer one path forward. |
 | **promotional** | Re-introducing concepts. A celebration is not a re-greeting. |
 | **bridge** | Hard-cutting into the next arc without acknowledging the transition. |
 
-The project's deny-list (read it at runtime if one exists) supplies the daily-driver phrase set. A target exhibiting a forbidden pattern is a **critical gap** for audits and a **rewrite-required** mark for designs — no softening. The pattern is wrong for the type, and the type is fixed.
+The project's deny-list (read it at runtime if one exists) supplies the daily-driver phrase set. A target exhibiting a banned pattern is a **critical gap** for audits and a **rewrite-required** mark for designs — no softening. The pattern is wrong for the type, and the type is fixed.
 
 ### Step 5 — Cross-surface duplication check
 
