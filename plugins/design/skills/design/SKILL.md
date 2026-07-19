@@ -91,7 +91,7 @@ git log --oneline --grep="fix:" -30
 git log --oneline -E --grep="design|UX|style|color|spacing|a11y|layout|copy|tone|chrome|polish" -30
 ```
 
-Identify the **2-3 most design-flavored commits** by subject line. These are what you'll ask about by SHA in interview Phase D. **Do this before the interview**, not during — you want to enter the interview already armed with the SHAs.
+Identify the **2-3 most design-flavored commits** by subject line. These are what you'll ask about by SHA in interview Phase G. **Do this before the interview**, not during — you want to enter the interview already armed with the SHAs.
 
 ### 1.9 — Assertions / lint config
 
@@ -123,7 +123,7 @@ The most important questions (the ones to fight for if the user resists):
 - **Q-B1 / Q-B2 / Q-B3** — Tier 1 (chrome) + Tier 2 (domain, with dimension) + anti-references. Without named benchmarks in `design-north-star.md`, every consumed audit grades on vibes.
 - **Q-C1 → Q-C4** — voice + assistant character + brand voice reference + banned phrases. Gates whether `persona-testing` ships.
 - **Q-D1 / Q-D2** — multi-screen arcs + multi-section primary surface. Gates whether `flow-audit` / `iterative-polish-autoloop` / `pages-audit` apply.
-- **Q-I1** — git-mined commit confirmation. Transforms generic textbook anti-patterns into project-specific ones.
+- **Q-G1** — git-mined commit confirmation. Transforms generic textbook anti-patterns into project-specific ones.
 - **Q-E3** — demo audience + quality posture. Defines what "shipped well" means.
 
 ## Phase 3 — Read the principles
@@ -174,7 +174,7 @@ The binding statement of what "good" means on this project — the doc every con
 - **Per-surface chrome reference table** — the row-per-surface convention from `design-benchmarking.md`: one row per named surface, its Tier 1 reference, its Tier 2 reference
 - **Voice / banned phrases** (Q-C4) — the elicited `BRAND_BANNED_PHRASES` deny-list plus the voice/anti-reference signal, so `persona-testing` and the taste audits have a home for it at runtime
 - **Accessibility compliance target** (Q-E3) — the named bar: WCAG 2.2 AA (default), AAA, Section 508, or none/internal-only. The consumed `a11y-audit` agent reads this at runtime to set its contrast and text-scaling thresholds — omitting it silently falls back to WCAG 2.2 AA rather than the project's actual bar.
-- **Project-specific anti-patterns mined from git** (Phase 1.8 SHAs, confirmed in Q-I1) — 3-5 concrete "this shipped wrong before, here's the commit" entries, not generic anti-patterns lifted from a principle doc
+- **Project-specific anti-patterns mined from git** (Phase 1.8 SHAs, confirmed in Q-G1) — 3-5 concrete "this shipped wrong before, here's the commit" entries, not generic anti-patterns lifted from a principle doc
 - **The demo test** — one line, instantiated from `quality-rubric.md`'s Component 1: "would I show this screen to \<the named audience/benchmark peer>?" Anchor the audience to a real person, role, or the Tier 1/Tier 2 benchmark the user named — this is the reproducible check that closes a grading debate without re-litigating taste.
 - **Claim-of-done checklist** — the design-specific definition-of-done, instantiated from `quality-rubric.md`'s canonical 5-item checklist: fresh screenshot captured / lint clean / tests pass / 5-pitfall composition scan done / Tier 1+Tier 2 benchmark named in the grade. A UI change isn't "done," only "in progress," until all five hold.
 
@@ -211,7 +211,7 @@ Each of the two artifacts you write in Phase 4 MUST contain ALL of these 10 stru
 
 6. **Numbered non-negotiable rules / discipline statements** — 5-10 with rationale per rule, not just a list of "do this." "1. Never grade without a captured screenshot — pixel review is the contract; reading code is not a substitute." The rationale clause is what makes the rule sticky.
 
-7. **Project-specific anti-patterns from git** — 3-5 anti-patterns derived from the **bug-mining sub-phase** (interview Phase D / Phase 1.8 SHAs). E.g. "Settings page bypassed the type scale for two weeks before someone noticed (commit `abc1234`) — sweep for `font-size:` / `text-[` outside the typography scale." Generic anti-patterns from a principle doc do NOT count for this slot. (`design-north-star.md`)
+7. **Project-specific anti-patterns from git** — 3-5 anti-patterns derived from the **bug-mining sub-phase** (interview Phase G / Phase 1.8 SHAs). E.g. "Settings page bypassed the type scale for two weeks before someone noticed (commit `abc1234`) — sweep for `font-size:` / `text-[` outside the typography scale." Generic anti-patterns from a principle doc do NOT count for this slot. (`design-north-star.md`)
 
 8. **Edge cases + abort conditions** — explicit "do NOT do X" and "abort if Y" that a consumed audit reading this artifact should honor. E.g. "Never skip a surface-hierarchy level — a level-4 surface only appears in the contexts level 4 is designed for."
 

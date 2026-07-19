@@ -299,4 +299,4 @@ Wait for confirmation, then proceed to Phase 4 of `SKILL.md`.
 - **Push gently on B1/B2/B3** — these are the most load-bearing answers. Without named benchmarks, `design-north-star.md` has no anchors.
 - **Mine git in Phase G no matter what.** Even if the user has prepared their war stories, the SHA + subject-line specificity makes the conversation 2-3× more concrete.
 - **End when you have enough.** Don't grind through low-leverage sub-questions if A-F + G already gave you a rich picture; default sensibly and confirm in the summary.
-- **The 46-knob configuration is the calibration target** — when you summarize before authoring, the user should recognize THEIR project, not a templatized version of it.
+- **The 47-knob configuration is the calibration target** — when you summarize before authoring, the user should recognize THEIR project, not a templatized version of it.
