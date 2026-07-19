@@ -4,7 +4,7 @@ Teaching material for Claude Code. When you bootstrap a `.claude/` directory, th
 
 ## DUAL LOAD — this skill runs at BOTH design time AND audit time
 
-This skill is **dual-loaded**: it fires inside `product-designer` (design time, Section 0b of every spec — every proposed copy element passes the triad) AND inside `ux-audit` / `interaction-audit` / `flow-continuity-review` / `flow-audit` (audit time, against every visible copy element on the captured surface).
+This skill is **dual-loaded**: it fires inside `product-designer` (design time, Section 0b of every spec — every proposed copy element passes the triad) AND inside `ux-audit` / `interaction-audit` / `flow-audit` (audit time, against every visible copy element on the captured surface).
 
 **The audit-time rerun catches implementation drift from spec.** This is the load-bearing rationale: a spec where every string passed all three tests at design time can still ship with strings that *fail* — an engineer substituted a "Continue" for "Next" in the heat of implementation; a translation file was extended with copy that mirrors-by-pattern-matching from an adjacent first-touch surface; a generated string from an LLM-shaped pipeline produced a customer-service register that wasn't in the spec. Without the audit-time rerun, those substitutions ship invisible.
 

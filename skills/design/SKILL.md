@@ -122,7 +122,7 @@ The most important questions (the ones to fight for if the user resists):
 
 - **Q-B1 / Q-B2 / Q-B3** — Tier 1 (chrome) + Tier 2 (domain, with dimension) + anti-references. Without named benchmarks, every authored agent grades on vibes.
 - **Q-C1 → Q-C4** — voice + assistant character + brand voice reference + forbidden phrases. Gates whether `persona-testing` + `forbidden-phrases` ship.
-- **Q-D1 / Q-D2** — multi-screen arcs + multi-section primary surface. Gates whether `flow-audit` / `flow-continuity-review` / `iterative-polish-autoloop` / `pages-audit` apply.
+- **Q-D1 / Q-D2** — multi-screen arcs + multi-section primary surface. Gates whether `flow-audit` / `iterative-polish-autoloop` / `pages-audit` apply.
 - **Q-I1** — git-mined commit confirmation. Transforms generic textbook anti-patterns into project-specific ones.
 - **Q-E3** — demo audience + quality posture. Defines what "shipped well" means.
 
@@ -153,8 +153,7 @@ Read these from `../../principles/` SELECTIVELY based on what the project actual
 - `pages-audit.md` — cross-section consistency
 
 **Read if project has multi-screen arcs** (onboarding, wizard, checkout):
-- `flow-audit.md` — whole-arc audit (deep, infrequent — produces canonical flow doc + dated gap report)
-- `flow-continuity-review.md` — lightweight series grader (frequent, takes pre-captured manifest, grades 6 flow-level dimensions)
+- `flow-audit.md` — whole-arc audit with two input modes: (a) walks a live flow end-to-end (deep, infrequent — produces canonical flow doc + dated gap report); (b) grades a pre-captured series (lightweight, frequent — takes a manifest, grades 6 flow-level dimensions)
 
 **Read if user wants iterative polish to award-tier** (capture harness + reviewer + fixture reset all present):
 - `iterative-polish-autoloop.md` — continuous polish loop with 3-layer scrutiny (reviewer / composition scan / backend-truth probe)
@@ -196,10 +195,9 @@ Based on what applied + the interview answers, author these in `.claude-staging/
   - Override convention: `// allow-color: <reason>`
   - Tier: haiku model (cheap) per `design-token-audit.md` principle
 
-- **`flow-auditor.md`** (if multi-screen arcs) — whole-arc audit
-  - 8-class gap rubric from `flow-audit.md` principle
-  - Arc inventory: list THEIR known arcs (signup, onboarding, checkout, etc.) — derive from Q-D1 + Phase 1 routes
-  - **Owner / Fix-by handoff column convention** in findings table
+- **`flow-auditor.md`** (if multi-screen arcs) — whole-arc audit, two input modes
+  - Mode (a) — live flow walk: 8-class gap rubric from `flow-audit.md` principle; arc inventory listing THEIR known arcs (signup, onboarding, checkout, etc.) derived from Q-D1 + Phase 1 routes; **Owner / Fix-by handoff column convention** in findings table
+  - Mode (b) — pre-captured series grading (if project also has a capture harness): manifest-driven series grader per `flow-audit.md` principle's mode (b) section; 6 flow-level dimensions; bridge reference apps from Q-B2
 
 - **`pages-audit.md`** (if multi-section primary surface) — cross-section consistency
   - Shared-component grep first, pixel measurement last
@@ -209,11 +207,6 @@ Based on what applied + the interview answers, author these in `.claude-staging/
   - Per `product-designer.md` principle — 8-step procedure
   - Reference THEIR spec doc convention (Q-H1), capability map path if any (Q-J1), prototype gates if any (Q-J1)
   - Self-audit checklist verbatim
-
-- **`flow-ux-reviewer.md`** (if multi-screen arcs + capture harness)
-  - Per `flow-continuity-review.md` principle — manifest-driven series grader
-  - 6 flow-level dimensions
-  - Bridge reference apps from Q-B2
 
 - **`product-compass.md`** (if vision docs exist — Q-J1)
   - Per `product-direction-validator.md` principle — Vision Health verdict + drift detection + agent coordination
@@ -247,7 +240,7 @@ When you ship a major artifact, also ship its companion(s):
 
 - **`product-designer.md` agent** ships with the **self-audit checklist** verbatim in the agent body — not as a reference. The checklist is the gate.
 - **`iterative-polish-autoloop.md` skill** ships with the **iteration-cap rule** (hard cap N, soft cap N-4) + the **safety invariants list** (do-not-edit migrations / fixtures / harness YAML).
-- **`flow-ux-reviewer.md` agent** ships with the **manifest schema** definition — `{step, name, path, context}` shape stated explicitly so the capture skill produces compatible output.
+- **`flow-auditor.md` agent's mode (b)** ships with the **manifest schema** definition — `{step, name, path, context}` shape stated explicitly so the capture skill produces compatible output.
 - **`design-system/SKILL.md`** ships with the **post-edit command rule** (*"After editing `<tokens>`, run `<command>`"*) — without it, generated tokens drift from source.
 - **`product-compass.md` agent** ships with the **agent coordination table** (situation → recommended-agent), not just prose.
 

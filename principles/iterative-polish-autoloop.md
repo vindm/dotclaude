@@ -8,7 +8,7 @@ Ship an iterative-polish-autoloop skill when:
 
 - The project has **multi-screen arcs** worth polishing iteratively (onboarding / setup / checkout / a generative pipeline visualization).
 - There's a **capture harness** that drives the flow without user input (Maestro / Playwright / similar).
-- There's a **reviewer agent** that grades the captured artifacts (`flow-continuity-review` is the standard L1 grader).
+- There's a **reviewer agent** that grades the captured artifacts (`flow-audit` in mode (b) — pre-captured-series grading — is the standard L1 grader).
 - The team's **quality posture is offensive** ("polish toward award-quality"), not defensive ("ship and iterate").
 - A **fixture-reset mechanism** exists (seed scripts / orphan SQL / mock-mode env vars) so each iteration starts from a known state.
 
@@ -24,7 +24,7 @@ Skip when:
 A single audit run produces a verdict; a verdict isn't the same as a polished flow. Without an autoloop:
 
 - **Polish stalls at "B+ feels good enough."** Without iteration discipline, the team plateaus at first acceptable quality. The autoloop's hard cap forces N tries to reach S-tier.
-- **Per-iteration regressions slip in.** Without the regression-delta check (inherited from `flow-continuity-review`), fixing one screen breaks another.
+- **Per-iteration regressions slip in.** Without the regression-delta check (inherited from `flow-audit`'s mode (b)), fixing one screen breaks another.
 - **Fixes batch into "polish PRs."** Five fixes in one commit = no way to attribute grade delta. The autoloop's atomic-commit discipline gives each fix its own grade delta.
 - **Composition-level bugs survive macro grading.** Reviewer agents are excellent at per-screen and arc-level grading but blind to composition-level duplication / orphan elements / semantic-count lies / status-color abuse. The L2 composition scan catches what L1 misses.
 - **Backend truth diverges from UI claims.** UI says "all done"; backend says "3 of 4 missing." Without L3 backend-truth probes, the autoloop ships UI-polished flows that lie. NON-NEGOTIABLE on generative surfaces.
@@ -38,7 +38,7 @@ Every iteration runs ALL THREE layers. Skipping any one is a known cause of plat
 
 ### Layer 1 — Reviewer agent (macro)
 
-`flow-continuity-review` for multi-screen arcs; `ux-audit` for single-screen drilldowns. Grades per-screen quality + flow-level dimensions (voice consistency, CTA progression, loading vocab, disclosure pacing, color drift, progress legibility).
+`flow-audit` (mode b — pre-captured-series grading) for multi-screen arcs; `ux-audit` for single-screen drilldowns. Grades per-screen quality + flow-level dimensions (voice consistency, CTA progression, loading vocab, disclosure pacing, color drift, progress legibility).
 
 Reviewer agents are excellent at macro tone and per-screen grading but **blind to composition-level duplication** because they grade each screen against a benchmark, not against itself. Hence L2.
 
@@ -119,7 +119,7 @@ Before authoring the skill, gather:
 
 2. **Flow capture harness** → `FLOW_CAPTURE_HARNESS`. The auto-driver. Common: Maestro YAML chain / Playwright spec / a custom shell script.
 
-3. **Reviewer agent name** → `REVIEWER_AGENT_NAME`. Which agent powers L1. Default: `flow-continuity-review`; for single-screen autoloops, `ux-audit`.
+3. **Reviewer agent name** → `REVIEWER_AGENT_NAME`. Which agent powers L1. Default: `flow-audit` in mode (b) (pre-captured-series grading); for single-screen autoloops, `ux-audit`.
 
 4. **Backend truth probe queries** → `BACKEND_TRUTH_PROBE_QUERIES`. Project-specific SQL / API calls. Each query has a known "good" shape; deviation = a bug. List 3-5 queries.
 
@@ -211,7 +211,7 @@ If the authored skill lacks any of these, redo.
 
 ## Cross-references
 
-- `flow-continuity-review.md` — the L1 grader for multi-screen autoloops.
+- `flow-audit.md` — mode (b) (pre-captured-series grading) is the L1 grader for multi-screen autoloops.
 - `ux-audit.md` — the L1 grader for single-screen autoloops, OR the follow-up drilldown on lowest-graded screens.
 - `quality-rubric.md` — the 5 composition pitfalls source of truth for L2.
 - `audit-routing.md` — cross-rubric translation table (S ↔ Crit ↔ S0).

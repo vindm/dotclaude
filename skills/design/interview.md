@@ -118,7 +118,7 @@ Backfill `BRAND_FORBIDDEN_PHRASES` with Phase I git-mining for revert-copy commi
 
 **Drives knobs**: `MULTI_SCREEN_ARCS_EXIST` (boolean), `ARC_INVENTORY` (named arcs with entry/exit surfaces).
 
-Gates whether `flow-audit`, `flow-continuity-review`, `iterative-polish-autoloop`, and the journey-mapping-mandatory discipline ship. If `MULTI_SCREEN_ARCS_EXIST = false`, downstream design simplifies meaningfully.
+Gates whether `flow-audit` (either input mode), `iterative-polish-autoloop`, and the journey-mapping-mandatory discipline ship. If `MULTI_SCREEN_ARCS_EXIST = false`, downstream design simplifies meaningfully.
 
 ### Q-D2 — Multi-section primary surface
 

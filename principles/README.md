@@ -6,7 +6,7 @@ These are **teaching-material** — docs that taught the `bootstrap` generator H
 
 Their universal content is now a directly-consumed agent/skill/hook; bootstrap no longer authors them per-project. Kept for now as rationale and as `/distill` re-derivation source. A future explicit cleanup may remove them (deleting 28 docs is its own decision — not done silently).
 
-- → consumable **agents**: `code-review`, `pre-flight`, `test-architect`, `data-integrity`, `skill-vs-code-audit`, `product-direction-validator`, `a11y-audit`, `ux-audit`, `interaction-audit`, `flow-audit`, `flow-continuity-review`, `pages-audit`, `design-token-audit`, `product-designer`.
+- → consumable **agents**: `code-review`, `pre-flight`, `test-architect`, `data-integrity`, `skill-vs-code-audit`, `product-direction-validator`, `a11y-audit`, `ux-audit`, `interaction-audit`, `flow-audit`, `pages-audit`, `design-token-audit`, `product-designer`.
 - → consumable **skills**: `operating-principles` + `lean-by-default` (→ `operating-discipline`), `decomposition`, `journey-mapping`, `persona-testing`, `element-reuse`, `iterative-polish-autoloop`, `knowledge-layers`, `migration-create`.
 
 ## 2. Still bootstrap's input — keep

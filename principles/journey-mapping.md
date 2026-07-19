@@ -4,7 +4,7 @@ Teaching material for Claude Code. When you bootstrap a `.claude/` directory, th
 
 ## DUAL LOAD — this skill runs at BOTH design time AND audit time
 
-This skill is **dual-loaded**: it fires inside `product-designer` (design time, Section 0 of every spec) AND inside `ux-audit` / `interaction-audit` / `flow-continuity-review` / `flow-audit` (audit time, before grading any captured surface).
+This skill is **dual-loaded**: it fires inside `product-designer` (design time, Section 0 of every spec) AND inside `ux-audit` / `interaction-audit` / `flow-audit` (audit time, before grading any captured surface).
 
 This dual-load is **structural drift prevention**. A spec passing journey-audit at design time tells you the *intended* surface-type classification; rerunning the skill at audit time against the *implemented* surface catches the case where impl drifted from spec. Without dual-load, an audit grades against the implementation's *de facto* surface type, which may not match the spec's *de jure* one — the bug class hides in plain sight.
 

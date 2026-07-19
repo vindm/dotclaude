@@ -4,7 +4,7 @@ Teaching material for Claude Code. When you bootstrap a `.claude/` directory, th
 
 ## DUAL LOAD — this skill runs at BOTH design time AND audit time
 
-This skill is **dual-loaded**: it fires inside `product-designer` (design time, Section 0a of every spec) AND inside `ux-audit` / `interaction-audit` / `flow-continuity-review` / `flow-audit` (audit time, when any borrowed string / component is detected on the captured surface).
+This skill is **dual-loaded**: it fires inside `product-designer` (design time, Section 0a of every spec) AND inside `ux-audit` / `interaction-audit` / `flow-audit` (audit time, when any borrowed string / component is detected on the captured surface).
 
 The dual-load is what catches **implementation drift from spec**. Spec said "fresh string authored for daily-driver context" — implementation reached for the nearest existing string at `lib/copy/narration.ts:60` to save time. The design-time gate caught nothing because at design time the proposal was new authorship. The audit-time gate catches the silent substitution: the implemented surface uses an existing string, and the verdict matrix flags the first-touch → daily-driver reuse as REJECT.
 
