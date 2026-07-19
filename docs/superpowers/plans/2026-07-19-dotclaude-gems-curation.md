@@ -377,7 +377,15 @@ git mv skills/worktree skills/decomposition skills/coding skills/testing \
 git mv hooks/* plugins/core/hooks/ && rmdir hooks
 git mv hook-templates/* plugins/core/hook-templates/ && rmdir hook-templates
 # CORE principles: move the ones owned by CORE tools (see Step 4 for the mapping)
+# DEFERRED domains — move straight to deferred/ now so no root dir is orphaned
+mkdir -p deferred/skills deferred/agents deferred/principles
+git mv skills/data skills/ai-workflow skills/migration-create deferred/skills/
+git mv agents/data-integrity.md deferred/agents/
+git mv principles/data-integrity.md principles/migration-create.md \
+       principles/database-query-discipline.md principles/ai-cost-monitoring.md deferred/principles/
 ```
+
+(The deferred domains are relocated here as part of the single big move; Task 11 only writes the deferral note and verifies. Their principles go to `deferred/principles/`, never into CORE.)
 
 - [ ] **Step 3: Move DESIGN members**
 
@@ -532,25 +540,14 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 
 Parks the two niche domains behind a documented note instead of shipping them first-class or deleting the work.
 
-### Task 11: Move `data` + `ai-workflow` to `deferred/` with a note
+### Task 11: Write the deferral note for `data` + `ai-workflow`
+
+The relocation to `deferred/` already happened in Task 8. This task documents it and verifies nothing in the shipped plugins references the parked domains.
 
 **Files:**
 - Create: `deferred/README.md`
-- Move: `skills/data`, `skills/ai-workflow`, `skills/migration-create`, `agents/data-integrity.md` and their principles into `deferred/`
 
-- [ ] **Step 1: Move the deferred domains**
-
-```bash
-mkdir -p deferred/skills deferred/agents deferred/principles
-git mv plugins/core/skills/data plugins/core/skills/ai-workflow plugins/core/skills/migration-create deferred/skills/ 2>/dev/null || \
-  git mv skills/data skills/ai-workflow skills/migration-create deferred/skills/
-git mv plugins/core/agents/data-integrity.md deferred/agents/ 2>/dev/null || git mv agents/data-integrity.md deferred/agents/
-git mv plugins/core/principles/data-integrity.md plugins/core/principles/migration-create.md \
-       plugins/core/principles/database-query-discipline.md plugins/core/principles/ai-cost-monitoring.md deferred/principles/ 2>/dev/null || true
-```
-(Resolve the actual current location from Phase 3; the `||` fallbacks cover pre/post-move states.)
-
-- [ ] **Step 2: Write the deferral note**
+- [ ] **Step 1: Write the deferral note**
 
 `deferred/README.md`: state that `data` (data-integrity + migration-create) and `ai-workflow` (eval-cost-watcher) are unique but niche (DB/AI projects only), parked pending demand, and how to revive one (move it back under `plugins/core/`, add its elicitation artifact to the contract, wire the consumed agent to read it — same pattern as coding/testing).
 
