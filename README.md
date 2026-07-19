@@ -1,6 +1,6 @@
 <img src="./assets/logo.svg" width="340" alt="dotclaude">
 
-Senior-engineer discipline for Claude Code, delivered as two plugins.
+Two Claude Code plugins: engineering workflow discipline, and design/UX audits.
 Consumed as-is; each adapts to your project at runtime.
 
     claude plugin marketplace add vindm/dotclaude
