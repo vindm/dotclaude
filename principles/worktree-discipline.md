@@ -120,6 +120,20 @@ scoped ONLY to the shared resource and the merge window. Edits inside one's
 own worktree need no lease. The pairing is the point: worktrees for the repo,
 the lease for what worktrees can't isolate.
 
+Two hard-won details for the lease itself. **Take it atomically — a check that
+only PRINTS does not gate the write.** `cat lock || echo "taking"` gates
+nothing: `cat` of an existing file exits 0, so the `||` never fires and the
+write lands on top of a live lease (a real incident). Acquire with the write
+itself failing when the file exists — `if ( set -o noclobber; echo "$label |
+$scope | $ts" > "$lock" ) 2>/dev/null; then :; else echo busy; fi`. **And the
+merge window has a hazard the lease can't see:** the shared checkout may sit
+mid-*another* session's merge, so `test -f <repo>/.git/MERGE_HEAD` before you
+merge. The reassurance underneath is that `git merge` with a sibling's foreign
+staged files *refuses* (`Your local changes would be overwritten`) rather than
+absorbing them — a busy main is impossible to merge into, not silently
+corruptible; the things to guard are the lease *overwrite* and the
+*interrupted merge*, not merge itself.
+
 ## Boundaries of the discipline
 
 - **Opt-in per project, never an always-on plugin guard.** A plugin-level
