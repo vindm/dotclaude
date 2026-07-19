@@ -1,6 +1,6 @@
 # `/dotclaude:bootstrap` interview
 
-The interview that drives the thin-generator bootstrap. Under dotclaude v3 consume-direct, the universal base — process discipline (the `operating-discipline` skill), the auditor agents / domain kits, and the maintenance ritual (the `saturday-ritual` skill) — is **consumed from the plugin, not authored by bootstrap.** So the interview covers ONLY the four un-shareable project-specific layers: **A Identity, B Architecture, D Quality Bar, E Knowledge Graph.** Phases C (process), F (domain kits), and G (maintenance) were removed because they're consumed — the A/B/D/E letters are kept as-is so they still map to SKILL.md's Phase references.
+The interview that drives the thin-generator bootstrap. Under dotclaude v3 consume-direct, the universal base — process discipline (the `operating-discipline` skill) and the auditor agents / domain kits — is **consumed from the plugin, not authored by bootstrap.** So the interview covers ONLY the four un-shareable project-specific layers: **A Identity, B Architecture, D Quality Bar, E Knowledge Graph.** Phases C (process) and F (domain kits) were removed because they're consumed — the A/B/D/E letters are kept as-is so they still map to SKILL.md's Phase references.
 
 Four phases, ~14–22 questions total, ~18–30 min wall clock for greenfield, ~10–18 min for brownfield in APPEND mode.
 
@@ -83,7 +83,7 @@ If the user names ≥ 3, the wedge is workable. If they name 0–2, surface the 
 
 > *"`git log` shows N contributors. Are they all actively writing code, or some historical / collaborators-via-issues only? And — solo-staying-solo, or planning to add collaborators in the next 3 months?"*
 
-**Drives**: the maturity/stage tag (A5) + downstream calibration. (Team coordination conventions and the maintenance-ritual cadence are consumed from the plugin — the `operating-discipline` and `saturday-ritual` skills — not authored here.)
+**Drives**: the maturity/stage tag (A5) + downstream calibration. (Team coordination conventions are consumed from the plugin — the `operating-discipline` skill — not authored here.)
 
 ### A5 — Maturity stage
 
@@ -261,7 +261,7 @@ For greenfield: most projects skip — author them when there's content to docum
 
 > *"Where should cross-conversation memory live? Default: `~/.claude/projects/<project-slug>/memory/` (Claude Code default). Override only if you want project-local memory (uncommon)."*
 
-**Drives**: the CLAUDE.md "Where to find what" memory pointer (the only project-specific piece). The memory-system *conventions* themselves are consumed from the plugin's `memory-system` skill — bootstrap just records where this project's memory lives.
+**Drives**: the CLAUDE.md "Where to find what" memory pointer (the only project-specific piece). The memory conventions themselves are Claude Code's built-in behavior, not authored by dotclaude — bootstrap just records where this project's memory lives.
 
 For 99% of cases: accept default. Override only if user has a specific reason.
 
@@ -299,7 +299,7 @@ Before invoking SKILL.md Phase 3 (stage → review → commit), summarize back w
 > *- Capability map: `<scaffold | empty | skip>`*
 > *- Memory directory: `<path>`*
 >
-> *(Process discipline, domain auditor kits, and the maintenance ritual are consumed from the dotclaude plugin — not authored here, so they're not summarized.)*
+> *(Process discipline and domain auditor kits are consumed from the dotclaude plugin — not authored here, so they're not summarized.)*
 >
 > *About to author the kit:*
 > *- `CLAUDE.md.draft` (~`<estimated LOC>` LOC) with sections: `<list>`*
@@ -314,7 +314,7 @@ Wait for explicit "go" before authoring. Acceptable signals: *"ship it"* / *"yes
 
 ## Interview structure summary
 
-Only the four project-specific phases are interviewed. Phases C (process), F (domain kits), and G (maintenance) are **removed because they're consumed from the dotclaude plugin** — the `operating-discipline` skill, the auditor agents, and the `saturday-ritual` skill respectively. The A/B/D/E letters are kept as-is so they still map to SKILL.md's Phase references.
+Only the four project-specific phases are interviewed. Phases C (process) and F (domain kits) are **removed because they're consumed from the dotclaude plugin** — the `operating-discipline` skill and the auditor agents respectively. The A/B/D/E letters are kept as-is so they still map to SKILL.md's Phase references.
 
 | Phase | Layer | Topic | Questions | Phase-1 scan helps |
 |---|---|---|---|---|
@@ -324,7 +324,6 @@ Only the four project-specific phases are interviewed. Phases C (process), F (do
 | D | 4 | Quality Bar | 4–6 | No (benchmarks are user-derived) |
 | E | 5 | Knowledge Graph | 3–5 | Partial (existing docs/) |
 | ~~F~~ | ~~6~~ | ~~Domain Kits~~ | — | consumed (auditor agents) |
-| ~~G~~ | ~~7~~ | ~~Maintenance~~ | — | consumed (`saturday-ritual` skill) |
 | **Total** | | | **14–22** | |
 
 ### Batched super-questions for actual interview UX
@@ -337,7 +336,7 @@ The 14–22 sub-questions can be grouped into ~4–6 super-questions per turn fo
 4. **Super-Q4** (Phase D): *"Demo audience. Tier 1 chrome benchmarks (2–3 apps). Tier 2 domain benchmarks (with dimension). Anti-references."*
 5. **Super-Q5** (Phase E): *"docs/ structure — keep default subdir taxonomy or customize? Spec/design naming? Capability map y/n? Memory directory location?"*
 
-4–6 super-questions × ~2–4 min each = ~18–30 min total interview. (Process / domain / maintenance are consumed from the plugin, so there's no per-domain delegation pass.) Total bootstrap session: ~22–35 min.
+4–6 super-questions × ~2–4 min each = ~18–30 min total interview. (Process / domain are consumed from the plugin, so there's no per-domain delegation pass.) Total bootstrap session: ~22–35 min.
 
 ---
 
@@ -348,7 +347,7 @@ The 14–22 sub-questions can be grouped into ~4–6 super-questions per turn fo
 - **Listen for off-script signal.** A user-volunteered *"our settings page got out of hand"* is gold for the Quality Bar's anti-patterns slot. Follow it.
 - **Push gently on D2/D3/D4** (benchmarks) — these are the most load-bearing answers. Without named benchmarks, the consumed auditor agents have no anchors to grade against.
 - **Honor skip / pause / go-back.** The user can interrupt at any phase. Don't barrel through.
-- **Don't interview process / domain / maintenance.** They're consumed from the plugin (`operating-discipline`, the auditor agents, `saturday-ritual`) — bootstrap authors only the project-specific A/B/D/E layers.
+- **Don't interview process / domain.** They're consumed from the plugin (`operating-discipline`, the auditor agents) — bootstrap authors only the project-specific A/B/D/E layers.
 - **End the interview when you have enough.** Don't grind through low-leverage questions if A/B/D/E already gave a rich picture; default sensibly and confirm in the summary.
 - **The summary turn is the contract.** When you summarize back, the user should recognize THEIR project, not a templatized version of it. If they don't — go back and refine.
 
@@ -363,7 +362,7 @@ The 14–22 sub-questions can be grouped into ~4–6 super-questions per turn fo
 - **Forcing maturity tag against project reality.** A project with 0 users is `[early]`, not `[shipped]`, even if the founder feels they've shipped. Be honest; the downstream layers calibrate against this answer.
 - **Skipping the Ambiguous row in the task-classification table.** That table is authored into CLAUDE.md's "How You Work" (per SKILL.md) and its Ambiguous row is mandatory per `task-classification.md` depth bar. Don't ask the user; just include it.
 - **Layer 4 with no anchored benchmarks.** *"Looks good"* is unenforceable. Push for at least 1 Tier 1 + 1 Tier 2-with-dimension, or skip Layer 4 entirely (research / library) with the skip logged.
-- **Re-authoring a consumed layer.** Process discipline, the auditor agents, and the maintenance ritual come from the plugin. Don't interview for them or write local copies — that defeats consume-direct and creates drift.
+- **Re-authoring a consumed layer.** Process discipline and the auditor agents come from the plugin. Don't interview for them or write local copies — that defeats consume-direct and creates drift.
 - **Implicit approval before authoring.** *"OK"* or silence is not approval. Wait for explicit *"go"* / *"ship it"* / *"yes proceed"*.
 
 ---
@@ -376,4 +375,4 @@ The 14–22 sub-questions can be grouped into ~4–6 super-questions per turn fo
 - `../../principles/quality-rubric.md` + `../../principles/design-benchmarking.md` — Layer 4 substance.
 - `../../principles/knowledge-graph.md` — Layer 5 substance.
 - `../../principles/task-classification.md` — the task-classification table authored into CLAUDE.md's "How You Work" (E5 / SKILL.md), including the mandatory Ambiguous row.
-- **Consumed from the plugin (not interviewed):** the `operating-discipline` skill (process discipline), the auditor agents (domain kits), and the `saturday-ritual` skill (maintenance ritual). Bootstrap does not re-author these.
+- **Consumed from the plugin (not interviewed):** the `operating-discipline` skill (process discipline) and the auditor agents (domain kits). Bootstrap does not re-author these.

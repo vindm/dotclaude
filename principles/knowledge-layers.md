@@ -154,7 +154,4 @@ If the authored doctrine lacks any of these, redo. The authority order is the ch
 ## Cross-references
 
 - `knowledge-graph.md` — Layer 5, the sibling. It teaches the `docs/` subdirectory taxonomy, dated-vs-permanent naming, and the archive lifecycle. This doc teaches how the three layers rank; that doc teaches how the `docs/` layer is organized internally. Read both together.
-- `authoring-skills.md` — *point, don't mirror.* The same anti-staleness instinct applied to skills: a skill that mirrors code drifts the same way a doc does, so skills point at code rather than restating it. The authority order is why.
-- `memory-system.md` — Layer 3. Memory is a fourth knowledge surface with its own lifetime; it composes with these three but isn't ranked among them. The distinction matters when deciding whether a fact belongs in memory, a doc, or code.
 - `skill-vs-code-audit.md` — Layer 6. The meta-audit agent that detects doc-vs-code drift is the *enforcement* arm of this doctrine: it finds the reflection docs that have fallen out of sync with code and flags them for update or stale-marking.
-- `plan-driven-work.md` — Layer 3. Plans are the *transient intent* half of `docs/`: forward-looking, consumed when the work ships, then archived. This doc explains why they leave the active reading order once consumed.

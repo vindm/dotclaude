@@ -167,4 +167,3 @@ The authored discipline fails the bar if it lacks any of these:
 - `audit-routing.md` — the cheapest-tier-wins cost ladder (Tier 0 hook → Tier 3 agent). The context-budget half cross-references it; don't restate the ladder.
 - `task-classification.md` — Layer 3. The routing table and this escalate table are complementary: classification routes *what kind* of task; this gates *whether ceremony fires at all*.
 - `knowledge-layers.md` — the layer model this doc sits in (Layer 3, cross-cutting into 2 and 6); the always-loaded surface is the Layer 1/3 boundary the context budget governs.
-- `authoring-skills.md` — skill descriptions are part of the always-loaded budget; that doc's one-line-description guidance is the same discipline applied to skills.

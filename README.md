@@ -48,7 +48,7 @@ A senior's coverage across your whole workflow — **14 agents, 13 working-disci
 `code-review` catches the bug that passed every test and shipped anyway — paths that drifted apart, a write that returned success but saved nothing — judged against the mistakes *your* git history repeats. `decomposition` splits a file that's outgrown itself, at the right seams.
 
 **🗺️ Planning.**
-`pre-flight` maps the blast radius before you touch anything risky. `plan-driven-work` turns a vague task into spec → plan → verified-done. `product-designer` takes a feature from idea to a real IA + flow spec.
+`pre-flight` maps the blast radius before you touch anything risky. `product-designer` takes a feature from idea to a real IA + flow spec.
 
 **🎨 Design & UX.**
 Grade a surface the way a design team would: `ux-audit` (visual polish), `a11y-audit` (accessibility), `interaction-audit` (chrome that lies about what it does), `flow-audit` (a whole journey end-to-end), `pages-audit` (cross-screen consistency), `design-token-audit` (color discipline).

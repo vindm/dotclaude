@@ -1,6 +1,6 @@
 # code-review — designing a post-implementation review agent for ANY project
 
-This is teaching material for Claude Code. When the user runs `/dotclaude:init`, you read this doc to learn HOW to author a code-review agent that fits THEIR project. You do not copy examples from this doc into the user's `.claude/`. You read the user's code, learn ITS failure modes, and write fresh anti-patterns derived from what you observe.
+This is teaching material for Claude Code. When you bootstrap a `.claude/` directory, this doc teaches you HOW to author a code-review agent that fits THEIR project. You do not copy examples from this doc into the user's `.claude/`. You read the user's code, learn ITS failure modes, and write fresh anti-patterns derived from what you observe.
 
 ## When to ship one (applicability gate)
 

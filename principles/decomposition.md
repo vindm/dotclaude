@@ -1,6 +1,6 @@
 # decomposition — designing a skill that decomposes a bloated file
 
-Teaching material for Claude Code. When the user runs `/dotclaude:init`, you read this doc to learn HOW to author the decomposition skill that fits THEIR stack. Pair with `file-discipline.md` — that's the rule (what to enforce); this is the skill (how to do the work when the rule fires).
+Teaching material for Claude Code. When you bootstrap a `.claude/` directory, this doc teaches you HOW to author the decomposition skill that fits THEIR stack. Pair with `file-discipline.md` — that's the rule (what to enforce); this is the skill (how to do the work when the rule fires).
 
 ## When to ship one (applicability gate)
 

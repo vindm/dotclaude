@@ -165,7 +165,4 @@ If the authored section lacks any of these, redo. These four principles are the 
 
 - `task-classification.md` — Layer 3. The routing table sits in "How You Work" *below* these four principles: principles say how to work, the table routes which runbook applies.
 - `lean-by-default.md` — Layer 3. Principle 4's ceremony / escalation detail lives here — which triggers justify agents, audit chains, and pipelines. Principle 4 points here rather than restating.
-- `plan-driven-work.md` — Layer 3. Principle 3's "complete, verified execution" scales up into the conformance-matrix discipline for plan-backed work; the plan threshold decides when a task crosses from in-head reasoning to written plan.
-- `memory-system.md` — Layer 3. Principle 1's "grill the user / push back" generates feedback memory; resolved ambiguities and approved decisions are capture triggers.
 - `knowledge-graph.md` — Layer 5. Principle 1's "trace the code end to end" and principle 2's reasoning both lean on `docs/` for prior decisions; the artifacts principle 3 produces (audits, plans) live there.
-- `handoff.md` — Layer 7. The autonomous-run fallback's flagged assumptions feed the handoff surface so a human can review every decision taken without them.

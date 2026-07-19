@@ -95,7 +95,7 @@ A doc / rule / skill that names a *specific dated file* (`docs/audits/2026-04-15
 - Reference capabilities by their stable ID (`O.1`, `M.2`), never by the dated doc that happens to describe them now.
 - A dated artifact is a *destination you write to*, not a *target you cite from elsewhere*. The graph's permanent layer (indexes, capability IDs, folder conventions) is the citable surface; the dated layer is write-only-from-the-outside.
 
-This is the docs-side application of *point, don't mirror* (`authoring-skills.md`) and the authority order in `knowledge-layers.md`.
+This is the docs-side application of *point, don't mirror* and the authority order in `knowledge-layers.md`.
 
 ### Optional subdirectories
 
@@ -284,14 +284,12 @@ If the authored graph lacks any of these, redo. The graph's value is in its addr
 
 - **`docs/` as a substitute for in-code documentation.** External memory is for *decisions, plans, audits, capabilities, flows*. It's NOT for *"how does function X work."* That's a code comment. Don't blur the boundary.
 
-- **`docs/` as a substitute for memory.** Memory (cross-conversation factoids) lives in the memory directory; `docs/` is project-level external memory. The two are different — see `memory-system.md` for the distinction.
+- **`docs/` as a substitute for memory.** Memory (cross-conversation factoids) lives in the memory directory; `docs/` is project-level external memory. The two are different.
 
 - **A `docs/scratch/` that becomes the dumping ground for unfiled work.** Either give every doc a real home, or accept that `scratch/` items get deleted on a schedule. Otherwise scratch absorbs the whole graph.
 
 ## Cross-references
 
 - `project-identity.md` — Layer 1. The identity layer in `CLAUDE.md` is the entry point; this principle is the second-level entry (the `docs/` graph).
-- `plan-driven-work.md` — Layer 3. Plans live in `docs/plans/`; conformance matrices in `docs/audits/`. The plan-driven discipline depends on the graph existing.
-- `memory-system.md` — Layer 3. Memory and `docs/` have different lifetimes: memory is cross-conversation factoids; `docs/` is project-level external memory. The two compose but don't substitute.
 - `task-classification.md` — Layer 3. The task classification table in `CLAUDE.md` references `docs/` paths; the graph must exist for the references to resolve.
 - `maintenance-ritual.md` — Layer 7. Drift detection (skill audit, doc audit) operates on the graph. The archive policy is enforced by the ritual.

@@ -228,5 +228,3 @@ If the authored identity layer lacks any of these, redo. The cost of a re-derive
 - `knowledge-graph.md` — Layer 5 conventions. The identity layer in `CLAUDE.md` is the entry point to the knowledge graph; this principle teaches what entry-point content looks like.
 - `task-classification.md` — Layer 3 routing table that lives in `CLAUDE.md` directly below the identity section. The two are co-located on purpose; identity grounds the routing.
 - `quality-rubric.md` — Layer 4 grading. The identity's production-vs-internal tag and stage tag drive what S-tier means.
-- `plan-driven-work.md` — Layer 3 process discipline. Identity references DoD; DoD references plan-driven discipline.
-- `memory-system.md` — Layer 3 memory typing. Identity-shaped facts (user info, product context) land in user / project memory typed correctly.

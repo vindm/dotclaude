@@ -4,7 +4,7 @@ description: Set up a project's AI dev infrastructure the consume-direct way —
 
 # `/dotclaude:bootstrap` — thin generator over the consumable base
 
-The base is **consumed, not authored.** Enabling the dotclaude plugin already gives the project the universal layer: the `operating-discipline` skill (how to work), the auditor agents (`code-review`, `pre-flight`, `test-architect`, `data-integrity`, `a11y-audit`, `ux-audit`, … dispatchable as `dotclaude:<name>`), the process/knowledge skills (`plan-driven-work`, `memory-system`, `handoff`, `knowledge-layers`, `decomposition`, `journey-mapping`, `persona-testing`, `element-reuse`, `iterative-polish-autoloop`, `saturday-ritual`), and the universal guard hooks (git-safety, secret-leak, file-size, session-start git context, uncommitted-on-clear). **Bootstrap does NOT re-author any of these.**
+The base is **consumed, not authored.** Enabling the dotclaude plugin already gives the project the universal layer: the `operating-discipline` skill (how to work), the auditor agents (`code-review`, `pre-flight`, `test-architect`, `data-integrity`, `a11y-audit`, `ux-audit`, … dispatchable as `dotclaude:<name>`), the process/knowledge skills (`knowledge-layers`, `decomposition`, `journey-mapping`, `persona-testing`, `element-reuse`, `iterative-polish-autoloop`), and the universal guard hooks (git-safety, secret-leak, file-size, session-start git context, uncommitted-on-clear). **Bootstrap does NOT re-author any of these.**
 
 Bootstrap authors only what a shared file cannot carry — the project-specific layer:
 
@@ -13,7 +13,7 @@ Bootstrap authors only what a shared file cannot carry — the project-specific 
 | **Identity** — vision / ICP / moat / stage (CLAUDE.md opening) | Process discipline (`operating-discipline` skill) |
 | **Architecture** — layers / boundaries + project boundary hooks + `dotclaude.yml` config for the config-needing guard templates | The universal guard hooks (`hooks/hooks.json`) |
 | **Quality bar** — the project's *named* benchmarks (`design-north-star.md`) | The auditor agents (they read the north-star at runtime) |
-| **Knowledge graph** — `docs/` structure + the project's task-classification routing table + capability map | The domain skills + maintenance ritual skill |
+| **Knowledge graph** — `docs/` structure + the project's task-classification routing table + capability map | The domain skills |
 | **A THIN local `CLAUDE.md`** — identity + architecture + task table + DoD (project verification commands) + a pointer to the consumed methodology | — |
 
 The thin local CLAUDE.md is the headline change from older bootstrap: it carries identity + project routing + project verification, and **points at** the consumed `operating-discipline` skill for the universal "how you work" rather than restating ~250 lines of it.
@@ -77,7 +77,7 @@ A comprehensive existing project is often a `/distill` candidate (push its unive
 
 ## Non-negotiable rules
 
-1. **Consume, don't re-author.** The base (operating-discipline, the auditor agents, the universal hooks, the process/knowledge skills, the ritual) comes from the plugin. Authoring local copies defeats consume-direct and creates drift. If a project needs to amend a base artifact, it *shadows* it by same-name — a deliberate exception, not the default.
+1. **Consume, don't re-author.** The base (operating-discipline, the auditor agents, the universal hooks, the process/knowledge skills) comes from the plugin. Authoring local copies defeats consume-direct and creates drift. If a project needs to amend a base artifact, it *shadows* it by same-name — a deliberate exception, not the default.
 2. **Project scan before any question.** A question answerable from Phase 1 is a wasted question.
 3. **Stage before commit; explicit approval gate** ("ship it", not silence).
 4. **The thin CLAUDE.md points at the methodology, never restates it.** Identity + architecture + task table + DoD + the one-line operating-discipline pointer. Not 250 lines of how-to-work.

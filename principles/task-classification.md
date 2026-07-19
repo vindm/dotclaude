@@ -99,7 +99,7 @@ Before authoring the table, gather:
 
 3. **The audit pipelines.** Does the project have a canonical pipeline (e.g. `design-token-auditor → interaction-audit + a11y-audit → ux-reviewer`)? Reference it in cells; don't restate.
 
-4. **The plan-driven threshold.** Per `plan-driven-work.md`. The "Plan-backed" row routes to the conformance-matrix workflow when the threshold is met.
+4. **The plan-driven threshold.** The "Plan-backed" row routes to the conformance-matrix workflow when the threshold is met.
 
 5. **The pre-flight gate.** Does the project use a `pre-flight` agent for risk assessment on complex changes? If yes, several rows route through pre-flight first.
 
@@ -160,7 +160,7 @@ The authored task classification table fails the depth bar if it lacks any of th
 
 6. **The table cross-references the audit pipeline doc** if one exists (e.g. `.claude/rules/design-audit-routing.md`). Without the cross-ref, the table restates pipeline order; the restatement drifts from the canonical source.
 
-7. **Plan-backed row references the conformance-matrix discipline.** Either inline (*"produce `docs/audits/<plan-slug>-conformance.md`"*) or via cross-ref to `plan-driven-work.md`. Without this, the table doesn't enforce the conformance bar.
+7. **Plan-backed row references the conformance-matrix discipline** inline (*"produce `docs/audits/<plan-slug>-conformance.md`"*). Without this, the table doesn't enforce the conformance bar.
 
 8. **Each named agent / skill / hook exists in `.claude/`.** Test: `grep -oE '\\`[a-z-]+\\`' CLAUDE.md` (extracting backtick names) → `ls .claude/{agents,skills,hooks}/` should resolve them. Names referencing non-existent specialists are dead ends.
 
@@ -247,9 +247,7 @@ These are *starting points*. Adjust columns and rows to the actual project.
 ## Cross-references
 
 - `project-identity.md` — Layer 1. Identity is in CLAUDE.md above the routing table; identity grounds *what kinds of tasks even apply*.
-- `plan-driven-work.md` — Layer 3. The "Plan-backed" row routes to plan-driven workflow + conformance-matrix discipline.
 - `knowledge-graph.md` — Layer 5. Many Approach cells reference `docs/` paths (specs, plans, audits); the knowledge graph must exist for the references to resolve.
-- `memory-system.md` — Layer 3. Memory access is part of how-you-work for several task types (*"check feedback memory for prior decisions"* gets executed as part of the Approach).
 - `pre-flight.md` — Layer 6 planning kit. The pre-flight agent is referenced in multiple rows (architecture change, complex backend); the row's runbook starts with pre-flight invocation.
 - `code-review.md` — Layer 6 coding kit. The code-reviewer agent is the terminal step in multiple rows.
 - `audit-routing.md` — Layer 6 design kit. The UI row references the audit pipeline doc; cells in the UI row don't restate the pipeline.

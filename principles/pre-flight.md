@@ -1,6 +1,6 @@
 # pre-flight — designing a pre-implementation validation agent for ANY project
 
-Teaching material for Claude Code. When you bootstrap a `.claude/` directory via `/dotclaude:init`, you read this doc to learn HOW to author a pre-flight agent for the user's project. The examples here are NOT to be copied into their `.claude/`. You derive their pre-flight from their codebase.
+Teaching material for Claude Code. When you bootstrap a `.claude/` directory, this doc teaches you HOW to author a pre-flight agent for the user's project. The examples here are NOT to be copied into their `.claude/`. You derive their pre-flight from their codebase.
 
 ## When to ship one (applicability gate)
 
