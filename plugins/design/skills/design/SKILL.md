@@ -213,7 +213,7 @@ Based on what applied + the interview answers, author these in `.claude-staging/
 
 ### Rules (in `.claude-staging/rules/`)
 
-- **`design-north-star.md`** — explicitly names THEIR Tier 1 + Tier 2 benchmarks; quotes specific anti-patterns the user mentioned in interview; **per-surface chrome reference table** (the row-per-surface convention from `design-benchmarking.md`)
+- **`design-north-star.md`** — explicitly names THEIR Tier 1 + Tier 2 benchmarks; quotes specific anti-patterns the user mentioned in interview; **per-surface chrome reference table** (the row-per-surface convention from `design-benchmarking.md`); **Voice / banned phrases (from Q-C4)** — the elicited `BRAND_BANNED_PHRASES` deny-list plus the voice/anti-reference signal, so the phrases have a home the taste audits and `persona-testing` can read at runtime
 - **`audit-routing.md`** — the pipeline order + when-to-dispatch table, scoped to the agents you just authored; **cheapest-tier-wins discipline** explicit (hook < rule < skill < agent in token cost)
 - **`visual-verification.md`** — see-what-you-built discipline, with THEIR device-screenshot commands
 

@@ -50,7 +50,6 @@ Vision (one sentence), `ICP (wedge)`, production-vs-internal, stage, `## Moat` (
   artifacts:
     code-anti-patterns: .claude/dotclaude/code-anti-patterns.md
     test-risk-model: .claude/dotclaude/test-risk-model.md
-    design-north-star: .claude/dotclaude/design-north-star.md
   ```
 - **Project boundary hooks** — copy the relevant config-needing templates from the plugin's `hook-templates/` into `.claude-staging/hooks/` with the project's values (these are project-specific, so they're authored locally, not consumed). Do NOT re-author the universal guards — they come from the plugin.
 
