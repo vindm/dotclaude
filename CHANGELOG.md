@@ -4,6 +4,27 @@ All notable changes to dotclaude are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project loosely follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) — minor versions for new layers / skills / principles, patches for fixes and doc corrections.
 
+## [3.0.0] - 2026-07-20 — split into two plugins + elicitation-not-generation
+
+The single `dotclaude` plugin splits into **`dotclaude`** (coding/testing/pre-flight/worktree base) and **`dotclaude-design`** (the design/UX/a11y audit layer) — install either independently or both together. Alongside the split, the domain generators (`/dotclaude:coding`, `/dotclaude:testing`) change shape: instead of authoring a project-local copy of an agent, they now elicit the project's own intent (anti-pattern lists, a risk model) into a **thin artifact** that the shipped, consumed agent reads at runtime — so the reviewer/architect logic lives in one place and stays current with the plugin instead of forking per project.
+
+### Added
+- **`.claude-plugin/marketplace.json`** — the two-plugin marketplace manifest; `plugins/core` and `plugins/design` each carry their own `.claude-plugin/plugin.json`, version `3.0.0`.
+- **Domain-artifact contract** (`docs/artifact-contract.md`) — the elicit → thin-artifact → consumed-agent-reads-at-runtime pattern that replaces the old per-project generator output. `code-review` reads `.claude/dotclaude/code-anti-patterns.md`; `test-architect` reads a project risk-model artifact; both fall back to generic methodology when the artifact is absent.
+
+### Changed
+- **`/dotclaude:coding`** and **`/dotclaude:testing`** — became elicitation-only. They no longer author an agent, rule, or hook copy; they write the project-specific artifact the already-shipped `code-review` / `test-architect` agents consume at runtime.
+- **`flow-continuity-review` merged into `flow-audit`** — one agent, two input modes (single screen vs. multi-screen arc), instead of two agents with overlapping scope.
+- **`pre-flight` stays directly consumed** — the planning generator that used to author a project-local copy of it was cut; the shipped agent is used as-is.
+
+### Removed
+- **5 box-duplicate skills**: `authoring-skills`, `plan-driven-work`, `memory-system`, `handoff`, `saturday-ritual` — each duplicated a discipline already carried by `operating-discipline` or by the artifact-contract pattern above; kept as one thing instead of two drifting copies.
+- **The `init` generator** (`/dotclaude:init`) — folded away now that the consumable base plus the per-domain elicitation skills cover the one-shot-bootstrap use case without a separate full-bootstrap command.
+- **`forbidden-phrases`** hook template — a voice-policing mechanism that didn't earn its keep against false positives; cut rather than kept as dead weight.
+
+### Deferred
+- **The `data` domain** (data-integrity agent + `migration-create` skill) and the **`ai-workflow` domain** moved to `deferred/` — not shipped in either plugin this release. Stale references to them across agents, principles, and skill docs were reworded or removed so nothing in the shipped plugins advertises a tool that isn't there.
+
 ## [2.1.0] - 2026-07-03
 
 ### Added
