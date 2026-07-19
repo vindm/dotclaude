@@ -248,6 +248,6 @@ These are *starting points*. Adjust columns and rows to the actual project.
 
 - `project-identity.md` — Layer 1. Identity is in CLAUDE.md above the routing table; identity grounds *what kinds of tasks even apply*.
 - `knowledge-graph.md` — Layer 5. Many Approach cells reference `docs/` paths (specs, plans, audits); the knowledge graph must exist for the references to resolve.
-- `pre-flight.md` — Layer 6 planning kit. The pre-flight agent is referenced in multiple rows (architecture change, complex backend); the row's runbook starts with pre-flight invocation.
+- `pre-flight.md` — Layer 6, shipped consumed (no generator kit). The pre-flight agent is referenced in multiple rows (architecture change, complex backend); the row's runbook starts with pre-flight invocation.
 - `code-review.md` — Layer 6 coding kit. The code-reviewer agent is the terminal step in multiple rows.
 - `audit-routing.md` — Layer 6 design kit. The UI row references the audit pipeline doc; cells in the UI row don't restate the pipeline.
