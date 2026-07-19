@@ -2,7 +2,7 @@
 
 The interview that drives the thin-generator bootstrap. Under dotclaude v3 consume-direct, the universal base — process discipline (the `operating-discipline` skill) and the auditor agents / domain kits — is **consumed from the plugin, not authored by bootstrap.** So the interview covers ONLY the four un-shareable project-specific layers: **A Identity, B Architecture, D Quality Bar, E Knowledge Graph.** Phases C (process) and F (domain kits) were removed because they're consumed — the A/B/D/E letters are kept as-is so they still map to SKILL.md's Phase references.
 
-Four phases, ~14–22 questions total, ~18–30 min wall clock for greenfield, ~10–18 min for brownfield in APPEND mode.
+Four phases, ~12–20 questions total, ~16–28 min wall clock for greenfield, ~10–18 min for brownfield in APPEND mode.
 
 **Pacing rule**: 1–3 questions per conversational turn. Never fire-hose. Listen for off-script signal — a user-volunteered *"our settings page got out of hand"* is gold for the Quality Bar's anti-patterns slot.
 
@@ -162,60 +162,34 @@ Don't ask here. The integrations (Supabase, Stripe, OpenAI, AI SDK) get caught b
 
 ---
 
-## Phase D — Quality Bar (Layer 4) — 4–6 questions
+## Phase D — Quality Bar (Layer 4) — 2–4 questions
 
-**THE most important phase.** Without named benchmarks, every authored audit collapses to vibes. Push if the user resists; one named app is the minimum.
+The quality bar splits by surface, and after the two-plugin split bootstrap owns only the **non-design** half:
 
-### D1 — Demo test framing
+- **Visual / UX / design benchmarks** (chrome references, domain references, anti-references) belong to the companion **dotclaude-design** plugin. **If Phase 1 found a human-facing UI surface, do NOT interview for visual benchmarks here** — tell the user to run `/dotclaude:design`, which elicits them and writes `.claude/rules/design-north-star.md` + `.claude/rules/design-system.md` for the consumed design audits to read. Bootstrap authors no `<domain>-north-star.md` for UI; it only records that the design north-star is owned there.
+- **Non-design quality bar** (API ergonomics, CLI, library output) — bootstrap authors `api-north-star.md` here, for the parts of the project with no visual surface to benchmark.
+
+### D1 — Demo test framing (generic — any surface)
 
 > *"Who would you demo a polished change to — be specific. Name the role or person. ('A friend's customer I'm recruiting as customer #2', 'a journalist writing about us', 'a CTO at a target enterprise', 'a designer whose taste I respect', 'my dad'.)"*
 
-**Drives**: Layer 4 demo-test framing + Layer 4 quality bar register.
+**Drives**: Layer 4 demo-test framing + the quality-bar register (production = consumer-grade; internal = credible-not-S-tier; library = API ergonomics). Applies whether or not the project has UI.
 
 The specificity matters. *"Users"* fails the test; *"a CTO at a target enterprise during a 30-min sales call"* passes.
 
-### D2 — Tier 1 chrome benchmarks (per platform)
+### D2 — Non-design benchmarks (only where there's a non-visual surface to benchmark)
 
-> *"Name 2–3 apps you benchmark **chrome** against — the apps your users already have on their device, the apps your product gets compared to by reflex. 'When I look at my screen and then look at App X, which one tells me my chrome is wrong?'"*
+> *"For the non-visual surfaces — your API, CLI, or library — name 2–3 references you benchmark against, each with the dimension. 'React Query for hook ergonomics', 'Zod for type-narrowing', 'requests-Python for readability', 'Stripe for API design', 'gh for CLI first-run'."*
 
-**Drives**: Layer 4 `<domain>-north-star.md` Tier 1 benchmarks.
+**Drives**: Layer 4 `api-north-star.md` benchmarks with named dimensions. The dimension is load-bearing — *"we like Stripe"* is useless; *"Stripe for API-key rotation ergonomics"* is enforceable.
 
-Common picks by platform (prompt, don't prescribe):
-- **iOS consumer** → Apple iOS 26 Music / Photos / Settings / Wallet + Telegram on iOS 26
-- **Web SaaS B2B** → Linear / Stripe / Notion / Vercel
-- **Developer tool** → Linear / Raycast / Things 3
-- **Content product** → Apple News / Reeder / Substack
-- **B2B dashboards** → Linear / Vercel / Stripe / Datadog
-- **CLI / TUI** → `gh`, `lazygit`, `htop`, `bat`
-- **Docs site** → Stripe API ref / Linear changelog / Astro docs
+**If the project is UI-only** (no meaningful API / CLI / library surface): skip this — there is no non-design bar to author, and the visual bar is `/dotclaude:design`'s job. Point the user there and move on. Pure-backend / library / research projects: this is the whole quality bar.
 
-If the user says *"we don't really benchmark"* — try once: *"What app on your device do you think is well-designed?"* Almost everyone has an answer.
+### D3 — Per-domain quality definitions (optional)
 
-**Skip if no UI** (research prototype, pure backend, pure library). Layer 4 ships an `api-north-star.md` instead, with API-ergonomics benchmarks (React Query for hook ergonomics, Zod for type-narrowing, requests-Python for readability, etc.).
+> *"If you hold different bars for different non-visual surfaces — one line each of what S-tier looks like. API: '<Y>'. CLI: '<Z>'. Code review: '<W>'."*
 
-### D3 — Tier 2 domain benchmarks (with dimension)
-
-> *"Name 2–3 apps you benchmark **specific dimensions** against. Not chrome-overall but specific things they do well. E.g. 'Linear for keyboard speed, WHOOP for data density, Things 3 for empty states, Stripe for checkout sequencing.' Each name comes with the dimension."*
-
-**Drives**: Layer 4 Tier 2 benchmarks with named dimensions.
-
-The **dimension is the load-bearing part**. *"We like Notion"* is useless. *"Notion for inline editing affordances"* is enforceable. Push for the dimension; without it, the Tier 2 benchmark doesn't anchor anything.
-
-### D4 — Anti-references
-
-> *"Apps the design should **NOT** look like? Aesthetics or patterns you've explicitly rejected? 'No SAP-enterprise grid', 'no early-Material', 'nothing Bootstrap-y', 'no consumer-y/bubbly tone'."*
-
-**Drives**: Layer 4 anti-references list.
-
-Anti-references are equally important — they tell agents what to **reject**. Without D4, the rubric only knows what to chase, not what to avoid. Push for at least 2 names.
-
-### D5 — Per-domain quality definitions (optional, batched with D2/D3)
-
-> *"For each domain you ship — one-line of what S-tier looks like. UI: '<X>'. API: '<Y>'. Code review: '<Z>'."*
-
-**Drives**: Layer 4 per-domain quality anchors.
-
-Most projects answer this implicitly through D1–D4. Ask explicitly only if user says *"we have different bars for different surfaces."*
+**Drives**: Layer 4 per-domain (non-design) quality anchors. Most projects answer this implicitly through D1–D2; ask explicitly only if the user says they hold different bars per surface.
 
 ---
 
@@ -288,10 +262,9 @@ Before invoking SKILL.md Phase 3 (stage → review → commit), summarize back w
 > *- Constraints: `<list, with hook/rule binding>`*
 >
 > ***Quality bar (Layer 4)***
-> *- Tier 1 chrome: `<list>`*
-> *- Tier 2 domain: `<list with dimensions>`*
-> *- Anti-references: `<list>`*
 > *- Demo audience: `<specific role/person>`*
+> *- Non-design bar (`api-north-star.md`): `<references with dimensions | n/a — UI-only>`*
+> *- Design bar: `<owned by dotclaude-design — run /dotclaude:design | n/a — no UI>`*
 >
 > ***Knowledge graph (Layer 5)***
 > *- `docs/` subdirectories: `<list>`*
@@ -304,7 +277,7 @@ Before invoking SKILL.md Phase 3 (stage → review → commit), summarize back w
 > *About to author the kit:*
 > *- `CLAUDE.md.draft` (~`<estimated LOC>` LOC) with sections: `<list>`*
 > *- `docs-staging/`: `<list of subdirs + README + capabilities scaffold if applicable>`*
-> *- `.claude-staging/` artifacts: `<agent count>` agents, `<skill count>` skills, `<rule count>` rules, `<hook count>` hooks*
+> *- `.claude-staging/` artifacts: `<rule count>` rules (`dotclaude.yml`, `api-north-star.md` if applicable), `<hook count>` project boundary hooks — no agents/skills (those are consumed from the plugins)*
 >
 > *Bootstrap takes ~5–10 more min for authoring + staging + review. Sound right? Or revise something first?*
 
@@ -321,19 +294,19 @@ Only the four project-specific phases are interviewed. Phases C (process) and F 
 | A | 1 | Project Identity | 4–6 | Partial (age, contributors, files) |
 | B | 2 | Architecture | 3–5 | Heavy (stack, dirs) |
 | ~~C~~ | ~~3~~ | ~~Process Discipline~~ | — | consumed (`operating-discipline` skill) |
-| D | 4 | Quality Bar | 4–6 | No (benchmarks are user-derived) |
+| D | 4 | Quality Bar (non-design; UI → `/dotclaude:design`) | 2–4 | No (benchmarks are user-derived) |
 | E | 5 | Knowledge Graph | 3–5 | Partial (existing docs/) |
 | ~~F~~ | ~~6~~ | ~~Domain Kits~~ | — | consumed (auditor agents) |
-| **Total** | | | **14–22** | |
+| **Total** | | | **12–20** | |
 
 ### Batched super-questions for actual interview UX
 
-The 14–22 sub-questions can be grouped into ~4–6 super-questions per turn for conversational pacing:
+The 12–20 sub-questions can be grouped into ~4–6 super-questions per turn for conversational pacing:
 
 1. **Super-Q1** (Phase A1–A3): *"In one sentence — what is this and who's it for? Where does it ship? Production-user-facing or internal?"*
 2. **Super-Q2** (Phase A4–A6): *"Solo / team? Project maturity (rough age + user count)? Moat — what's hard for a competitor to catch up to?"*
 3. **Super-Q3** (Phase B): *"Confirm stack. Single-tier or multi? Any non-negotiable boundaries or constraints?"*
-4. **Super-Q4** (Phase D): *"Demo audience. Tier 1 chrome benchmarks (2–3 apps). Tier 2 domain benchmarks (with dimension). Anti-references."*
+4. **Super-Q4** (Phase D): *"Demo audience. Non-design benchmarks — API / CLI / library references, each with its dimension. (If the project has a UI surface, don't ask for visual benchmarks here — point the user at `/dotclaude:design`.)"*
 5. **Super-Q5** (Phase E): *"docs/ structure — keep default subdir taxonomy or customize? Spec/design naming? Capability map y/n? Memory directory location?"*
 
 4–6 super-questions × ~2–4 min each = ~18–30 min total interview. (Process / domain are consumed from the plugin, so there's no per-domain delegation pass.) Total bootstrap session: ~22–35 min.
