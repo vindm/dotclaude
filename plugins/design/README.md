@@ -1,13 +1,18 @@
-# dotclaude-design — the AI design/UX auditor nobody else has
+# dotclaude-design
+
+A design/UX audit layer for Claude Code, calibrated once to what "good"
+means for your product, then applied to every screen.
 
 ```bash
 claude plugin marketplace add vindm/dotclaude
 claude plugin install dotclaude-design@dotclaude
 ```
 
-## Start here: tell it what "good" means
+## Setting the north-star
 
-Before any audit is worth running, run `/dotclaude:design` once. It reads your stack, your existing screens, and the design-flavored commits in your git history, then interviews you: which apps set your visual bar (a platform-chrome reference plus a domain reference), your voice and banned phrases, whether your surfaces form multi-screen arcs or a multi-section dashboard. It writes two thin artifacts to `.claude/rules/` — no agents are authored: `design-north-star.md` (your named benchmarks, voice, and project-specific anti-patterns — not "make it look nice") and `design-system.md` (a reference digest of your tokens, primitives, and motion vocabulary). The audits below read both directly, at runtime, and grade every screen against them.
+Before any audit is worth running, run `/dotclaude:design` once. It reads your stack, your existing screens, and the design-flavored commits in your git history, then interviews you: which apps set your visual bar (a platform-chrome reference plus a domain reference), your voice and banned phrases, whether your surfaces form multi-screen arcs or a multi-section dashboard.
+
+It writes two files to `.claude/rules/` — no agents are authored. `design-north-star.md` holds your named benchmarks, voice, and project-specific anti-patterns; `design-system.md` is a reference digest of your tokens, primitives, and motion vocabulary. The audits below read both at runtime and grade every screen against them.
 
 Skip this step and the taste audits still run, but they fall back to general platform-native conventions and say so explicitly in every report. Useful, but generic — the north-star is what turns "S-tier" from a vibe into something two people can agree on.
 
@@ -21,8 +26,8 @@ Three grade only what's in front of them — no north-star needed:
 
 Four grade against your north-star, and say so if you skipped the setup:
 
-- **`ux-audit`** — single-screen visual polish, graded against your named chrome and domain references, plus a highest-ROI fix.
-- **`flow-audit`** — whole-arc continuity, in two modes: walk a live flow end-to-end and grade eight gap classes single-screen review structurally misses, or grade a pre-captured screenshot series across six continuity dimensions (voice drift, CTA-weight progression, color drift, and more).
+- **`ux-audit`** — single-screen visual polish, graded against your named chrome and domain references, plus the fix worth doing first.
+- **`flow-audit`** — whole-arc continuity, in two modes: walk a live flow end-to-end and grade eight gap classes single-screen review structurally misses, or grade a pre-captured screenshot series across six continuity dimensions (voice drift, CTA-weight progression, loading vocabulary, color drift).
 - **`pages-audit`** — cross-section consistency: does your dashboard or tab bar feel like one app, or like several built independently.
 
 And one design partner, not an audit:
@@ -31,4 +36,4 @@ And one design partner, not an audit:
 
 ---
 
-Part of the [dotclaude](../../README.md) marketplace. Companion plugin: [dotclaude](../core/README.md), the coding/testing/pre-flight base.
+Part of the [dotclaude](../../README.md) marketplace. Companion: [dotclaude](../core/README.md), the coding/testing/pre-flight base.
