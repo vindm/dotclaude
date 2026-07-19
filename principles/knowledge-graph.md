@@ -108,7 +108,7 @@ Ship these only when the project has specific needs:
 - `docs/blueprints/` — architectural blueprints (rare; for projects that pre-design engine primitives).
 - `docs/superpowers/{plans,specs}/` — output of superpowers plan-writing skill if used.
 - `docs/mcp/` — MCP server architecture / tools if the project authors MCP servers.
-- `docs/design-debt/registry.md` — the Saturday-ritual canonical findings registry. Ship if Layer 7 maintenance is active.
+- `docs/design-debt/registry.md` — the maintenance-ritual canonical findings registry. Ship if Layer 7 maintenance is active.
 
 ## How to derive THIS project's specifics
 
