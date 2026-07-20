@@ -6,7 +6,7 @@ description: Elicit the project's design north-star + design-system reference (t
 
 You are eliciting the project-specific design-discipline intent for the user's project: the named benchmarks, voice, and design-system vocabulary a design audit should grade against. The output is TWO thin artifacts — `.claude/rules/design-north-star.md` and `.claude/rules/design-system.md` — written directly, no staged agent or skill copies. The 7 design audits (`ux-audit`, `a11y-audit`, `interaction-audit`, `flow-audit`, `pages-audit`, `product-designer`, `design-token-audit`) ship with the plugin and are consumed as-is: every one already opens with "discover THIS project at runtime" and reads these two artifacts directly, so writing a project-local copy of an audit would only duplicate what the plugin ships and drift the moment either side changes.
 
-**This is the showpiece flow.** Most Claude Code plugins focus on engineering (CI, testing, refactoring). Design / IA / UX / a11y is a near-empty niche — your user's expertise in this area is what makes dotclaude unique. Treat this flow as the differentiator: the value isn't in generating more files, it's in the depth of the elicited benchmarks, voice, and design-system digest the consumed audits read.
+The value is in the depth of the elicited benchmarks, voice, and design-system digest the consumed audits read — not in the number of files generated. A shallow but complete-looking pair of artifacts is the failure mode; specificity is the whole product.
 
 ## Phase 1 — Read the project's UI shape
 
