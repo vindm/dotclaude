@@ -10,7 +10,7 @@ The single `dotclaude` plugin splits into **`dotclaude`** (coding/testing/pre-fl
 
 ### Added
 - **`.claude-plugin/marketplace.json`** — the two-plugin marketplace manifest; `plugins/core` and `plugins/design` each carry their own `.claude-plugin/plugin.json`, version `3.0.0`.
-- **Domain-artifact contract** (`docs/artifact-contract.md`) — the elicit → thin-artifact → consumed-agent-reads-at-runtime pattern that replaces the old per-project generator output. `code-review` reads `.claude/dotclaude/code-anti-patterns.md`; `test-architect` reads a project risk-model artifact; both fall back to generic methodology when the artifact is absent.
+- **Domain-artifact contract** (`plugins/core/docs/artifact-contract.md`) — the elicit → thin-artifact → consumed-agent-reads-at-runtime pattern that replaces the old per-project generator output. `code-review` reads `.claude/dotclaude/code-anti-patterns.md`; `test-architect` reads a project risk-model artifact; both fall back to generic methodology when the artifact is absent.
 
 ### Changed
 - **`/dotclaude:coding`** and **`/dotclaude:testing`** — became elicitation-only. They no longer author an agent, rule, or hook copy; they write the project-specific artifact the already-shipped `code-review` / `test-architect` agents consume at runtime.
