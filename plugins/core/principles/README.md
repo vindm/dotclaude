@@ -11,9 +11,9 @@ Their universal content is now a directly-consumed agent/skill/hook; bootstrap n
 
 ## 2. Still bootstrap's input — keep
 
-The thin `bootstrap` still reads these to author the **project-specific** layer it can't ship as a shared file (identity / architecture / quality-bar / knowledge-graph + the project's own routing table, design system, eval, voice list):
+The thin `bootstrap` still reads these to author the **project-specific** layer it can't ship as a shared file (identity / architecture / quality-bar + the project's own routing table, design system, eval, voice list):
 
-`project-identity`, `file-discipline`, `quality-rubric`, `design-benchmarking`, `knowledge-graph`, `task-classification`, `design-system-reference-skill`, `audit-routing`, `ai-cost-monitoring`.
+`project-identity`, `file-discipline`, `quality-rubric`, `design-benchmarking`, `task-classification`, `design-system-reference-skill`, `audit-routing`, `ai-cost-monitoring`.
 
 ## 3. Universal but not yet converted — future base candidates
 

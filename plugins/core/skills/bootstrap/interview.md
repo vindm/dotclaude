@@ -346,6 +346,5 @@ The 12–20 sub-questions can be grouped into ~4–6 super-questions per turn fo
 - `../../principles/project-identity.md` — Layer 1 substance + depth signatures.
 - `../../principles/file-discipline.md` + `../../principles/decomposition.md` — Layer 2 file-size + decomposition discipline.
 - `../../principles/quality-rubric.md` — Layer 4 substance. The design north-star / benchmarking elicitation (naming Tier 1 + Tier 2 references) is owned by the separate `dotclaude-design` plugin, not authored here — point the user at that plugin's own bootstrap if they want it.
-- `../../principles/knowledge-graph.md` — Layer 5 substance.
 - `../../principles/task-classification.md` — the task-classification table authored into CLAUDE.md's "How You Work" (E5 / SKILL.md), including the mandatory Ambiguous row.
 - **Consumed from the plugin (not interviewed):** the `operating-discipline` skill (process discipline) and the auditor agents (domain kits). Bootstrap does not re-author these.

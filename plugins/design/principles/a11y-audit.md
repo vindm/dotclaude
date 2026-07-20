@@ -1,157 +1,54 @@
 # a11y-audit — designing an accessibility audit agent for ANY project
 
-Teaching material for Claude Code. When you bootstrap a `.claude/` directory, this doc teaches you HOW to author an accessibility-audit agent that catches the gap between "the screen looks polished" and "the screen actually works for users with assistive tech."
+Teaching material for Claude Code. Teaches you how to author an accessibility-audit agent that catches the gap between "the screen looks polished" and "the screen actually works for users with assistive tech."
 
-## When to ship one (applicability gate)
+## When to ship one
 
-Ship an a11y-audit agent when:
+Ship an a11y-audit agent when the project has user-facing UI that real users (not just internal developers) operate, when it faces an accessibility regulation (App Store / Play Store / WCAG / Section 508 / public-sector procurement), when real users with assistive tech will use it, or when the user holds an "Apple-parity" bar — that bar is unreachable without a11y parity (Apple ships every chrome surface with proper VoiceOver / Dynamic Type / contrast). Skip for internal developer tools with no external users, exploratory code that won't ship, or a wholly text-only platform-rendered UI (a CLI relying on the terminal's a11y).
 
-- The project has **user-facing UI** that real users (not just internal developers) will operate.
-- The project will face an accessibility regulation (App Store / Play Store / WCAG compliance / public sector procurement / Section 508).
-- The user holds an "Apple-parity" or "world-class" bar — that bar is unreachable without a11y parity (Apple ships every chrome surface with proper VoiceOver / Dynamic Type / contrast).
-- Real users with assistive tech will use the product.
+## Why it matters
 
-Skip when:
-
-- The project is an internal developer tool with no external users.
-- The project is exploratory / spike code where the surface won't ship.
-- The project's UI is wholly text-only and platform-rendered (e.g., a CLI that depends on the terminal's a11y).
-
-## Why it matters — what this catches that nothing else does
-
-Visual reviewers grade what they see. An a11y audit grades what the **screen reader, keyboard navigator, contrast-sensitive viewer, motion-sensitive user, dynamic-type user** experience. These dimensions are orthogonal to visual polish:
+Visual reviewers grade what they see. An a11y audit grades what the screen reader, keyboard navigator, contrast-sensitive viewer, motion-sensitive user, and dynamic-type user experience — dimensions orthogonal to visual polish and invisible to both per-screen review and linters:
 
 - A screen can be S-tier visually and silent to VoiceOver — every interactive element missing its label.
-- A screen can be visually beautiful and have hit targets at 28×28 px — Apple's HIG demands 44×44; Android's demands 48dp.
-- A screen can pass dark-mode review and fail Dynamic Type at 200% (text overflows, layout collapses).
-- A screen can use motion gracefully and ignore the user's reduced-motion preference.
-- A screen can be on-brand and fail WCAG contrast at 3.5:1 where 4.5:1 is required.
+- Visually beautiful, with hit targets at 28×28 where Apple's HIG demands 44×44 and Android's 48dp.
+- Passing dark-mode review and failing Dynamic Type at 200% (text overflows, layout collapses).
+- Using motion gracefully while ignoring the user's reduced-motion preference.
+- On-brand and failing WCAG contrast at 3.5:1 where 4.5:1 is required.
 
-None of these are visible to per-screen visual review. None are caught by linters. The a11y audit is the only realistic guard.
-
-The shipping-block rationale: a missing accessibility label on an interactive element or a < 44pt hit target is **ship-blocking severity**, regardless of how the visual audit grades the screen. See `audit-routing.md` for cross-rubric severity translation.
+A missing label on an interactive element or a sub-threshold hit target is **ship-blocking severity regardless of visual grade** (see `audit-routing.md` for cross-rubric translation). A shallow a11y audit is worse than none — it passes the screen on cosmetic criteria while real users stay locked out.
 
 ## Core methodology — four hard dimensions + one soft
 
-Every audit walks five dimensions. The first four are hard (failures block ship); the fifth is best-effort.
+Every audit walks five dimensions; the first four are hard (failures block ship), the fifth best-effort.
 
-### Dimension 1 — Assistive-tech labels (hard)
+**Dimension 1 — Assistive-tech labels (hard).** Every interactive element needs a meaningful semantic label; the mechanism varies by platform (Web: `aria-label` / semantic HTML, `<button>` not `<div onClick>` · iOS SwiftUI: `accessibilityLabel` · iOS RN: `accessibilityLabel` + `accessibilityRole` · Android Compose: `contentDescription` + `Modifier.semantics` · desktop: NSAccessibility / UIA). Failure modes: icon-only button without a label (reader announces "button" with no context); Pressable wrapping a View without a label (silence); decorative image not hidden (reader reads the filename); a related group without a semantic group (read in isolation, no structure). Severity: missing label on an interactive element = CRIT; decorative-image label missing = MAJOR.
 
-Every interactive element must have a meaningful semantic label. The mechanism varies by platform:
+**Dimension 2 — Hit-target size (hard).** Minimum tappable area: iOS 44×44 pt, Android 48×48 dp, Web-touch 44×44 px (WCAG 2.2). Measure rendered bounds (view hierarchy / DOM); `hitSlop` counts if it meets the threshold. Failure modes: a 24×24 close-X with no hit-slop, inline links at default text height, dense rows with packed actions. Any tappable below threshold = CRIT.
 
-| Platform | Mechanism |
-|---|---|
-| Web | `aria-label`, `aria-labelledby`, semantic HTML (`<button>` not `<div onClick>`) |
-| iOS / SwiftUI | `accessibilityLabel`, `.accessibilityElement(children: .combine)` |
-| iOS / React Native | `accessibilityLabel`, `accessibilityRole`, `accessible={true|false}` |
-| Android / Compose | `contentDescription`, `Modifier.semantics` |
-| Android / RN | `accessibilityLabel` |
-| Desktop / native | platform-specific (NSAccessibility on macOS, UIA on Windows) |
+**Dimension 3 — Contrast ratios (hard).** WCAG 2.2 AA: normal text 4.5:1, large text (18pt+ / 14pt+ bold) 3:1, UI components 3:1. **Contrast MUST be computed from TOKEN values, not screenshot-estimated** — this is core methodology, not a refinement. Screenshot sampling is unreliable (anti-aliasing, sub-pixel rendering, compression, blur backdrops, per-display gamma all distort the apparent pair): a 4.5:1 token pair can sample to 3.8:1 and false-flag compliant chrome, while a 4.2:1 pair can sample to 4.6:1 over an off-white edge and miss a real failure. Read the project's semantic tokens (`DESIGN_SYSTEM_TOKENS_PATH`), pick the actual foreground + background tokens for the surface, compute ratios mathematically. Pixel sampling is a *fallback* when tokens are unavailable. Audit BOTH modes if the project has dark + light; failures in either block. Severity: text below 4.5:1 or UI below 3:1 = MAJOR; multiple across a screen = CRIT.
 
-Failure modes the agent looks for:
-- Icon-only button without a label → reader announces "button" with no context.
-- Pressable / TouchableOpacity wrapping a View without label → silence.
-- Decorative image not hidden → reader reads filename.
-- Group of related elements without semantic group → reader reads each in isolation, no structure.
+**Dimension 4 — Text scaling (hard where the platform has system text size).** iOS Dynamic Type, Android font scale, browser `rem`-based scaling. At the project's upper target (typically 200% / XXXL) the screen must not truncate critical text, overflow critical controls, or collapse into unreadable density. Severity: critical text truncated or control overflowed at supported scale = MAJOR.
 
-Severity: missing label on an interactive element = CRIT (block ship). Decorative-image label missing = MAJOR.
+**Dimension 5 — Motion / reduced-motion (soft).** When the user requests reduced motion (iOS / Android setting, `prefers-reduced-motion`), animations should skip, minimize (cross-fade over slide), or stay brief. Soft because non-honoring is rarely critical — but on parallax-heavy / motion-rich screens it matters (vestibular conditions). Severity: critical chrome ignoring the preference = MAJOR; decorative = LOW.
 
-### Dimension 2 — Hit-target size (hard)
-
-Minimum tappable area:
-- iOS: 44×44 points (Apple HIG)
-- Android: 48×48 dp (Material guidelines)
-- Web (touch): 44×44 px (WCAG 2.2 Target Size)
-- Web (mouse-only): no strict minimum, but a11y for mobile-web requires the touch threshold.
-
-The agent measures rendered bounds (via view hierarchy or DOM inspection) and flags any tappable below the threshold. `hitSlop` / extended hit areas count if they meet the threshold.
-
-Failure modes:
-- Close-X icon at 24×24 with no hit-slop → CRIT.
-- Inline links at default text height (often ~20 px) → fail.
-- Dense list rows with multiple actions packed → each action below threshold.
-
-Severity: any tappable below the threshold = CRIT.
-
-### Dimension 3 — Contrast ratios (hard)
-
-WCAG 2.2 AA:
-- Normal text: 4.5:1 minimum.
-- Large text (18pt+ or 14pt+ bold): 3:1 minimum.
-- UI components and graphical objects: 3:1 minimum.
-
-**Contrast MUST be computed from TOKEN values, not screenshot-estimated.** This is core methodology, not an optional refinement. Screenshot color sampling is unreliable: anti-aliasing, sub-pixel rendering, JPEG compression, blur backdrops, and per-display gamma curves all distort the apparent foreground/background pair. A 4.5:1 token pair can sample to 3.8:1 in a screenshot — the audit then false-flags compliant chrome; conversely a 4.2:1 token pair can sample to 4.6:1 over an off-white anti-aliased edge — the audit misses real failures. The correct path: read the project's semantic tokens (`DESIGN_SYSTEM_TOKENS_PATH` from the design-system reference skill), pick the actual foreground + background tokens for the surface, and compute ratios mathematically against them. Pixel sampling is a *fallback* when tokens are unavailable, not the default.
-
-For projects with dark + light modes, the agent audits BOTH modes. Failures in either are blocking.
-
-Severity: text below 4.5:1 or UI below 3:1 = MAJOR. Multiple failures across a screen = CRIT.
-
-### Dimension 4 — Text scaling (hard for platforms with system text size)
-
-iOS Dynamic Type, Android font scale, browser `prefers-text-size` / `rem`-based scaling. The user can request 130%, 150%, 200% text. The screen must:
-- Not truncate critical text.
-- Not overflow critical controls.
-- Not collapse layout into unreadable density.
-
-The agent should verify at the project's defined upper scaling target (typically 200% / XXXL). Test mode-switches if the project supports them.
-
-Severity: critical text truncated or critical control overflowed at supported scale = MAJOR.
-
-### Dimension 5 — Motion / reduced-motion (soft)
-
-If the user has indicated reduced-motion preference (iOS, Android, `prefers-reduced-motion` CSS query), animations should either:
-- Skip entirely
-- Use minimal motion (cross-fade instead of slide)
-- Not exceed brief duration thresholds
-
-The agent should check whether the project's animation library / motion primitives honor the preference. This is soft because non-honoring is rarely a critical failure, but on parallax-heavy / motion-rich screens it can be (motion sensitivity, vestibular conditions).
-
-Severity: animations on critical chrome ignoring reduced-motion preference = MAJOR. Decorative animation ignoring it = LOW.
-
-### Additional dimensions for specific platforms
-
-- **Web only**: keyboard navigation order, focus-ring visibility, focus management on dialog open/close, skip-links, semantic HTML, ARIA landmarks.
-- **iOS only**: VoiceOver rotor configuration, accessibility actions for swipe-only gestures, voice control hints.
-- **Android only**: TalkBack-specific live-region announcements, content-grouping rules.
-
-The agent should know its platform and apply the relevant additional checks.
+**Platform extras.** Web: keyboard order, focus-ring visibility, focus management on dialog open/close, skip-links, ARIA landmarks. iOS: VoiceOver rotor, accessibility actions for swipe-only gestures. Android: TalkBack live-region announcements, content grouping. The agent knows its platform and applies the relevant extras.
 
 ## How to derive THIS project's specifics
 
-Before authoring the agent, gather:
-
-1. **The project's platform.** Determines which dimensions apply and which platform-specific extras to include.
-
-2. **The project's theme / token system.** Contrast checks should reference the project's semantic tokens, not raw colors guessed from a screenshot.
-
-3. **The project's accessibility audit history.** Have any audits been done? What did they find? Those findings are the highest-priority recurrence checks.
-
-4. **The project's compliance target.** WCAG AA? WCAG AAA? Section 508? App Store? Each has slightly different thresholds.
-
-5. **The project's animation library.** Does it have a reduced-motion hook / setting? The agent should check usage.
-
-6. **The capture / inspection commands.** View-hierarchy inspection differs by platform (`maestro hierarchy`, Chrome DevTools tree, Xcode accessibility inspector, etc.).
-
-## Authoring the agent
-
-The final agent (typically `.claude/agents/a11y-audit.md`) should specify:
-
-1. **When to invoke** — default: in parallel with `interaction-audit` and `ux-audit` before claiming a UI surface done.
-2. **The four hard dimensions** — with platform-specific commands for each check.
-3. **The fifth soft dimension** — motion / reduced-motion.
-4. **The severity mapping** — CRIT / MAJOR / LOW; CRIT blocks ship regardless of visual grade.
-5. **The platform-specific extras** — keyboard / focus-ring for web; VoiceOver rotor for iOS; TalkBack live regions for Android.
-6. **The report format** — graded per dimension, with per-element findings.
-7. **The "ship-block" precondition** — a missing label or sub-threshold hit-target blocks ship; the report's first line names this if applicable.
+1. **The platform** — determines which dimensions and extras apply.
+2. **The theme / token system** — contrast checks reference the semantic tokens, not screenshot guesses.
+3. **The accessibility audit history** — prior findings are the highest-priority recurrence checks.
+4. **The compliance target** — WCAG AA / AAA / Section 508 / App Store; each shifts thresholds slightly.
+5. **The animation library** — does it have a reduced-motion hook? Check its usage.
+6. **The capture / inspection commands** — `maestro hierarchy` for iOS sim, `axe-core` / `pa11y` / `lighthouse` for web, Xcode Accessibility Inspector for native iOS.
 
 ## Report format
 
 ```markdown
-## A11y Audit — <screen name> — <date>
+## A11y Audit — <screen> — <date>
 
-### Captured artifact
-<path to screenshot + view-hierarchy capture>
-
+### Captured artifact: <screenshot + view-hierarchy capture>
 ### Overall: <S/A/B/C/D/F>
 
 ### Dim 1 — Assistive labels
@@ -166,72 +63,33 @@ The final agent (typically `.claude/agents/a11y-audit.md`) should specify:
 | Foreground | Background | Ratio | Required | Pass? |
 |---|---|---|---|---|
 
-### Dim 4 — Text scaling
-| Element / surface | Behavior at 200% | Severity |
+### Dim 4 — Text scaling · Dim 5 — Motion
+| Element / animation | Behavior at 200% / honors reduced-motion? | Severity |
 |---|---|---|
 
-### Dim 5 — Motion / reduced-motion
-| Animation | Honors prefers-reduced-motion? | Severity |
-|---|---|---|
-
-### Ship-blocking findings (CRIT)
-<list — these block merge>
-
-### Major findings
-<list — should fix before ship>
-
-### Minor / suggestions
-<list>
+### Ship-blocking (CRIT) · Major · Minor
+<grouped findings, each with a concrete fix>
 ```
 
-## Depth signatures — what battle-tested looks like
+## Authoring the agent
 
-The authored `a11y-audit.md` agent fails the depth bar if it lacks any of these 10 structural elements. Accessibility is a domain where shallow audits are actively misleading — they pass the screen on cosmetic criteria while real users with assistive tech remain locked out. Depth is not negotiable.
+The final agent (typically `.claude/agents/a11y-audit.md`) assembles the five dimensions with platform-specific inspection commands, the severity mapping, and the report format above, plus these project-specific pieces:
 
-1. **Named benchmarks** — Apple's own apps (Music, Settings, Wallet) for iOS a11y; Stripe / Linear for web a11y standards; Microsoft Office for desktop a11y. The benchmark for "S-tier a11y" must be a real product the user can open and compare against, not "WCAG AA pass." E.g. *"Tier 1 = Apple Settings VoiceOver flow; Tier 2 = Linear keyboard navigation for power-user a11y."*
-2. **5+ inspection dimensions** — assistive labels, hit-target size, contrast ratios, text scaling, motion preference, plus platform-specific (focus rings on web; VoiceOver rotor on iOS; TalkBack live regions on Android). Each with the concrete command/grep for inspecting it.
-3. **Rubric anchored per grade** — `S = Apple-parity (zero CRIT, zero MAJOR, every interactive element labeled and reachable) / A = ships with 1-2 MAJOR / B = ships with multiple MAJOR; ship-blocking CRIT clear / C = at least one CRIT; ship blocked / D = pervasive CRITs / F = unusable by assistive-tech users`. Crit-class severity OVERRIDES visual grade — Apple iOS 26 Settings is the parity claim, and parity without a11y is no parity.
-4. **Report-format sections** — `## Captured artifact / ## Overall grade / ## Dim 1: Assistive labels (table) / ## Dim 2: Hit targets (table) / ## Dim 3: Contrast (table with computed ratios) / ## Dim 4: Text scaling / ## Dim 5: Motion / ## Ship-blocking findings (CRIT) / ## Major findings / ## Minor`. Tables are mandatory; flat prose loses signal.
-5. **Cross-references** — composes with `ux-audit.md` (orthogonal dimensions; both must pass), `interaction-audit.md` (parallel dispatch), `audit-routing.md` (CRIT in a11y blocks ship regardless of visual grade), `visual-verification.md` (capture is precondition), the project's theme/token file (contrast computation source).
-6. **Numbered non-negotiable rules** — minimum 6: *(1) CRIT-class findings (missing label on interactive, sub-threshold hit target) block ship regardless of visual grade — call this out in the first line of the report. (2) Audit BOTH light and dark modes if the project supports them. (3) Audit all meaningful states — happy, error, empty, loading, focus, disabled. (4) Compute contrast from token values, NOT visual estimation from a screenshot. (5) Provide a fix per finding — "missing label" without "add `accessibilityLabel='close'`" is unactionable. (6) Verify Dynamic Type / text-scale at 200% explicitly — devs test at 100%, and that's where scale bugs hide.*
-7. **Project-specific anti-patterns from git** — 3-5 from interview Phase D. E.g. *"Close-X icon on modal at 28×28 (commit `abc1234` fix) — sweep for sub-44pt close icons on every modal in `src/components/Modal/`."* *"Empty list state used decorative-image label that screen reader spoke verbatim (commit `def5678`) — flag every `Image` not wrapped in `accessibilityHidden`."*
-8. **Edge cases + abort conditions** — *"Abort if project has no theme file (no source of truth for contrast computation). Refuse if scope is "the whole app" — audit one surface at a time. Skip Dim 5 (motion) if the project has no animation library — but flag the omission."*
-9. **Calibration text** — `S-tier looks like: <every interactive element labeled, VoiceOver/screen-reader can complete the primary task without sighted assistance, 44pt+ hit targets throughout, contrast computed > 4.5:1 for text and > 3:1 for UI in both modes, Dynamic Type at 200% reflows cleanly>. F-tier looks like: <icon-only buttons with no labels, hit targets at 24×24, contrast 2.8:1 on primary text, layout collapses at 130% Dynamic Type, motion ignores reduced-motion preference>.`
-10. **Operational specifics** — platform-specific hierarchy/inspection commands derived from Phase 1: `maestro hierarchy --compact` for iOS sim, `axe-core` for web (or `pa11y` / `lighthouse --only-categories=accessibility`), Xcode Accessibility Inspector for native iOS, the user's actual theme/token path for contrast computation. Compliance target (WCAG 2.2 AA vs AAA vs Section 508) stated explicitly.
-
-If the authored `a11y-audit.md` lacks any of these, redo. A shallow a11y audit is worse than no audit — it gives false confidence.
-
-## Cross-references
-
-- `ux-audit.md` — visual polish. Visual + a11y are orthogonal; both must pass.
-- `interaction-audit.md` — semantic chrome integrity. Runs in parallel with a11y; same dispatch batch.
-- `audit-routing.md` — when to dispatch this agent; cross-rubric severity translation (a11y CRIT blocks ship regardless of visual grade).
-- `visual-verification.md` — capture is the precondition.
-- `quality-rubric.md` — a11y is one input to the overall composite grade.
-
-## Anti-patterns in the agent you write
-
-- **Skipping a11y because "the visual is fine."** Visual quality doesn't predict a11y quality. The agent runs regardless of visual grade.
-
-- **Auditing only the happy path.** Disabled states, focus states, error states, loading states all have a11y requirements. Audit the surface in its meaningful states, not just the default.
-
-- **Visual estimate of contrast.** "Looks contrast-y" is not a check. Compute ratios from the actual tokens.
-
-- **No per-platform tailoring.** Web a11y has focus rings + landmarks; iOS has VoiceOver rotor + accessibility actions; Android has TalkBack live regions. Don't ship a one-size-fits-all checklist.
-
-- **CRIT findings without a "this blocks ship" header.** The audit's authority depends on calling its blocking findings clearly. Don't bury ship-blockers in a list.
-
-- **Auditing the design-token file directly.** The audit grades a captured artifact, not source code. Token values are an input, but the verification is on rendered output.
-
-- **Ignoring scaling.** Dynamic Type / font-scale failures are common because devs test at 100% only. The audit must explicitly check the scaled state.
-
-- **Confusing reduced-motion as cosmetic.** For motion-sensitive users, ignoring reduced-motion is a real accessibility failure, not a polish detail. Severity should reflect that.
-
-- **Producing audit findings without fix suggestions.** "This pressable lacks a label" is unactionable without "add `accessibilityLabel='close'` or wrap in a button with appropriate text." Every finding has the fix.
+- **Named benchmarks** — real products to compare against, not "WCAG AA pass": *"Tier 1 = Apple Settings VoiceOver flow; Tier 2 = Linear keyboard navigation."* Parity without a11y is no parity.
+- **Rubric anchored per grade** — `S = Apple-parity (zero CRIT/MAJOR, every element labeled and reachable) · A = 1-2 MAJOR · B = multiple MAJOR, CRIT clear · C = ≥1 CRIT (blocked) · D = pervasive CRIT · F = unusable by assistive tech`. CRIT-class severity overrides the visual grade.
+- **Project anti-patterns from git** (3-5, from the interview): *"Close-X on modal at 28×28 (fix `abc1234`) — sweep sub-44pt close icons in `src/components/Modal/`."*
+- **Calibration** — *S-tier: every element labeled, screen reader completes the primary task unaided, 44pt+ targets, computed contrast > 4.5:1 text / > 3:1 UI in both modes, 200% Dynamic Type reflows cleanly. F-tier: unlabeled icon buttons, 24×24 targets, 2.8:1 text, layout collapses at 130%.*
+- **Non-negotiable rules**, each with its why: CRIT findings named in the report's first line · audit both light and dark modes · audit all meaningful states (happy / error / empty / loading / focus / disabled) · compute contrast from tokens · a fix per finding (*"missing label"* without *"add `accessibilityLabel='close'`"* is unactionable) · verify Dynamic Type at 200% explicitly (devs test at 100%, which is where scale bugs hide).
+- **Abort conditions** — no theme file (no contrast source of truth); "the whole app" scope (one surface at a time); no animation library (skip Dim 5, but flag the omission).
 
 ## Tool surface
 
-Read, Grep, Glob, Bash for static analysis. Platform-specific capture + hierarchy inspection tools (CLI > MCP per `visual-verification.md`).
+`Read`, `Grep`, `Glob`, `Bash` for static analysis, plus the platform's capture + hierarchy inspection tools (CLI > MCP per `visual-verification.md`). The audit grades a captured artifact, not source — token values are an input, the verification is on rendered output. Model: high-capability (contrast / scaling / semantic-structure reasoning benefits from depth). Effort: high.
 
-Model: high-capability. The contrast / scaling / semantic-structure reasoning benefits from depth.
-Effort: high. A11y audits are detailed and dense; don't shortchange the model.
+## Cross-references
+
+- `ux-audit.md` — visual polish; orthogonal to a11y, both must pass.
+- `interaction-audit.md` — semantic chrome integrity; runs in parallel, same dispatch batch.
+- `audit-routing.md` — when to dispatch, and the cross-rubric rule that a11y CRIT blocks ship regardless of visual grade.
+- `visual-verification.md` — capture is the precondition.
+- `quality-rubric.md` — a11y is one input to the composite grade.
