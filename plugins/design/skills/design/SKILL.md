@@ -116,7 +116,7 @@ This is the substrate the interview adapts to. Skip questions whose answer is al
 
 ## Phase 2 — Interview
 
-Open `interview.md` (same directory). The interview is structured as **7 phases (A–G) driving 47 configuration knobs** — a reduced subset of the original 53-knob calibration target inherited from `docs/design-stack-analysis.md`, after dropping the knobs that only existed to tune a per-project agent copy's internals (gone now that the 7 design audits ship with the plugin and are consumed as-is). Adaptive: ~20 knobs auto-populate from Phase 1's scan; the interview drives the remaining ~27 via 19 sub-questions batchable into ~5 super-questions per turn.
+Open `interview.md` (same directory). The interview is structured as **7 phases (A–G) driving 47 configuration knobs** — a reduced subset of the original 53-knob calibration target, after dropping the knobs that only existed to tune a per-project agent copy's internals (gone now that the 7 design audits ship with the plugin and are consumed as-is). Adaptive: ~20 knobs auto-populate from Phase 1's scan; the interview drives the remaining ~27 via 19 sub-questions batchable into ~5 super-questions per turn.
 
 The most important questions (the ones to fight for if the user resists):
 
@@ -164,7 +164,7 @@ Based on what applied + the interview answers, write exactly two files to `.clau
 
 **Do NOT author any agent copy — the 7 design audits are consumed as-is from the plugin and self-adapt at runtime.** `ux-audit`, `a11y-audit`, `interaction-audit`, `flow-audit`, `pages-audit`, `product-designer`, and `design-token-audit` all ship with the plugin, already open with "discover THIS project at runtime," and read the two artifacts below directly. Writing a project-local copy of any of them (or of the plugin's `journey-mapping`, `element-reuse`, `persona-testing`, or `iterative-polish-autoloop` skills — all of which already self-adapt the same way, e.g. `persona-testing` derives its own test triad from "the project's stated voice / quality-bar / design-north-star at runtime") would duplicate what the plugin ships and drift the moment either side changes. This phase writes reference data, not code.
 
-**Calibration target**: the interview's knob set (per `docs/design-stack-analysis.md`). Every artifact's body must thread the relevant knobs. If a drafted artifact still reads like a template, the interview didn't drive enough knobs through.
+**Calibration target**: the interview's knob set. Every artifact's body must thread the relevant knobs. If a drafted artifact still reads like a template, the interview didn't drive enough knobs through.
 
 ### `.claude/rules/design-north-star.md`
 
@@ -197,7 +197,7 @@ The design-system reference digest, per the `design-system-reference-skill.md` p
 
 Each of the two artifacts you write in Phase 4 MUST contain ALL of these 10 structural elements, or the artifact is shallow and the user will reject it. This checklist is the difference between a "v0.1 sketch" and a "battle-tested reference." Treat it as binding.
 
-**Calibration target**: the interview's knob set (see `docs/design-stack-analysis.md` for the full knob map). Each artifact's depth signature is achieved by threading the relevant subset of knobs into its body — not by adding length. A 150-LOC rule with 12 project-specific knob references beats a 300-LOC body of generic methodology.
+**Calibration target**: the interview's knob set. Each artifact's depth signature is achieved by threading the relevant subset of knobs into its body — not by adding length. A 150-LOC rule with 12 project-specific knob references beats a 300-LOC body of generic methodology.
 
 1. **Named benchmarks** — specific Tier 1 + Tier 2 apps from the interview, with WHY each is the benchmark. "Apple-like" or "modern apps" is NOT a benchmark. "Linear for keyboard speed" or "Apple iOS 26 Settings + Telegram for chrome" is. (`design-north-star.md`)
 
