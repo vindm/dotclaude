@@ -34,4 +34,4 @@ This costs three lines of code per screen. It would have saved three hours on th
 
 ## See also
 
-- `interaction-audit` agent — pre-ship audit that asks "does this affordance fire its handler?" before the test harness has to.
+- `plugins/design/agents/interaction-audit.md` — pre-ship audit that asks "does this affordance fire its handler?" before the test harness has to.

@@ -28,6 +28,6 @@ The reducer was not the single owner of order state. The doc *said* it was. The 
 
 ## See also
 
-- `principles/knowledge-layers.md` — the authority order `.claude` → code → docs; doc-vs-code conflict → code wins. This story is what that rule prevents.
-- `principles/code-review.md` — parallel-path detection: grep for every other path performing the same operation before trusting that one path owns it.
-- `principles/authoring-skills.md` — the same staleness failure applied to skills: point at code, don't mirror a snapshot that rots.
+- `plugins/core/skills/knowledge-layers/SKILL.md` — the authority order `.claude` → code → docs; doc-vs-code conflict → code wins. This story is what that rule prevents. (The doctrine moved from a principle into this runtime skill.)
+- `plugins/core/principles/code-review.md` — parallel-path detection: grep for every other path performing the same operation before trusting that one path owns it.
+- `plugins/core/principles/skill-vs-code-audit.md` — the same staleness failure applied to skills: point at code, don't mirror a snapshot that rots.
