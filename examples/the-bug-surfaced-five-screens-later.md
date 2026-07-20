@@ -40,5 +40,5 @@ The harness had typed exactly what we'd told it to type. The substitution had si
 
 ## See also
 
-- `rules/visual-verification.md` — screenshot the screen, even when the failure looks logic-shaped. Cheap diagnostic, eliminates entire hypothesis space.
-- `agents/pre-flight` — pre-implementation review that asks "what other call paths exist?" applies equally to test runners.
+- `plugins/design/principles/visual-verification.md` — screenshot the screen, even when the failure looks logic-shaped. Cheap diagnostic, eliminates entire hypothesis space.
+- `plugins/core/agents/pre-flight.md` — pre-implementation review that asks "what other call paths exist?" applies equally to test runners.

@@ -28,5 +28,5 @@ The failure is invisible at commit time and surfaces only when someone (often yo
 
 ## See also
 
-- `principles/code-review.md` — "Commit integrity — verify the staged set landed"; the same trust-the-result-less instinct as parallel-path detection.
-- `principles/operating-principles.md` — Goal-driven complete execution: the success criterion is *observably* met, not assumed from a green exit code.
+- `plugins/core/principles/code-review.md` — "Commit integrity — verify the staged set landed"; the same trust-the-result-less instinct as parallel-path detection.
+- `plugins/core/principles/operating-principles.md` — Goal-driven complete execution: the success criterion is *observably* met, not assumed from a green exit code.

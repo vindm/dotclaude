@@ -28,6 +28,5 @@ The deeper cause: stash is a *fragile, unnamed, off-branch* place to put work yo
 
 ## See also
 
-- `principles/handoff.md` — WIP-commit-not-stash is part of the conscious-handoff discipline; orphan WIP gets a durable home before context is lost.
-- `hook-templates/warn-uncommitted-on-clear.sh` — the SessionEnd nudge that fires when a session ends with uncommitted changes.
-- `hook-templates/check-git-safety.sh` — blocks `git stash drop` / `clear` (among other destructive git ops) so a stash can't be discarded by accident.
+- `plugins/core/hooks/scripts/warn-uncommitted-on-clear.sh` — the SessionEnd nudge that fires when a session ends with uncommitted changes; WIP-commit-not-stash gives orphan work a durable home before context is lost.
+- `plugins/core/hooks/scripts/check-git-safety.sh` — blocks `git stash drop` / `clear` (among other destructive git ops) so a stash can't be discarded by accident.

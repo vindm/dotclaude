@@ -38,5 +38,5 @@ The bug-cost diagnostic: if your test suite passes and your production bill spik
 
 ## See also
 
-- `rules/file-discipline.md` — a workflow that holds multiple entry points is a candidate for explicit decomposition; the mock check belongs in a shared `runWorkflow.ts` helper, not in each caller.
-- `check-secret-leak` hook — the same "is this layer the right enforcement point?" question, applied to credentials.
+- `plugins/core/principles/file-discipline.md` — a workflow that holds multiple entry points is a candidate for explicit decomposition; the mock check belongs in a shared `runWorkflow.ts` helper, not in each caller.
+- `plugins/core/hooks/scripts/check-secret-leak.sh` — the same "is this layer the right enforcement point?" question, applied to credentials.

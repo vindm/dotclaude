@@ -36,4 +36,4 @@ Three rules now hold in our codebase:
 
 ## See also
 
-- `rules/database-query-discipline.md` — the broader CLI-over-LLM-tool discipline; the RLS-no-op trap is one specific instance of "trust the response shape less than you think."
+- `deferred/principles/database-query-discipline.md` — the broader CLI-over-LLM-tool discipline; the RLS-no-op trap is one specific instance of "trust the response shape less than you think." (Part of the not-yet-shipped data domain under `deferred/`.)
