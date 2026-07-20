@@ -10,11 +10,11 @@ Four phases, ~12–20 questions total, ~16–28 min wall clock for greenfield, ~
 
 **Adaptive depth**: each phase has a default question count. Reduce when Phase 1 pre-populated; expand only when the user gives volunteered signal. Greenfield runs need fewer pre-populates and more questions; brownfield runs the inverse.
 
-**Pause-and-confirm gate**: after each phase, the SKILL.md flow stages the layer's artifact and asks *"Layer N staged. Move to Layer N+1?"*. The user can interrupt, revise, or skip the next layer.
+**Pause-and-confirm gate**: after each phase, the SKILL.md flow stages that phase's artifact and asks whether to move to the next. The user can interrupt, revise, or skip the next phase.
 
 ---
 
-## Phase A — Project Identity (Layer 1) — 4–6 questions
+## Phase A — Project Identity — 4–6 questions
 
 ### A0 — Mode confirmation (only if brownfield detected)
 
@@ -36,7 +36,7 @@ Wait for explicit mode pick. The rest of Phase A is unchanged.
 
 > *"In one sentence: what is this, who's it for? Pretend you're explaining to a developer friend who's curious."*
 
-**Drives**: Layer 1 vision opening sentence + downstream task classification calibration.
+**Drives**: the vision opening sentence + downstream task classification calibration.
 
 **Listen for**: marketing copy. If the answer is *"a revolutionary new way to..."* or *"the modern X for Y"*, push back gently: *"Strip the adjectives — what do users DO with this?"* The opening sentence battle-tests when it has a noun + verb + user, not when it has marketing register.
 
@@ -46,11 +46,9 @@ Wait for explicit mode pick. The rest of Phase A is unchanged.
 
 > *"In ONE more sentence, what makes this project hard or different from the obvious-looking version of it? Skip if your A1 already captures it. (Common shape: 'X with optionality on Y' — e.g. 'a gym vertical, with the spatial engine generalizing to other venues as optionality.' Captures the moat hint without committing the moat.)"*
 
-**Drives**: Layer 1 secondary-product framing — distinct from A6 moat. A1 captures purpose; A1.5 captures the "primary product + optionality" structure if it exists. Useful for CLAUDE.md Architecture (when the optionality has a code-shape implication, e.g. one codebase serving two products) AND for the Quality Bar register (one product may be S-tier register, the other credible-register).
+**Drives**: the secondary-product framing — distinct from A6 moat. A1 captures purpose; A1.5 captures the "primary product + optionality" structure if it exists. Useful for CLAUDE.md Architecture (when the optionality has a code-shape implication, e.g. one codebase serving two products) AND for the Quality Bar register (one product may be S-tier register, the other credible-register).
 
 **Listen for**: a user volunteering *"actually it's two things on one codebase"* or *"the underlying engine could generalize to..."* These are the signals A1 didn't fully capture. Most projects answer *"A1 already says it"* — that's fine. Don't force a second framing if there isn't one.
-
-**Discovered**: 2026-05-21 smoke test against the case-study project. A1 captured *"intelligence layer for premium specialty gyms,"* but the ground-truth CLAUDE.md opens with *"Primary product + optionality on one codebase. Primary: gym vertical. Optionality: spatial engine."* The optionality framing was load-bearing for downstream architecture decisions; missing it produced a thinner Identity section.
 
 **Skip-if-volunteered-already**: if A1's answer already contains *"primary X + optionality Y"* / *"a vertical that uses an engine"* / *"two products on one codebase"* — confirm in one sentence and skip A1.5 question.
 
@@ -58,7 +56,7 @@ Wait for explicit mode pick. The rest of Phase A is unchanged.
 
 > *"Who are the first 5 specific customers you'd want for this? Name them — companies, roles, or specific people. If you can't list 5 by name, the wedge is too fuzzy; tell me what you DO know and I'll help sharpen."*
 
-**Drives**: Layer 1 ICP line. Anchors every downstream "does feature X serve our users" question.
+**Drives**: the ICP line. Anchors every downstream "does feature X serve our users" question.
 
 **3-property test** per `project-identity.md`:
 - **Named** (industry / role / company-size).
@@ -73,7 +71,7 @@ If the user names ≥ 3, the wedge is workable. If they name 0–2, surface the 
 
 > *"Where does this ship? App Store / public website / open-source registry / internal dashboard / notebook on your laptop?"*
 
-**Drives**: Layer 1 production-vs-internal tag. Anchors Layer 4 quality bar register (production = consumer-app benchmarks; internal = credible-not-S-tier; library = API ergonomics; research = produces-interpretable-output).
+**Drives**: the production-vs-internal tag. Anchors the quality-bar register (production = consumer-app benchmarks; internal = credible-not-S-tier; library = API ergonomics; research = produces-interpretable-output).
 
 **Skip-if-Phase-1**: if the project is a public package on npm / PyPI / Cargo (visible in `package.json` `"name"` field + a `"main"` / `"bin"` / `"exports"` pattern), confirm: *"Looks like a public library — `<package-name>` on npm/PyPI/Cargo. Confirm production-library?"*
 
@@ -100,13 +98,13 @@ Propose maturity tag with the heuristic:
 
 > *"Based on git: project is `<age>` old with `<file count>` source files. I'd tag this `<proposed maturity>`. Do you have external users yet — and roughly how many?"*
 
-**Drives**: Layer 1 stage tag (and downstream Quality Bar register calibration).
+**Drives**: the stage tag (and downstream quality-bar register calibration).
 
 ### A6 — Moat / differentiation (optional, defer-able)
 
 > *"What would a well-funded competitor need 3 months to catch up to? What couldn't they ever catch up to?"*
 
-**Drives**: Layer 1 moat bullets + Layer 1 NOT-the-moat negation.
+**Drives**: the moat bullets + the NOT-the-moat negation.
 
 The two-question form is intentional. *"Couldn't ever catch up to"* is the load-bearing answer (per `project-identity.md`); *"3 months to catch up to"* is the moat-shaped-differentiator (real but copyable).
 
@@ -118,7 +116,7 @@ If the user can't articulate a moat:
 
 ---
 
-## Phase B — Architecture (Layer 2) — 3–5 questions
+## Phase B — Architecture — 3–5 questions
 
 ### B1 — Stack confirmation
 
@@ -126,13 +124,13 @@ If the user can't articulate a moat:
 
 > *"Looks like `<language>` + `<framework>` + `<runtime>`. Confirm? Any major components I missed?"*
 
-**Drives**: Layer 2 stack + downstream domain applicability matrix.
+**Drives**: the stack + downstream domain applicability matrix.
 
 ### B2 — Layer model
 
 > *"How would you describe the codebase's structure in 1–3 layers? Common patterns: single-tier (one app, one codebase), two-tier (e.g. shared/ + app/, or engine + vertical), N-tier (microservices, monorepo with N packages). Or is there a less-standard shape?"*
 
-**Drives**: Layer 2 architecture diagram + Layer 2 boundary detection.
+**Drives**: the architecture diagram + boundary detection.
 
 For most greenfield projects: single-tier is default. The question forces *naming* the implicit layers (e.g. *"core logic / presentation / I/O"* for a CLI, or *"models / controllers / views"* for a monolith). Naming makes the boundaries enforceable downstream.
 
@@ -140,7 +138,7 @@ For most greenfield projects: single-tier is default. The question forces *namin
 
 > *"Any non-negotiable boundaries? Examples: 'lib/ never imports from app/', 'frontend never imports from backend/', 'domain doesn't know about infrastructure.' If yes — name them; I'll author a hook + rule per boundary. If unclear — fine to defer."*
 
-**Drives**: Layer 2 boundary rules + boundary hooks.
+**Drives**: the boundary rules + boundary hooks.
 
 If the user says *"not really"*: ship only the universal file-size hook + rule. Don't invent boundaries.
 
@@ -150,7 +148,7 @@ If the user names ≥ 1 boundary: confirm greppability (*"can this boundary be e
 
 > *"Any non-negotiable constraints? Examples: file-size ceiling (1000 LOC for TS / 500 for Python / 800 for Rust / 600 for Go), no raw color literals, no `any` types, no inline styles. I'll author hooks + rules for each."*
 
-**Drives**: Layer 2 constraints bullets + per-constraint hook/rule.
+**Drives**: the constraints bullets + per-constraint hook/rule.
 
 **Universal default**: ship `check-file-size.sh` at the project-language-appropriate ceiling unless user opts out. Don't ask if they want it — propose, accept opt-out.
 
@@ -162,7 +160,7 @@ Don't ask here. The integrations (Supabase, Stripe, OpenAI, AI SDK) get caught b
 
 ---
 
-## Phase D — Quality Bar (Layer 4) — 2–4 questions
+## Phase D — Quality Bar — 2–4 questions
 
 The quality bar splits by surface, and after the two-plugin split bootstrap owns only the **non-design** half:
 
@@ -173,7 +171,7 @@ The quality bar splits by surface, and after the two-plugin split bootstrap owns
 
 > *"Who would you demo a polished change to — be specific. Name the role or person. ('A friend's customer I'm recruiting as customer #2', 'a journalist writing about us', 'a CTO at a target enterprise', 'a designer whose taste I respect', 'my dad'.)"*
 
-**Drives**: Layer 4 demo-test framing + the quality-bar register (production = consumer-grade; internal = credible-not-S-tier; library = API ergonomics). Applies whether or not the project has UI.
+**Drives**: the demo-test framing + the quality-bar register (production = consumer-grade; internal = credible-not-S-tier; library = API ergonomics). Applies whether or not the project has UI.
 
 The specificity matters. *"Users"* fails the test; *"a CTO at a target enterprise during a 30-min sales call"* passes.
 
@@ -181,7 +179,7 @@ The specificity matters. *"Users"* fails the test; *"a CTO at a target enterpris
 
 > *"For the non-visual surfaces — your API, CLI, or library — name 2–3 references you benchmark against, each with the dimension. 'React Query for hook ergonomics', 'Zod for type-narrowing', 'requests-Python for readability', 'Stripe for API design', 'gh for CLI first-run'."*
 
-**Drives**: Layer 4 `api-north-star.md` benchmarks with named dimensions. The dimension is load-bearing — *"we like Stripe"* is useless; *"Stripe for API-key rotation ergonomics"* is enforceable.
+**Drives**: the `api-north-star.md` benchmarks with named dimensions. The dimension is load-bearing — *"we like Stripe"* is useless; *"Stripe for API-key rotation ergonomics"* is enforceable.
 
 **If the project is UI-only** (no meaningful API / CLI / library surface): skip this — there is no non-design bar to author, and the visual bar is `/dotclaude:design`'s job. Point the user there and move on. Pure-backend / library / research projects: this is the whole quality bar.
 
@@ -189,11 +187,11 @@ The specificity matters. *"Users"* fails the test; *"a CTO at a target enterpris
 
 > *"If you hold different bars for different non-visual surfaces — one line each of what S-tier looks like. API: '<Y>'. CLI: '<Z>'. Code review: '<W>'."*
 
-**Drives**: Layer 4 per-domain (non-design) quality anchors. Most projects answer this implicitly through D1–D2; ask explicitly only if the user says they hold different bars per surface.
+**Drives**: the per-domain (non-design) quality anchors. Most projects answer this implicitly through D1–D2; ask explicitly only if the user says they hold different bars per surface.
 
 ---
 
-## Phase E — Knowledge Graph (Layer 5) — 3–5 questions
+## Phase E — Knowledge Graph — 3–5 questions
 
 ### E1 — `docs/` root convention
 
@@ -203,19 +201,19 @@ If no `docs/`:
 
 > *"I'll scaffold `docs/` at the repo root. Default subdirectories: `brainstorms/`, `specs/` (or `designs/` — pick one), `plans/`, `audits/`, `archive/{...}/`. Plus optional: `flows/`, `design-system/`, `research/`, `superpowers/{plans,specs}/`, `design-debt/`. Want any of the optionals? Or use a different root location (e.g. `notes/` instead of `docs/`)?"*
 
-**Drives**: Layer 5 `docs/` root + subdirectory selection.
+**Drives**: the `docs/` root + subdirectory selection.
 
 ### E2 — Specs vs designs naming
 
 > *"Spec convention: `docs/specs/<slug>-spec.md` or `docs/designs/<slug>-design.md`? Pick one and stay consistent."*
 
-**Drives**: Layer 5 spec naming convention. Authority hierarchy table uses the picked convention.
+**Drives**: the spec naming convention. Authority hierarchy table uses the picked convention.
 
 ### E3 — Capability map y/n
 
 > *"Capability map at `docs/product/capabilities.md` is a stable-ID list of what users can currently do (e.g. `O.1`, `M.1`, etc.). Brainstorms, specs, audits reference these IDs. Default-on for shipped/mature projects; default-defer for greenfield/early. Yours: `<recommendation based on maturity>`. Confirm?"*
 
-**Drives**: Layer 5 `docs/product/capabilities.md` scaffold.
+**Drives**: the `docs/product/capabilities.md` scaffold.
 
 For shipped/mature: scaffold + propose 3-5 initial capability IDs based on Phase 1 surface inventory.
 
@@ -227,7 +225,7 @@ For research / library: skip the capability map. Different doc shape applies.
 
 > *"Any permanent docs you want scaffolded (no date in filename, slug-only + 'Last verified' inside)? Common: `docs/design-system/README.md`, `docs/flows/<arc>.md` for canonical user journeys, `docs/architecture/<subsystem>.md` for substrate docs."*
 
-**Drives**: Layer 5 optional subdirectories + permanent doc scaffold.
+**Drives**: the optional subdirectories + permanent doc scaffold.
 
 For greenfield: most projects skip — author them when there's content to document. Don't pre-scaffold empty permanent docs (they become wishlist docs that stay empty).
 
@@ -247,7 +245,7 @@ Before invoking SKILL.md Phase 3 (stage → review → commit), summarize back w
 
 > *"Based on our conversation:*
 >
-> ***Project identity (Layer 1)***
+> ***Project identity***
 > *- Vision: `<one sentence>`*
 > *- Wedge ICP: `<specific segment>`*
 > *- Production-vs-internal: `<X>`*
@@ -255,18 +253,18 @@ Before invoking SKILL.md Phase 3 (stage → review → commit), summarize back w
 > *- Moat: `<bullets | TBD>`*
 > *- Anti-vision: `<bullets | none yet>`*
 >
-> ***Architecture (Layer 2)***
+> ***Architecture***
 > *- Layer model: `<1-tier | 2-tier | N-tier>`*
 > *- Stack: `<X>`*
 > *- Boundaries: `<list or "single-tier — none">`*
 > *- Constraints: `<list, with hook/rule binding>`*
 >
-> ***Quality bar (Layer 4)***
+> ***Quality bar***
 > *- Demo audience: `<specific role/person>`*
 > *- Non-design bar (`api-north-star.md`): `<references with dimensions | n/a — UI-only>`*
 > *- Design bar: `<owned by dotclaude-design — run /dotclaude:design | n/a — no UI>`*
 >
-> ***Knowledge graph (Layer 5)***
+> ***Knowledge graph***
 > *- `docs/` subdirectories: `<list>`*
 > *- Specs naming: `<docs/specs/ | docs/designs/>`*
 > *- Capability map: `<scaffold | empty | skip>`*
@@ -289,15 +287,15 @@ Wait for explicit "go" before authoring. Acceptable signals: *"ship it"* / *"yes
 
 Only the four project-specific phases are interviewed. Phases C (process) and F (domain kits) are **removed because they're consumed from the dotclaude plugin** — the `operating-discipline` skill and the auditor agents respectively. The A/B/D/E letters are kept as-is so they still map to SKILL.md's Phase references.
 
-| Phase | Layer | Topic | Questions | Phase-1 scan helps |
-|---|---|---|---|---|
-| A | 1 | Project Identity | 4–6 | Partial (age, contributors, files) |
-| B | 2 | Architecture | 3–5 | Heavy (stack, dirs) |
-| ~~C~~ | ~~3~~ | ~~Process Discipline~~ | — | consumed (`operating-discipline` skill) |
-| D | 4 | Quality Bar (non-design; UI → `/dotclaude:design`) | 2–4 | No (benchmarks are user-derived) |
-| E | 5 | Knowledge Graph | 3–5 | Partial (existing docs/) |
-| ~~F~~ | ~~6~~ | ~~Domain Kits~~ | — | consumed (auditor agents) |
-| **Total** | | | **12–20** | |
+| Phase | Topic | Questions | Phase-1 scan helps |
+|---|---|---|---|
+| A | Project Identity | 4–6 | Partial (age, contributors, files) |
+| B | Architecture | 3–5 | Heavy (stack, dirs) |
+| ~~C~~ | ~~Process Discipline~~ | — | consumed (`operating-discipline` skill) |
+| D | Quality Bar (non-design; UI → `/dotclaude:design`) | 2–4 | No (benchmarks are user-derived) |
+| E | Knowledge Graph | 3–5 | Partial (existing docs/) |
+| ~~F~~ | ~~Domain Kits~~ | — | consumed (auditor agents) |
+| **Total** | | **12–20** | |
 
 ### Batched super-questions for actual interview UX
 
@@ -318,7 +316,7 @@ The 12–20 sub-questions can be grouped into ~4–6 super-questions per turn fo
 - **One or two questions per turn**, conversational. The super-question batching above is fine for actual UX.
 - **Skip ruthlessly.** If Phase 1's project scan answered, confirm in one sentence rather than asking. Phase 1 reliably handles 30–40% of all questions in brownfield projects.
 - **Listen for off-script signal.** A user-volunteered *"our settings page got out of hand"* is gold for the Quality Bar's anti-patterns slot. Follow it.
-- **Push gently on D2/D3/D4** (benchmarks) — these are the most load-bearing answers. Without named benchmarks, the consumed auditor agents have no anchors to grade against.
+- **Push gently on D2/D3** (benchmarks) — these are the most load-bearing answers. Without named benchmarks, the consumed auditor agents have no anchors to grade against.
 - **Honor skip / pause / go-back.** The user can interrupt at any phase. Don't barrel through.
 - **Don't interview process / domain.** They're consumed from the plugin (`operating-discipline`, the auditor agents) — bootstrap authors only the project-specific A/B/D/E layers.
 - **End the interview when you have enough.** Don't grind through low-leverage questions if A/B/D/E already gave a rich picture; default sensibly and confirm in the summary.
@@ -334,7 +332,7 @@ The 12–20 sub-questions can be grouped into ~4–6 super-questions per turn fo
 - **Asking the moat question to a 1-week-old greenfield project.** They don't have an answer yet. Defer with `<MOAT_TBD>` placeholder.
 - **Forcing maturity tag against project reality.** A project with 0 users is `[early]`, not `[shipped]`, even if the founder feels they've shipped. Be honest; the downstream layers calibrate against this answer.
 - **Skipping the Ambiguous row in the task-classification table.** That table is authored into CLAUDE.md's "How You Work" (per SKILL.md) and its Ambiguous row is mandatory per `task-classification.md` depth bar. Don't ask the user; just include it.
-- **Layer 4 with no anchored benchmarks.** *"Looks good"* is unenforceable. Push for at least 1 Tier 1 + 1 Tier 2-with-dimension, or skip Layer 4 entirely (research / library) with the skip logged.
+- **Quality bar with no anchored benchmarks.** *"Looks good"* is unenforceable. Push for at least 1 Tier 1 + 1 Tier 2-with-dimension, or skip the quality bar entirely (research / library) with the skip logged.
 - **Re-authoring a consumed layer.** Process discipline and the auditor agents come from the plugin. Don't interview for them or write local copies — that defeats consume-direct and creates drift.
 - **Implicit approval before authoring.** *"OK"* or silence is not approval. Wait for explicit *"go"* / *"ship it"* / *"yes proceed"*.
 
@@ -343,8 +341,8 @@ The 12–20 sub-questions can be grouped into ~4–6 super-questions per turn fo
 ## Cross-references
 
 - `SKILL.md` (same directory) — the orchestrator. The kept phases here (A Identity, B Architecture, D Quality Bar, E Knowledge Graph) each correspond to an authoring block in SKILL.md Phase 2. Process / domain / maintenance are consumed from the plugin, not authored.
-- `../../principles/project-identity.md` — Layer 1 substance + depth signatures.
-- `../../principles/file-discipline.md` + `../../principles/decomposition.md` — Layer 2 file-size + decomposition discipline.
-- `../../principles/quality-rubric.md` — Layer 4 substance. The design north-star / benchmarking elicitation (naming Tier 1 + Tier 2 references) is owned by the separate `dotclaude-design` plugin, not authored here — point the user at that plugin's own bootstrap if they want it.
+- `../../principles/project-identity.md` — identity substance + depth signatures.
+- `../../principles/file-discipline.md` + `../../principles/decomposition.md` — architecture file-size + decomposition discipline.
+- `../../principles/quality-rubric.md` — quality-bar substance. The design north-star / benchmarking elicitation (naming Tier 1 + Tier 2 references) is owned by the separate `dotclaude-design` plugin, not authored here — point the user at that plugin's own bootstrap if they want it.
 - `../../principles/task-classification.md` — the task-classification table authored into CLAUDE.md's "How You Work" (E5 / SKILL.md), including the mandatory Ambiguous row.
 - **Consumed from the plugin (not interviewed):** the `operating-discipline` skill (process discipline) and the auditor agents (domain kits). Bootstrap does not re-author these.
