@@ -21,28 +21,30 @@ mid-session; the hook is the mechanism, the prose is the explanation.
 
 ## The universal / project-specific split
 
-This is the part that makes worktree discipline a *generator* domain, not a
-consumable hook. The mechanics are identical everywhere; the calibration is a
-judgment call per project.
+The mechanics are identical everywhere; the calibration is a judgment call per
+project. So the hook is CONSUMED — one debugged script, wired always-on — and
+the per-project part is a `worktree:` block in `dotclaude.yml` that the hook
+reads, not a rendered per-project copy.
 
-**Universal (ships as a tested template, consumed as-is):**
+**Universal (ships as ONE consumed hook — `hooks/scripts/check-main-checkout-edit.sh`):**
 - The detection logic: a file's repo is found via `git rev-parse
   --git-common-dir` from its nearest EXISTING ancestor directory (a Write may
   target a directory that doesn't exist yet); a worktree is recognized by
   `--git-dir` ≠ `--git-common-dir`; other repos and non-repo paths are ignored.
-- The escape hatch: a `.claude/.runtime/allow-main-edits` flag file, created
-  only on the user's explicit ask (merge-conflict resolution, approved
-  hotfix), removed right after.
-- The test harness: synthetic PreToolUse payloads asserting exit codes. A
-  fresh install is unverified until it passes.
+- The stray-worktree guard (a path that looks like a worktree but resolves
+  OUTSIDE the policed repo) and the escape hatch (a
+  `.claude/.runtime/allow-main-edits` flag, created only on the user's explicit
+  ask, removed right after).
+- NO-OP when the project has no `worktree:` config — so the one hook ships
+  always-on yet bites only opted-in projects.
 
-The hook is a guard around every future edit — a guard that each installation
-rewrites from prose is itself unguarded. A subtly wrong PreToolUse hook (bad
-exit code, unhandled missing `jq`, no nearest-existing-dir walk) can block
-EVERY edit in a project. Consume the debugged template; substitute only the
-placeholders.
+The hook guards every future edit — a guard each installation rewrites from
+prose is itself unguarded. A subtly wrong PreToolUse hook (bad exit code,
+unhandled missing `jq`, no nearest-existing-dir walk) can block EVERY edit.
+Consume the one debugged hook; a project supplies only data, never logic (its
+own logic is tested in the plugin, not re-tested per install).
 
-**Project-specific (interviewed / detected, never defaulted):**
+**Project-specific (interviewed / detected → the `worktree:` config block, never defaulted):**
 - *Which repo to police.* The project root is not always the repo — audit
   zones and monorepo-of-repos layouts keep the policed repo one level down.
 - *The exempt list.* See "markdown is sometimes code" below.
