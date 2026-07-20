@@ -1,137 +1,62 @@
 # file-discipline — designing file-size limits and the override convention
 
-Teaching material for Claude Code. When you bootstrap a `.claude/` directory, you read this doc to decide whether file-size discipline is worth enforcing in the user's project — and if so, what the ceiling should be and how the override convention should work.
+Teaching material for Claude Code. You read this to decide whether file-size discipline is worth enforcing in the user's project — and if so, what the ceiling is and how the override works.
 
-## When to ship one (applicability gate)
+## When to ship one
 
-Ship a file-size rule (+ companion hook from `hook-templates/check-file-size.sh`) when:
+Ship a file-size rule (+ the companion `hook-templates/check-file-size.sh`) when the project already has source files > 800 LOC in main, when its stack typically grows files (React components, controller classes, Rails models, Django views accrete), or when the user wants Claude to participate in decomposition discipline (otherwise files grow quietly, because every individual edit looks justifiable). Skip when the codebase is uniformly < 300 LOC per file already (the discipline is internalized), when the dominant file type is auto-generated (you'd just be writing exemptions), or when the user pushes back hard on any ceiling. When in doubt, ship with a generous ceiling — a 600-LOC ceiling on a codebase averaging 200 adds zero friction and catches outliers.
 
-- The project has source files > 800 LOC already in main branches.
-- The project's stack typically grows files (React components, controller classes, Rails models, Django views often accrete).
-- The user wants Claude Code to participate in decomposition discipline (otherwise, files quietly grow because every individual edit looks justifiable).
+## Why it matters
 
-Skip when:
-
-- The codebase is uniformly < 300 LOC per file already. The discipline is internalized; the rule adds friction without value.
-- The dominant file type is auto-generated (DB types, GraphQL types, protobuf bindings). Rule applies to the generated files; you'd just be writing exemptions.
-- The user pushes back hard against any line-count ceiling. Forced discipline against the user's instinct produces noise, not signal.
-
-When in doubt, ship the rule with a generous ceiling. A 1500-LOC ceiling is still useful; a 600-LOC ceiling on a codebase that averages 200 LOC adds zero friction and catches outliers.
-
-## Why it matters — what this catches
-
-File-size discipline is a **proxy for cognitive-load discipline**. A 2000-LOC file is, in practice, ALWAYS:
-
-- Too expensive for an LLM to re-read on every edit. Claude pays tokens to load context that's already there but bloated.
-- Too hard for a human reviewer to hold in their head. Parallel-path drift between sibling code blocks in the same file goes unnoticed because the reviewer's working memory has tapped out.
-- A signal that the file is doing too many things. State machines past ~400 LOC, persistence pipelines past ~600 LOC, screens past ~800 LOC stop being legible. Continuing to add to them costs more per change than decomposing once.
-
-The cost asymmetry is the argument: **decomposition is paid once; editing-a-bloated-file is paid every change forever.**
-
-What an LLM-callable rule catches that lint typically doesn't: lint can be configured to enforce file size, but the rule lives in `.claude/` so that Claude Code — when proposing an edit that would push a file over — proactively decomposes instead of just adding lines. The companion hook (`hook-templates/check-file-size.sh`) is the edit-time enforcement; this rule is the methodology Claude reaches for when the hook fires.
+File-size discipline is a **proxy for cognitive-load discipline**. A 2000-LOC file is, in practice, always too expensive for the model to re-read on every edit, too big for a human reviewer to hold in their head (so parallel-path drift between sibling blocks in the same file goes unnoticed — the reviewer's working memory tapped out), and a signal the file does too many things. The argument is the cost asymmetry: **decomposition is paid once; editing a bloated file is paid every change, forever.** Lint can enforce file size too, but this rule lives in `.claude/` so that Claude — when an edit would push a file over — proactively decomposes instead of just adding lines. The hook is the edit-time enforcement; this rule is the methodology Claude reaches for when the hook fires.
 
 ## Core methodology — picking the ceiling
 
-The right ceiling varies by stack and language. Defaults based on observed practice:
+The right ceiling varies by stack. Defaults from observed practice:
 
 | Stack | Typical ceiling | Why |
 |---|---|---|
-| TypeScript / JavaScript (React, Node) | 1000 LOC | Idiomatic React screens with hooks, JSX, callbacks accrete fast. 1000 is generous; 500 is aggressive. |
-| Python | 500 LOC | Idiomatic Python files are tighter (no JSX, less framework boilerplate). |
-| Swift / Kotlin (mobile native) | 600 LOC | View controllers and ViewModels grow; this catches the worst offenders. |
-| Rust | 1500–2000 LOC | Crates with many types in one module are idiomatic. Higher ceiling. |
-| Go | 800 LOC | Go's per-file convention is "one cohesive thing" — 800 catches drift without being punitive. |
-| Java / C# / Kotlin (backend) | 1000 LOC | Class-per-file convention naturally bounds; 1000 is the outlier-catcher. |
-| HTML / templates / Vue SFC / Svelte | 600 LOC | Single-file components want strict ceilings; bloated SFCs become unreviewable. |
-| SQL / migration files | 1000 LOC for schema dumps; 200 LOC for hand-written migrations | Hand-written migrations should be tight; dumps are auto-generated. |
+| TypeScript / JavaScript (React, Node) | 1000 LOC | React screens with hooks, JSX, callbacks accrete fast. 1000 generous; 500 aggressive. |
+| Python | 500 LOC | Idiomatic Python is tighter (no JSX, less boilerplate). |
+| Swift / Kotlin (mobile native) | 600 LOC | View controllers and ViewModels grow; catches the worst offenders. |
+| Rust | 1500-2000 LOC | Many types in one module is idiomatic. Higher ceiling. |
+| Go | 800 LOC | Per-file convention is "one cohesive thing"; 800 catches drift without being punitive. |
+| Java / C# (backend) | 1000 LOC | Class-per-file naturally bounds; 1000 catches the outlier. |
+| HTML / Vue SFC / Svelte | 600 LOC | Single-file components want strict ceilings; bloated SFCs become unreviewable. |
+| SQL / migrations | 1000 for schema dumps; 200 for hand-written migrations | Hand-written migrations tight; dumps are generated. |
 | Markdown / docs | No ceiling | This rule is for source. |
 
-These are starting points. The actual ceiling should be calibrated against the project's current distribution: look at `find . -name '*.<ext>' -not -path './node_modules/*' | xargs wc -l | sort -rn | head -20` for the worst offenders and set the ceiling at the *95th percentile of healthy files* plus a small buffer.
+Starting points only. Calibrate against the project's current distribution: `find . -name '*.<ext>' -not -path './node_modules/*' | xargs wc -l | sort -rn | head -20`, then set the ceiling at the **95th percentile of healthy files plus a small buffer** — never below what the codebase already routinely hits, or you produce constant noise devs learn to ignore.
 
 ## How to derive THIS project's specifics
 
-Before authoring the rule, audit the codebase:
-
-1. **Run `wc -l` over source files** and look at the distribution:
-   ```bash
-   find . -path ./node_modules -prune -o -name '*.<ext>' -print | xargs wc -l | sort -rn | head -30
-   ```
-   The right ceiling is where most healthy files sit + comfortable margin. Don't pick a ceiling that the codebase already routinely violates — you'll just produce constant noise.
-
-2. **Identify auto-generated files** that need exemption. Common patterns:
-   - DB type files (`database.types.ts`, `schema.ts` generated from Prisma / Drizzle / Supabase)
-   - GraphQL codegen output (`generated.ts`, `types.gen.ts`)
-   - Protobuf / OpenAPI generated clients
-   - Snapshot files (`__snapshots__/`)
-   - Test fixtures with recorded data
-   - Anything with `// AUTOGENERATED` or `@generated` headers
-
-   Encode the exemption list explicitly. Don't blanket-exempt a directory if only some files in it are generated.
-
-3. **Identify legitimate large-file types** the user prefers not to decompose:
-   - Long config files (Tailwind config, project-wide constants)
-   - Single-source-of-truth lookup tables
-   - State-machine definitions that are atomic by intent
-
-4. **Pick the warning threshold.** Hook templates usually warn at ceiling × 0.95 (e.g., 950 if ceiling is 1000). This gives the dev a chance to decompose before they hit the hard limit. If the user has explicit opinions ("warn me at 80% so I have time"), respect them.
-
-5. **Decide the override convention.** Override mechanisms vary; pick one:
-   - **Per-line override comment** (`// allow-size: <reason>` or similar). Rare; only for files that the user has consciously decided to grow.
-   - **Per-file override header** (a sentinel comment near the top). For files like state-machine definitions.
-   - **Exemption list** in the hook script itself, by path pattern.
-
-   The override convention should require a written reason. "I overrode the limit because the reason is X" is one keystroke more than `// allow-size:` alone — and the reason is what makes the override auditable later.
+1. **Run `wc -l` over source** and read the distribution; the ceiling sits where most healthy files are + margin.
+2. **Identify auto-generated files** needing exemption — DB types (`database.types.ts`, Prisma / Drizzle / Supabase output), GraphQL codegen (`generated.ts`), protobuf / OpenAPI clients, snapshots (`__snapshots__/`), recorded fixtures, anything with `// AUTOGENERATED` / `@generated`. Encode the list explicitly; don't blanket-exempt a directory if only some files in it are generated.
+3. **Identify legitimate large-file types** the user won't decompose — long config (Tailwind, project-wide constants), single-source lookup tables, atomic-by-intent state-machine definitions.
+4. **Pick the warning threshold** — usually ceiling × 0.95, giving the dev a chance to decompose before the hard limit. Respect an explicit preference ("warn me at 80%").
+5. **Decide the override convention** — a per-line comment (`// allow-size: <reason>`), a per-file sentinel header, or a path-pattern exemption list in the hook. Whichever you pick, it must **require a written reason** — that reason is what makes the override auditable later.
 
 ## Authoring the rule
 
-The final rule file (typically `.claude/rules/file-discipline.md`) should answer:
-
-1. **What is the ceiling?** A specific number, per file type if needed.
-2. **Why this ceiling specifically?** One paragraph; the user should be able to defend it to a teammate.
-3. **What does decomposition look like?** A short table of extraction patterns (this stack's typical patterns — pure helpers, sub-components, type modules, etc.). See `decomposition.md` for the methodology; the rule file should reference it, not duplicate it.
-4. **What's the override convention?** The exact comment syntax + the rule that every override carries a reason.
-5. **What's exempt?** The list of auto-generated patterns + any legitimate large-file types.
-6. **What does "decompose now" mean?** Crucially: the decomposition lands in the same PR as the work that pushed the file over. Not a backlog item, not a follow-up ticket.
+The final rule (typically `.claude/rules/file-discipline.md`) answers: the **ceiling** (a specific number, per file type if polyglot); **why this ceiling** (one paragraph the user could defend to a teammate); **what decomposition looks like** (reference `decomposition.md` for the methodology — don't duplicate it); the **override convention** (exact syntax + the every-override-carries-a-reason rule); **what's exempt** (the generated-pattern list + legitimate large-file types); and **what "decompose now" means** — the decomposition lands in the *same PR* as the work that pushed the file over, never a backlog item or follow-up ticket (those don't happen; if you can't decompose now, the change is the wrong scope).
 
 ## Companion hook — the enforcement teeth
 
-The rule alone is advisory. The companion hook (`hook-templates/check-file-size.sh`) is the enforcement: it fires on Edit / Write and blocks (or warns) when a file exceeds the ceiling. The rule and the hook are paired — ship both or neither.
-
-When configuring the hook:
-- Substitute the ceiling value (the number you picked above).
-- Substitute the warning threshold.
-- Substitute the file-extension patterns that the hook should check.
-- Substitute the exemption list (paths the hook should skip).
-
-The hook itself stays generic; only the config substitutions are project-specific. See `hook-templates/check-file-size.sh` for the substitution markers.
+The rule alone is advisory; `hook-templates/check-file-size.sh` is the enforcement — it fires on Edit / Write and blocks (or warns) over the ceiling. Ship both or neither: an advisory rule without edit-time enforcement is forgotten. Configuring it is pure substitution — the ceiling value, the warning threshold, the file-extension patterns to check, the exemption paths to skip. The hook stays generic; only the config is project-specific (see the substitution markers in the template).
 
 ## Don't-game-the-rule clauses
 
-The rule should explicitly call out the games people play to avoid genuine decomposition:
+Name the games explicitly in the rule — naming them is the cheapest defense, because the user recognizes the temptation when it surfaces:
 
-- **`// eslint-disable-next-line` over the file-size check.** No. If you'd disable the rule, you'd also dismiss the underlying signal — decompose instead.
-- **Barrel files (`index.ts` re-exporting one giant internal file).** No. The internal file is still bloated; you've just hidden the count behind an export.
-- **Splitting a function across files purely for line count.** No. The split must be at a natural cognitive boundary, not an arbitrary cut.
-- **Adding helper files that are 5 LOC each just to drain the parent's count.** No. The decomposition should produce 2–4 sibling files of 100–500 LOC each, not 20 micro-files.
+- **`// eslint-disable-next-line` over the size check.** Disabling the rule dismisses the signal — decompose instead.
+- **Barrel files** (`index.ts` re-exporting one giant internal file). The internal file is still bloated; you've hidden the count behind an export.
+- **Splitting a function across files for line count.** The split must be at a natural cognitive boundary, not an arbitrary cut.
+- **5-LOC helper files draining the parent's count.** Decomposition produces 2-4 sibling files of 100-500 LOC, not 20 micro-files.
 
-Naming these games in the rule is the cheapest defense. The user reads them and recognizes the temptation when it surfaces.
+**Acceptance:** ceiling at the healthy 95th percentile (not below it), exemptions encoded up front, the hook wired (the rule is toothless without it), every override carrying a reason, decomposition landing same-PR, and per-extension ceilings if the codebase is polyglot.
 
 ## Cross-references
 
-- `decomposition.md` — the skill that runs when a file approaches the ceiling. The rule says *what*; the skill says *how*.
-- `code-review.md` — the agent should treat a 950-LOC file (close to ceiling) as a red flag in any change touching it.
+- `decomposition.md` — the skill that runs when a file nears the ceiling. The rule says *what*; the skill says *how*.
+- `code-review.md` — treats a file near the ceiling as a red flag in any change touching it.
 - `hook-templates/check-file-size.sh` — the edit-time hook. Wire it; the rule is toothless without it.
-
-## Anti-patterns in the rule you write
-
-- **Picking a ceiling lower than the codebase's current 95th percentile.** Constant red squiggles. Devs stop trusting the rule. Set the ceiling at *current healthy distribution + buffer*, and let it stay there as the codebase tightens.
-
-- **No exemption list.** The first time the hook fires on `database.types.ts` and refuses to merge, the user adds `// allow-size:` overrides everywhere and the discipline collapses. Encode exemptions up front.
-
-- **Rule with no companion hook.** Advisory rules without edit-time enforcement do nothing; everyone forgets they exist. Either ship the rule with the hook wired, or don't ship the rule.
-
-- **Override mechanism that doesn't require a reason.** `// allow-size:` alone tells the future reviewer nothing. `// allow-size: shared lookup table, not decomposable` tells them the override is principled. The reason field is the audit trail.
-
-- **Decomposition deferred to "follow-up PR."** Follow-up PRs don't happen. The rule must say: decomposition lands in the same change. If you can't decompose now, the change is the wrong scope.
-
-- **One ceiling for a polyglot codebase.** A 1000-LOC ceiling makes sense for TS, is too strict for Rust, and is too loose for Python. Configure per-extension if the project is polyglot.

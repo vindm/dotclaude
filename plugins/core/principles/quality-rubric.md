@@ -1,184 +1,110 @@
 # quality-rubric — designing the S/A/B/C/D/F operational rubric for ANY project
 
-Teaching material for Claude Code. When you bootstrap a `.claude/` directory, this doc teaches you HOW to design a project-specific quality rubric — the operational definition of "done" — that the user actually applies before claiming work is shipped.
+Teaching material for Claude Code. Teaches you how to design a project-specific quality rubric — the operational definition of "done" that the user actually applies before claiming work is shipped. A rubric is not a code-review checklist; it's a **shipping-decision scaffold** that runs at the point where someone is about to declare work done.
 
-## When to ship one (applicability gate)
+## When to ship one
 
-Ship a quality-rubric skill when:
+Ship a quality-rubric skill when the project has a **quality bar to hold** — the user says "S-tier," "Apple-parity," "production-grade," "demo-ready" — or is customer-facing, or has had to send work back for re-do (quality drift is a real cost being paid).
 
-- The project has a **quality bar to hold**. The user has used phrases like "S-tier," "Apple-parity," "production-grade," "demo-ready," etc.
-- The project is customer-facing (members, end-users, paying customers see the output).
-- The user has had to send work back for re-do — quality drift is a real cost being paid.
+Skip when the user's posture is explicitly "just ship it" (a rubric on a velocity-first culture breeds resentment without lift), when "works correctly" is the only relevant bar (internal tooling), or when the project is so early that "anything visible" is the success criterion.
 
-Skip when:
+## Why it matters
 
-- The user's posture is explicitly "just ship it" with no quality bar held. Forcing a rubric on a velocity-first culture produces resentment without lift.
-- The project is internal tooling where "works correctly" is the only relevant bar.
-- The project is so early that "anything visible" is the success criterion — premature rubrics are noise.
+The rubric closes three failure modes:
 
-## Why it matters — what this catches that nothing else does
-
-The rubric solves three failure modes:
-
-1. **"Good enough" drift.** Without a named tier, "done" becomes a feeling. Six months in, the team's calibration has drifted and yesterday's "good" is today's "ship it." A rubric with concrete reference anchors arrests the drift.
-
-2. **Argument resolution.** When two contributors disagree on whether a screen is done, the rubric is the third party. "You think A; I think B; let's compare to the reference for each tier" is faster than relitigating taste.
-
-3. **What-to-fix-first.** The rubric pairs grade-of-current-state with the single highest-ROI move to lift one tier. This is more useful than "needs polish" because it names the move.
-
-A rubric is NOT a code review checklist; it's a **shipping decision** scaffold. It runs at the point in the loop where someone is about to declare work done.
+- **"Good enough" drift** — without a named tier, "done" is a feeling, and six months of drift makes yesterday's "good" today's "ship it." Concrete reference anchors arrest it.
+- **Argument resolution** — when two contributors disagree on whether a screen is done, the rubric is the third party: *"compare to the reference for each tier"* beats relitigating taste.
+- **What-to-fix-first** — pairing grade-of-current-state with the single highest-ROI move to lift one tier is more actionable than "needs polish," because it names the move.
 
 ## Core methodology — the rubric's five components
 
-A useful rubric has five elements. Each is project-specific in its detail; the shape is universal.
+Each is project-specific in detail; the shape is universal.
 
-### Component 1 — The single demo test
+### 1 — The single demo test
 
-One question, asked of every change, that short-circuits debate. Example shapes:
+One question, asked of every change, that short-circuits debate — and it must name a real audience the user actually faces:
 
-- "Would I demo this to the customer I'm trying to win next?"
-- "Would I show this to a journalist writing about us?"
-- "Would I expect this to pass code review at <FAANG-tier company we benchmark against>?"
-- "Would my technical co-founder approve this?"
+- *"Would I demo this to the customer I'm trying to win next?"*
+- *"Would I show this to a journalist writing about us?"*
+- *"Would this pass review at <the FAANG-tier company we benchmark against>?"*
 
-The test must be specific to a real audience the user actually faces. Generic ("is this good?") is useless. The audience must be someone the user could name. If the user can't name an audience, the rubric isn't ready to be authored.
+Generic (*"is this good?"*) is useless. If the user can't name an audience, the rubric isn't ready to author.
 
-### Component 2 — The five-tier grade scale
+### 2 — The five-tier grade scale
 
-S / A / B / C / D / F (or whatever the user prefers — some teams use 1-5 or P0-P3). The structure is what matters: top tier reserved for indistinguishable-from-reference, bottom tier reserved for don't-ship.
-
-Universal anchor template (fill with project-specific references):
+S / A / B / C / D / F (or 1-5, or P0-P3 — the structure is what matters: top tier reserved for indistinguishable-from-reference, bottom for don't-ship). Fill each row with a project-specific reference:
 
 | Tier | Means | Reference |
 |---|---|---|
-| **S** | Indistinguishable from the user's named top-tier benchmark. Demo-ready to the demo-test audience. | <project's actual top benchmark> |
-| **A** | Clearly intentional, no rough edges, doesn't embarrass next to a top-tier app. Minor polish gaps. | <project's domain references> |
-| **B** | Functional, looks designed, but has 1-2 visible cracks. Reviewer can point them out within 30 seconds of looking. | <project's "decent SaaS" references> |
-| **C** | Looks rushed. Inconsistent, residue elements, lazy edge cases. | (no positive reference — this is "what we don't want to ship") |
+| **S** | Indistinguishable from the user's named top benchmark. Demo-ready to the demo-test audience. | <top benchmark> |
+| **A** | Clearly intentional, no rough edges, doesn't embarrass next to a top-tier app. Minor polish gaps. | <domain references> |
+| **B** | Functional, looks designed, 1-2 visible cracks a reviewer spots within 30 seconds. | <"decent SaaS" references> |
+| **C** | Looks rushed. Inconsistent, residue elements, lazy edge cases. | (no positive reference) |
 | **D** | Broken or embarrassing. Black screens, dead ends, untranslated copy in prod. | Don't ship. |
-| **F** | Will cause active harm. Wrong data, security holes, breaks the user's existing workflow. | Block merge. |
+| **F** | Active harm. Wrong data, security holes, breaks an existing workflow. | Block merge. |
 
-For every PR-sized change, the user names: tier currently at, and the **single highest-ROI move to push up one tier**.
+For every PR-sized change, name the tier it's at and the **single highest-ROI move to push up one tier**.
 
-### Component 3 — Named composition pitfalls
+### 3 — Named composition pitfalls
 
-The most useful part of a project-specific rubric. Each pitfall is a class of mistake that recurs in this project's domain, named so reviewers can spot and call it.
+The most useful project-specific part: recurring mistake classes, named so reviewers can call them. The universal categories (project-specific names and examples derive from the user's own work):
 
-Universal pitfall categories (project-specific names and examples derive from the user's work):
+- **Duplication** — two elements communicating the same fact (two progress indicators showing the same percent).
+- **Orphan elements** — a control with no clear job; residue from a prior state; a default-rendered widget no one designed.
+- **Tone mismatch** — an element's voice doesn't match the situation (cheerful copy on an error state).
+- **Hierarchy violations** — visual weight not aligned to importance (chrome louder than the CTA).
+- **Residue / cruft** — overlay chrome covering interactive content; debug labels in prod.
 
-- **Duplication.** Two or more elements communicating the same fact. Three things saying the user's name; two progress indicators showing the same percent.
-- **Orphan elements.** A control with no clear job. Residue from a prior state. Default-rendered widget no one designed.
-- **Tone mismatch.** Element's voice doesn't match the user's situation. Placeholder asking when the situation requires answering. Cheerful copy on an error state.
-- **Hierarchy violations.** Visual weight doesn't match importance. Chrome louder than CTA. Status indicator competing with the primary action.
-- **Residue / cruft.** Overlay chrome covering interactive content. Universal-X dismiss button blocking the right edge of every widget. Debug labels in prod.
+Extract THIS project's named pitfalls from its recent UX reviews, the user's interview, or the last few "this looks rushed" commits — don't copy the categories above verbatim.
 
-THIS project's named pitfalls come from the user's actual work — extract them by reading the recent UX reviews, by interviewing the user, or by reviewing the last few "this looks rushed" commits.
+### 4 — Benchmark anchors (Tier 1 / Tier 2)
 
-### Component 4 — Benchmark anchors (Tier 1 / Tier 2)
+The rubric is empty unless it names specific reference apps. Two layers:
 
-The rubric is empty unless it names specific reference apps the user grades against. Two layers:
+**Tier 1 — chrome / platform reference:** what's "S-tier" on the platform you ship to? (iOS → Apple's native chrome + Telegram; Web → Linear, Stripe, Vercel; B2B SaaS → Notion, Linear, Figma; CLI → Raycast, Things 3; dev tool → GitHub CLI, Lazygit.)
 
-**Tier 1 — chrome / platform reference.** What is "S-tier" on the platform the user ships to? Examples:
-- iOS app → Apple's iOS 26 native chrome (Music, Settings, Photos, Wallet) + Telegram on iOS 26.
-- Android app → Material Design 3 reference apps (Google Calendar, YouTube Music) + Telegram.
-- Web app → Linear, Stripe, Vercel, Superhuman.
-- B2B SaaS → Notion, Linear, Figma.
-- CLI tool → Raycast, Things 3 (the bar for first-run quality).
-- Developer tool → GitHub CLI, gh-dash, Lazygit.
+**Tier 2 — domain reference:** the bar for the *specific* surface type. (Onboarding → WHOOP, Things 3 first-run; Dashboard → Linear inbox, Superhuman; Settings → Apple Settings, Telegram; Wizard → Stripe checkout, TurboTax.)
 
-Whatever the project's platform / domain, NAME the Tier 1 references explicitly. "Premium" without naming references is unactionable.
+When grading, name BOTH and say what's missing relative to each: *"Chrome at Apple-Settings parity; copy below Things 3 — Things teaches, ours apologizes."* "Premium" without named references is unactionable.
 
-**Tier 2 — domain reference.** What's the bar for the SPECIFIC type of surface this project is building? Examples:
-- Onboarding flow → WHOOP onboarding, Things 3 first-run.
-- Dashboard → Linear inbox, Superhuman triage.
-- Empty states → Things 3, Raycast.
-- Settings → Apple Settings, Telegram settings.
-- Workflow / wizard → Stripe checkout, TurboTax.
+### 5 — Fast vs careful decision rule
 
-When grading a screen, name BOTH a Tier 1 (chrome) and Tier 2 (domain) reference, and say what we're missing relative to each. *"Chrome at Apple-Settings parity; copy below Things 3 — Things teaches; ours apologizes."*
+Not every change deserves the full rubric. **Fast** (no rubric pass): typos, single-style nudges, type-only fixes, an isolated rename, adding a missing test. **Careful** (full rubric): UI surface changes, cross-module refactors, copy / voice changes, state-machine edits, anything customer-facing. When in doubt, default to careful — running the rubric on a fast task is cheap; skipping it on a careful one ships a regression.
 
-### Component 5 — Fast vs careful decision rule
+## Claim-of-done preconditions — the canonical 5-item checklist
 
-Not every change deserves the full rubric. A typo fix doesn't need a five-step quality scan. The rubric should encode the fast / careful split:
+The rubric's binding gate. **Five items minimum, every UI surface, every claim of "shipped" / "done":**
 
-**Fast** (no rubric pass needed): typos, single-style nudges, type-only fixes, isolated callback rename, adding a missing test.
+1. **Fresh screenshot of every affected surface.** "Compiles" / "tests pass" / "I read the code" are NOT substitutes — the screenshot is the visual contract. Exception: pure copy-string diffs (the diff IS the artifact). If capture is impossible for non-string work, say so and ask the user to verify.
+2. **Lint passes, 0 errors.** The lint config is the project's contract on what the code looks like; if the change can't pass it, it isn't done.
+3. **Tests green** (the project's primary command — `npm test` / `pytest` / `cargo test` / etc.). Failures block the claim.
+4. **5-pitfall composition scan complete** — duplication / orphan / tone-mismatch / hierarchy / residue, verdict per pitfall (found / clean) on every affected screen. Without the explicit scan, the claim is "I think it looks fine."
+5. **Tier 1 + Tier 2 benchmark named** for every graded surface. *"Sits next to Linear's project view"* is what claim-of-done sounds like; "looks good" is not.
 
-**Careful** (full rubric applies): UI surface changes, cross-module refactors, copy or voice changes, state-machine modifications, anything customer-facing.
+Any item unchecked → the claim is "in progress," not "done."
 
-When in doubt, default to careful. The cost of running the rubric on a fast task is low; the cost of skipping it on a careful task is shipping a regression.
+The rubric is best shipped as a skill (auto-loaded on UI work) rather than a passive rule, so the assessment is built into the proposal. Auto-load when the change touches user-facing screens, the user mentions design / polish / demo / S-tier / parity, a visual audit agent is invoked, or a flow-spanning change is in scope. Skip for backend-only, type-only, and doc-only work.
 
 ## How to derive THIS project's specifics
 
-Before authoring the rubric, gather:
+1. **The user's named benchmarks** — ask directly: *"when you say 'S-tier,' which specific apps?"* Get app names, not categories.
+2. **Past quality feedback** — `git log --grep="polish\|cleanup\|fix.*layout\|broken.*UX"` surfaces the bug classes to name as pitfalls.
+3. **The demo-test audience** — a specific customer, a friend whose taste they trust, a named persona.
+4. **The surface inventory** — onboarding? dashboard? settings? Each may want its own domain reference.
+5. **The platform** — iOS / Android / web / desktop / CLI. Tier 1 references derive from it.
+6. **The user's known anti-patterns** — every *"I always forget to…"* is a candidate for the named-pitfall list.
 
-1. **The user's named benchmarks.** Ask directly: *"When you say 'S-tier', which specific apps are you grading against?"* Get specific app names, not categories.
+## Acceptance — what the authored rubric must have
 
-2. **Past quality-related feedback.** Look at `git log --grep="polish\|cleanup\|fix.*layout\|broken.*UX"` for the bug classes the user has fixed. Each repeated pattern is a candidate pitfall to name.
-
-3. **The user's audience for the demo test.** Who would they show this to? A specific customer? A friend whose opinion they trust? A specific persona? Get a name or a role specific enough that the user could imagine showing them the screen.
-
-4. **The project's surface inventory.** What does it have? Onboarding? Dashboard? Settings? Each surface category may benefit from a domain reference; collect those.
-
-5. **The project's platform.** iOS / Android / web / desktop / CLI / something else. Tier 1 references derive from this.
-
-6. **The user's known anti-patterns.** Phrases like "I always forget to" — every one of those is a candidate for the named-pitfall list. Listen for them.
-
-## Authoring the rubric
-
-The final rubric (typically `.claude/skills/quality-bar/SKILL.md` or `.claude/rules/quality-rubric.md`) should contain:
-
-1. **The demo test** — one question, specific audience.
-2. **The five-tier scale** — with project-specific references in each row.
-3. **Five named composition pitfalls** — each with a one-line example from THIS project's history.
-4. **Benchmark anchors** — Tier 1 and Tier 2 tables, populated with specific app names.
-5. **Fast vs careful rule** — concrete examples for each mode from the project's actual work shapes.
-6. **"Claim of done" preconditions** — the checklist the user / Claude runs before writing "shipped" / "done" / "ready." This typically includes: capture / lint / test / pitfall-scan / benchmark-named.
-
-### Claim-of-done preconditions — the canonical 5-item checklist
-
-The rubric's claim-of-done preconditions are binding. **Five items minimum, every UI surface, every claim of "shipped" / "done":**
-
-1. **Fresh screenshot of every affected surface is present.** "Compiles" / "tests pass" / "I read the code" are NOT substitutes. The screenshot is the visual contract. Exception: pure copy-string diffs — the diff IS the artifact. If capture is impossible for non-string work, say so explicitly and ask the user to verify.
-2. **Lint passes 0 errors.** No exceptions. The lint config is the project's contract on what the codebase looks like; if the change can't pass it, the change isn't done.
-3. **Tests green** (the project's primary test command — `npm test` / `pnpm test` / `yarn test` / `pytest` / `cargo test` / etc.). Failures block claim-of-done.
-4. **5-pitfall composition scan complete.** Duplication / orphan / tone-mismatch / hierarchy / residue — each checked on every affected screen. Verdict per pitfall: found / clean. Without explicit scan, the claim is "I think it looks fine" instead of "I checked the 5 known pitfalls."
-5. **Tier 1 + Tier 2 benchmark named** for every graded surface. "S-tier" or "looks good" without a reference is unenforceable. *"Sits comfortably next to Linear's project view"* or *"Apple Settings-row parity on density and tap targets"* is what claim-of-done sounds like.
-
-If any item is unchecked, the claim is "in progress," not "done." This checklist is what separates "I think this works" from "I've verified this works."
-
-The rubric is best as a skill (auto-loaded on UI work) rather than a rule (passive). When Claude proposes UI work, the rubric should be active so the assessment is built into the proposal.
-
-## When to auto-load the rubric
-
-The skill's frontmatter (or the project's CLAUDE.md routing) should auto-load the rubric when:
-
-- The change touches user-facing screens (frontend files).
-- The user mentions design / polish / demo / S-tier / parity / broken-UX.
-- A visual audit agent (ux-reviewer, etc.) is being invoked.
-- A flow-spanning change is in scope.
-
-Skip auto-loading for:
-
-- Backend-only / internal-tooling work.
-- Type-only / lint-only / tooling-only changes.
-- Documentation-only changes (unless they describe UI behavior).
+- **Every tier row names a real reference.** "S = excellent" is vibes; "S = indistinguishable from <specific app>" is enforceable.
+- **Pitfalls extracted from THIS project's history**, not copied from the categories above (those are teaching material).
+- **A demo test with a nameable audience** — "would I be proud of this?" is unstable; "would I demo this to <specific person>?" is concrete.
+- **A fast-vs-careful split**, so the rubric isn't friction on every change and users don't start ignoring it.
+- **A "next move up one tier" for each grade** — "B" alone triggers debate; "B; highest-ROI move to A is fix the empty-state copy" is actionable.
+- **Dated, periodically-reviewed anchors** — "iOS 17 chrome" was right once; the reference moves with the platform.
+- **Grade target that varies by surface** — a rarely-touched admin tool is correctly at B; don't demand S of every screen.
 
 ## Cross-references
 
-- `audit-routing.md` — when multiple audit agents apply, the rubric's grades cross-translate to those agents' rubrics.
-
-## Anti-patterns in the rubric you write
-
-- **Tier descriptions without named references.** "S = excellent" is vibes. "S = indistinguishable from <specific app>" is enforceable. Every tier row needs a real reference.
-
-- **Pitfalls copied from this principle doc.** The list of pitfalls here (duplication / orphan / tone-mismatch / hierarchy / residue) is teaching material. The project's pitfalls are the ones the user actually exhibits — extract from the project's history, don't copy from here.
-
-- **A demo test with a generic audience.** "Would I be proud of this?" — pride is unstable. "Would I demo this to <specific person whose taste I respect>?" — concrete.
-
-- **No fast vs careful split.** Without it, the rubric becomes friction on every change, including the ones it shouldn't apply to. Users start ignoring it. Encode the split explicitly.
-
-- **No "next move up one tier" guidance.** A grade alone says "B." A grade plus the move says "B; the highest-ROI move to A is fix the empty state's copy." The second form is actionable; the first triggers debate.
-
-- **Anchors that drift with platform updates.** "Apple iOS 17 chrome" was the right reference once; iOS 26 is the right reference now. The rubric should be dated and reviewed periodically.
-
-- **Setting the bar at the top tier for every change.** Not every change is S-tier worth. Some surfaces are correctly at B (they're rarely-touched admin tools). The rubric should accept that grade-targeted varies by surface, and not demand S of every screen.
+- `audit-routing.md` — when multiple audit agents apply, this rubric's grades cross-translate to theirs.
+- `operating-principles.md` — principle 3's "verify" and this checklist's claim-of-done gate are the same discipline at two altitudes.

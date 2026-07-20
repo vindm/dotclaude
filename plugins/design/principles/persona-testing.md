@@ -1,181 +1,51 @@
 # persona-testing — designing an outside-eyes lens on every visible string
 
-Teaching material for Claude Code. When you bootstrap a `.claude/` directory, this doc teaches you HOW to author a persona-lens skill — three outside-eyes tests that run on every copy element to catch the "still apologizing on day 30" / "performing helpfulness" / "introducing the assistant the user has known for a month" class of voice violations.
+Teaching material for Claude Code. Teaches you how to author a persona-lens skill — three outside-eyes tests that run on every copy element to catch the "still apologizing on day 30" / "performing helpfulness" / "introducing the assistant the user has known for a month" class of voice violation.
 
-## DUAL LOAD — this skill runs at BOTH design time AND audit time
+## DUAL LOAD — runs at BOTH design time AND audit time
 
-This skill is **dual-loaded**: it fires inside `product-designer` (design time, Section 0b of every spec — every proposed copy element passes the triad) AND inside `ux-audit` / `interaction-audit` / `flow-audit` (audit time, against every visible copy element on the captured surface).
+Dual-loaded: it fires inside `product-designer` (design time, Section 0b of every spec — every proposed copy element passes the triad) AND inside `ux-audit` / `interaction-audit` / `flow-audit` (audit time, against every visible copy element on the captured surface). **The audit-time rerun catches implementation drift from spec** — a spec where every string passed at design time can still ship with strings that fail (an engineer swapped "Continue" for "Next"; a translation file was extended with copy pattern-matched from an adjacent first-touch surface; an LLM-shaped pipeline produced a customer-service register). Without the rerun, those substitutions ship invisible. Designers load it as Section 0b (proposed strings); reviewers load it as the first action when any visible copy is found (verify the string in source, apply the three tests, REWRITE is binding regardless of spec status).
 
-**The audit-time rerun catches implementation drift from spec.** This is the load-bearing rationale: a spec where every string passed all three tests at design time can still ship with strings that *fail* — an engineer substituted a "Continue" for "Next" in the heat of implementation; a translation file was extended with copy that mirrors-by-pattern-matching from an adjacent first-touch surface; a generated string from an LLM-shaped pipeline produced a customer-service register that wasn't in the spec. Without the audit-time rerun, those substitutions ship invisible.
+## When to ship one
 
-The discipline: the agent dispatching this skill MUST load it at BOTH moments. Designer agents — Section 0b of the spec template (proposed strings). Reviewer agents — first action when any visible copy element is found on the audited surface (verify the string in source, apply day-30 / partner / stranger tests, REWRITE verdict is binding regardless of spec status).
+Ship a persona-testing skill when the project has voice / persona discipline (an authored voice every string should fit), assistant-style or conversational copy where tone matters, a history of "this string feels wrong on the daily-driver" bugs, or both designer and reviewer roles (the dual-run prevents drift). Skip when copy is purely functional (form labels, schema'd error messages), when the user is indifferent to voice, or when strings are user-generated content the platform shouldn't impose voice on.
 
-## When to ship one (applicability gate)
+## Why it matters
 
-Ship a persona-testing skill when:
-
-- The project has **voice / persona discipline** — there's an authored voice the team wants every string to fit.
-- The project has assistant-style or conversational copy where tone matters.
-- The project has shipped a "this string feels wrong on the daily-driver surface" bug.
-- Both designers and reviewers exist as roles (skill runs at both ends to prevent drift).
-
-Skip when:
-
-- The project has only functional copy (form labels, error messages with strict schemas) where voice considerations don't apply.
-- The user is indifferent to voice — "as long as it's grammatical."
-- The project's strings are user-generated content (chat / forum) where the platform shouldn't impose voice.
-
-## Why it matters — what this catches that nothing else does
-
-A phrase deny-list catches binary violations (specific phrases that shouldn't appear). `element-reuse.md` catches context-mismatch reuse. But strings can pass both and still feel wrong:
-
-- A string written for day-1 enthusiasm ("Welcome back!") reads as condescending on day 30.
-- A string written in customer-service register ("I'm here to help") reads as performative when the assistant is supposed to feel like a peer.
-- A string written for a stranger ("Tap below to continue") reads as patronizing when the user already knows how the app works.
-
-These don't appear on a deny-list because they're not specific phrases — they're voice-register failures that show up across many specific words. The persona-testing skill catches them by running three orthogonal outside-eyes tests on every string.
-
-The skill also serves a **drift-prevention** role: it runs at both DESIGN time (designers test their proposed strings) AND AUDIT time (reviewers re-test the shipped strings). Without the audit-time rerun, implementations can silently drift from passing specs.
+A phrase deny-list catches binary violations; `element-reuse.md` catches context-mismatch reuse. But strings can pass both and still feel wrong — a day-1 string (*"Welcome back!"*) reads condescending on day 30; a customer-service string (*"I'm here to help"*) reads performative when the assistant should feel like a peer; a stranger-framed string (*"Tap below to continue"*) reads patronizing when the user knows the app. These don't appear on a deny-list — they're voice-register failures spread across many specific words. The three tests catch them, and the dual-run (design + audit) stops implementations silently drifting from passing specs.
 
 ## Core methodology — the three tests
 
-The three tests are orthogonal. A string passes only if ALL THREE pass. Two-of-three is insufficient.
+Orthogonal; a string passes only if ALL THREE pass — two-of-three ships drift.
 
-### Test 1 — Frequency-jaded (the "day-30" test)
+**Test 1 — Frequency-jaded (the "day-30" test):** *would this read OK if the user saw this exact string on day 30? day 365?* A first-touch string fails instantly (*"Hi — I'm <assistant>"* on day 30 is repetition, not welcome); an evergreen status string passes (*"Floor's quiet — 0 sessions today"* works every day it's true). Catches strings authored for new-user emotional context and shipped to surfaces the user revisits.
 
-> "Would this string read OK if the user saw this exact string on day 30? Day 60? Day 365?"
+**Test 2 — Partner / peer (the voice-register test):** *would <named-reference-voice> say this — or does it sound like customer service / tutorial / performance?* The reference is project-specific (Apple's Photos/Notes empty-state voice — calm, observant, doesn't apologize; Telegram's terseness; a named character). The anti-references that FAIL: customer-service (*"I'm here to help," "anything else?"*), apology (*"sorry, that didn't work," "oops"*), performance (*"Great job!" "you're crushing it"*), tutorial (*"tap the button below"*). Catches strings that fall into the LLM's default friendly-helpful register when the project's voice is cooler / more confident.
 
-A string that's fine on day 1 may grate on day 30. A first-touch string fails this instantly: "Hi — I'm <assistant>" on day 30 is repetition, not welcome.
+**Test 3 — Cold-stranger (the "did this introduce me to something I know?" test):** *does this assume the user has already met the assistant and product, or introduce them as if for the first time?* PASS treats the user as someone who already knows the context; FAIL re-introduces / re-explains / re-asks (*"I'm <assistant>, your <product>'s <role>"* on a daily-driver; *"let me explain how <feature> works"* to a week-long user). Catches strings authored without knowledge of the user's accumulated context.
 
-A status string passes if it's evergreen: "Floor's quiet — 0 sessions today" works every day it's true.
-
-Failure modes:
-- "Welcome back!" — fine on day 2, weird on day 30.
-- "Your data is loaded" — fine on day 1, condescending on day 365.
-- "Tap the button below to continue" — fine for first-touch, patronizing thereafter.
-
-This test catches strings that were authored for new-user emotional context and shipped to surfaces the user revisits regularly.
-
-### Test 2 — Partner / peer (the voice-register test)
-
-> "Would <named-reference-voice> say this — or does this sound like customer service / tutorial / performance?"
-
-The reference voice depends on the project. Examples:
-- Apple's empty-state voice in Photos / Notes (calm, observant, doesn't apologize).
-- Telegram's product voice (terse, confident, present).
-- A specific character / persona the team has named (e.g., "the partner-companion from <a film the team referenced>").
-
-The anti-references (these FAIL the partner test):
-- Customer-service register: "I'm here to help" / "How can I help" / "Is there anything else"
-- Apology register: "Sorry to interrupt" / "Sorry, that didn't work" / "Oops"
-- Performance register: "Great job!" / "You're crushing it" / over-eager exclamation
-- Tutorial register: "Tap the button below" / "Here's how this works"
-
-This test catches strings that fall into the LLM's default friendly-helpful register when the project's voice is supposed to be cooler / more confident / less performative.
-
-### Test 3 — Cold-stranger (the "did this introduce me to something I know?" test)
-
-> "Does this string assume the user has already met the assistant and the product — or is it introducing them as if for the first time?"
-
-PASS = the string treats the user as someone who already knows the assistant and the product context.
-FAIL = the string re-introduces, re-explains, re-asks information the user already provided.
-
-Failure modes:
-- "I'm <assistant>, your <product>'s <role>" on a daily-driver — user met the assistant in the wizard.
-- "Let me explain how <feature> works" — user has used the feature for a week.
-- "What kind of <thing> do you have?" — user has already configured it.
-
-This test catches strings authored without knowledge of the user's accumulated context.
-
-## Why all three are needed
-
-Each test is orthogonal:
-
-- A string can be evergreen (passes day-30) and still in customer-service voice (fails partner).
-- A string can be in partner voice and still introduce the assistant (fails stranger).
-- A string can avoid introduction and still grate at day 30 (fails day-30).
-
-A string passes only if all three return PASS. Two-of-three ships drift.
+Each is orthogonal — a string can be evergreen yet in customer-service voice; in partner voice yet introduce the assistant; introduction-free yet grate at day 30. All three must return PASS.
 
 ## Core procedure
 
-The skill walks four steps:
-
-### Step 1 — Enumerate every copy element on the target
-
-For designs: list every string in the proposed spec.
-
-For audits: capture the surface and grep its strings (translation files + inline strings in components).
-
-### Step 2 — Test each element
-
-Build the audit table:
-
-| Surface | Copy element | Day-30 | Partner | Stranger | Verdict |
-|---|---|---|---|---|---|
-| <surface> | <verbatim string> | PASS / FAIL | PASS / FAIL | PASS / FAIL | OK / REWRITE |
-
-### Step 3 — Apply the verdict
-
-- **All three PASS** → ship the string.
-- **Any FAIL** → REWRITE. Do not ship a spec or claim audit-clean with failing strings.
-
-### Step 4 — Hard-bound banned phrases (independent of the three tests)
-
-Some phrases are categorically banned on certain surface types. The persona skill mirrors the project's deny-list as a hard-bound check independent of the three tests — these phrases never ship on the wrong surface, regardless of what the tests say.
+**Step 1 — Enumerate every copy element** on the target (designs: every string in the spec; audits: capture the surface and grep its strings — translation files + inline strings). **Step 2 — Test each** into the audit table (Surface / Copy element / Day-30 / Partner / Stranger / Verdict). **Step 3 — Apply the verdict** (all three PASS → ship; any FAIL → REWRITE; never ship a spec or claim audit-clean with failing strings). **Step 4 — Hard-bound banned phrases**, independent of the three tests: mirror the project's deny-list as a mechanical check — these never ship on the wrong surface regardless of what the interpretive tests say.
 
 ## How to derive THIS project's specifics
 
-Before authoring the skill, gather:
-
-1. **The project's named voice reference.** The Partner test needs a specific reference: which voice does the project's assistant aspire to? Apple Photos' empty-state voice? Telegram's terseness? A character from a film the team references? Get a specific reference.
-
-2. **The project's anti-references.** Customer-service tone is usually anti-reference. Are there others? "We don't want to sound like enterprise SaaS X" — that's actionable.
-
-3. **The project's deny-list path.** The hard-bound banned-phrases check needs the path to the deny-list.
-
-4. **The project's copy file locations.** Grep paths for Step 1 enumeration.
-
-5. **Time-frequency framing.** If the project isn't day-30 framed (e.g., a checkout flow that runs once per user), the day-30 test may be wrong. Use the right time-frequency framing: a checkout might be "did this read OK to a user under cognitive load," a daily-driver might be "did this read OK on the 30th rerun."
-
-6. **Alternative test triads.** Day-30 / partner / stranger is the canonical set for consumer / daily-use products. For other product types, the tests differ:
-   - CLI tool: first-run / power-user / regression-debugger
-   - Doc site: skimmer / focused-learner / reference-checker
-   - B2B SaaS: trial-evaluator / power-admin / new-team-member
-   The skill should pick the right triad for the product.
+1. **The named voice reference** for the Partner test — a specific one (Apple Photos' empty-state voice, Telegram's terseness, a named character), not "friendly but not too friendly."
+2. **The anti-references** — customer-service is the usual one; *"we don't want to sound like enterprise SaaS X"* is actionable.
+3. **The deny-list path** — for the hard-bound check.
+4. **The copy file locations** — grep paths for Step 1.
+5. **Time-frequency framing** — day-30 suits a daily-driver; a once-per-user checkout wants *"did this read OK under cognitive load"* instead.
+6. **The right test triad for the product type** — day-30 / partner / stranger is canonical for consumer / daily-use; a CLI tool wants first-run / power-user / regression-debugger; a doc site wants skimmer / focused-learner / reference-checker; a B2B SaaS wants trial-evaluator / power-admin / new-team-member.
 
 ## Authoring the skill
 
-The final skill (typically `.claude/skills/persona-lens/SKILL.md`) should specify:
-
-1. **When to use** — at design time AND at audit time (the dual-run is the drift-prevention).
-2. **When NOT to use** — pure-engineering code, internal debug labels, logging strings.
-3. **The three tests** — with project-specific reference voices.
-4. **The procedure** — enumerate / test / verdict / hard-bound deny-list.
-5. **The audit-table format** — Day-30 / Partner / Stranger / Verdict columns.
-6. **The non-negotiables** — all three pass; REWRITE is binding; audit-time rerun is mandatory.
+The final skill (typically `.claude/skills/persona-lens/SKILL.md`) assembles the three tests (with the project's reference voices), the enumerate/test/verdict/deny-list procedure, and the audit-table format above, plus the non-negotiables: all three pass or REWRITE (two-of-three is the drift slope — each compromise looks small, the cumulative effect is voice collapse); REWRITE is binding (*"FAIL — but it's contextually fine"* defeats the gate; either rewrite the string or fix the test definition); the audit-time rerun is mandatory (design-time-only misses drift; audit-time-only lands rewrites late — run both ends); and the hard-bound deny-list backstops the interpretive tests (without it, ruled-out phrases slip through when the tests are run charitably).
 
 ## Cross-references
 
-- `journey-mapping.md` — provides surface-type classification needed for the stranger test.
-- `element-reuse.md` — Gate A (context fit). Persona-lens is Gate B (voice fit). Both run; both bind.
-- `flow-audit.md` / `ux-audit.md` / `interaction-audit.md` — these agents run persona-lens on visible copy at audit time.
+- `journey-mapping.md` — provides the surface-type classification the stranger test needs.
+- `element-reuse.md` — Gate A (context fit); persona-lens is Gate B (voice fit). Both run, both bind.
+- `flow-audit.md` / `ux-audit.md` / `interaction-audit.md` — these run persona-lens on visible copy at audit time.
 - `quality-rubric.md` — persona-lens failures register against the "tone mismatch" pitfall.
-
-## Anti-patterns in the skill you write
-
-- **Two-of-three ships.** All three tests are needed. Allowing two-of-three is the drift slope: each compromise looks small in isolation; the cumulative effect is voice collapse.
-
-- **No reference voice for the partner test.** "Friendly but not too friendly" is vibes. "Telegram's product voice" or "Apple Photos' empty-state voice" is enforceable.
-
-- **Time-frame mismatch.** Using day-30 for a checkout flow that runs once is wrong; using first-run-only for a daily-driver is wrong. Match the test framing to the product's usage pattern.
-
-- **Running only at design time.** Implementations drift from specs. The audit-time rerun is the only mechanism that catches the drift.
-
-- **Running only at audit time.** Design-time application catches problems cheaply; audit-time-only means rewrites land late. Run at both ends.
-
-- **REWRITE softening.** "FAIL — but it's contextually fine" defeats the gate. Either the test fails and the string is rewritten, or the test was wrong (in which case the test definition needs work, not the verdict).
-
-- **No hard-bound deny-list check.** The three tests are interpretive; the deny-list is mechanical. Without the deny-list as a backstop, specific phrases the project has explicitly ruled out can slip through if the tests are run charitably.
-
-- **Generic reference triad.** "Imagine three readers — frequency-jaded, partner, and cold-stranger" is the universal shape; the specifics must come from the project. A CLI-tool's triad is different from a consumer-app's triad.

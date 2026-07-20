@@ -1,48 +1,23 @@
 # decomposition — designing a skill that decomposes a bloated file
 
-Teaching material for Claude Code. When you bootstrap a `.claude/` directory, this doc teaches you HOW to author the decomposition skill that fits THEIR stack. Pair with `file-discipline.md` — that's the rule (what to enforce); this is the skill (how to do the work when the rule fires).
+Teaching material for Claude Code. Teaches you how to author the decomposition skill that fits THIS stack. Pair with `file-discipline.md` — that's the rule (what to enforce); this is the skill (how to do the work when the rule fires).
 
-## When to ship one (applicability gate)
+## When to ship one
 
-Ship a decomposition skill when:
+Ship a decomposition skill when you also shipped `file-discipline.md` and its hook (the skill is what the user invokes when the hook warns) and the stack has stable extraction patterns (most do — hooks, components, types, pure helpers, modules). Skip when file-size discipline isn't enforced (no hook → no signal → no use) or when the project is a tiny single-language utility where decomposition is "just move 50 lines."
 
-- You also shipped `file-discipline.md` (and its companion hook). The skill is what the user invokes when the hook warns.
-- The project's stack has stable extraction patterns (most do — hooks, components, types, pure helpers, modules).
+## Why it matters
 
-Skip when:
-
-- File-size discipline isn't being enforced. No hook → no signal → no use for a decomposition skill.
-- The project is a single-language tiny utility where decomposition is "just move 50 lines."
-
-## Why it matters — what this catches that nothing else does
-
-Decomposition is a skill-shaped task because it has a **wrong way that looks right**. The wrong way:
-
-- Extract aggressively into 8 micro-files. Now navigation is worse; nothing is comprehensible in isolation.
-- Extract on textual seams (random cut at line 500) rather than cognitive seams (the hook, the sub-component, the pure helper).
-- Hide the file behind a barrel `index.ts` that re-exports a still-bloated internal module.
-- Split a function across files purely to drain line count.
-
-A skill encodes the *right* way: identify natural seams, extract at those seams in a particular order, verify the parent is now under the ceiling, run the test suite to confirm nothing broke. The skill is the institutional memory of "we tried the wrong way and learned what the right way looks like."
-
-This is also a skill that benefits hugely from **user approval before executing**. Decomposition rewrites file structure; the user wants to see the plan before code moves. A skill enforces that handshake.
+Decomposition is skill-shaped because it has a **wrong way that looks right**: extract aggressively into 8 micro-files (navigation gets worse, nothing is comprehensible in isolation); cut on textual seams (line 500) instead of cognitive ones (the hook, the sub-component, the pure helper); hide the file behind a barrel `index.ts` re-exporting a still-bloated module; split a function across files purely to drain line count. The skill encodes the *right* way — identify natural seams, extract in a particular order, verify the parent is under the ceiling, run tests — as institutional memory of "we tried the wrong way and learned what the right one looks like." It also benefits hugely from **user approval before executing**: decomposition rewrites file structure, so the user wants to see the plan before code moves, and the skill enforces that handshake.
 
 ## Core methodology — the natural-seam doctrine
 
-The principle is: **extract at cognitive boundaries, not at textual boundaries.** A 1500-LOC React screen is not "the top 750 lines" + "the bottom 750 lines." It is, more usefully:
-
-1. A few hooks bundling state + effects + callbacks for distinct concerns
-2. One or more sub-components that render large JSX subtrees
-3. A handful of pure helper functions transforming data
-4. Maybe a types module if inline types exceed ~50 LOC
-
-Each of these has a natural file. The skill identifies them, names them, and proposes the extraction.
+The principle: **extract at cognitive boundaries, not textual ones.** A 1500-LOC React screen is not "top 750 + bottom 750." It is, more usefully: a few hooks bundling state + effects + callbacks for distinct concerns; one or more sub-components rendering large JSX subtrees; a handful of pure helpers transforming data; maybe a types module if inline types exceed ~50 LOC. Each has a natural file; the skill identifies, names, and proposes the extraction.
 
 ### Extraction-pattern table (per stack)
 
-The skill's core asset is a table mapping bloated-file shapes to extraction targets. Examples by stack:
+The skill's core asset maps bloated-file shapes to extraction targets. The pattern is stack-independent; the targets are stack-specific. React / React Native (TypeScript):
 
-**React / React Native (TypeScript):**
 | Pattern in the bloated file | Extract to |
 |---|---|
 | Stateful effect + refs + callbacks scoped to one feature | `useFeature.ts` hook |
@@ -51,131 +26,67 @@ The skill's core asset is a table mapping bloated-file shapes to extraction targ
 | > 50 LOC of inline types | sibling `types.ts` |
 | Per-action dispatch / handler bundle | `useFeatureHandlers.ts` returning `{ handle*, state }` |
 
-**Python (Django / FastAPI):**
-| Pattern | Extract to |
-|---|---|
-| > 5 view functions in one file | split by domain into `views/<domain>.py` |
-| Long serializer / schema definitions | `serializers/<resource>.py` or `schemas/<resource>.py` |
-| Pure validation helpers | `validators.py` or `helpers/<topic>.py` |
-| Repeated query patterns | `selectors.py` or `repositories/<resource>.py` |
-
-**Go:**
-| Pattern | Extract to |
-|---|---|
-| Multiple HTTP handlers in one file | `handlers_<resource>.go` |
-| Long type-method blocks for one struct | `<struct>_methods.go` |
-| Pure helpers | `helpers.go` or topic-named file in same package |
-
-**Rust:**
-| Pattern | Extract to |
-|---|---|
-| Multiple impl blocks for one type | split impls into `<type>/impl_<aspect>.rs` |
-| Trait definitions intermixed with impl | `traits.rs` |
-| Test module larger than the code module | `tests.rs` or `tests/` directory |
-
-These tables are guidance. Derive THIS project's specific extraction-pattern table from how the user's codebase already organizes itself when files stay healthy.
+The same shapes map onto any stack — Python: > 5 views → `views/<domain>.py`, long serializers → `serializers/<resource>.py`, query patterns → `selectors.py`; Go: multiple handlers → `handlers_<resource>.go`, long method blocks → `<struct>_methods.go`; Rust: multiple impl blocks → `<type>/impl_<aspect>.rs`, traits → `traits.rs`, oversized test module → `tests/`. Derive THIS project's table from how the user's codebase already organizes itself when files stay healthy.
 
 ### Order of operations
 
-When a file genuinely needs decomposition, the order matters:
+When a file genuinely needs decomposition, order matters:
 
-1. **Hooks / state-bearing logic first.** This is the most-coupled extraction; doing it first reduces the parent's surface area for subsequent extractions.
-2. **JSX sub-components / view modules second.** These usually pull cleanly once hooks have been extracted.
-3. **Pure helpers last.** These are the easiest extraction (no closure dependencies); save them for the tail of the work.
+1. **Hooks / state-bearing logic first** — the most-coupled extraction; doing it first shrinks the parent's surface for the rest.
+2. **JSX sub-components / view modules second** — these pull cleanly once hooks are out.
+3. **Pure helpers last** — the easiest (no closure dependencies); save them for the tail.
 
-Reversing this order — extracting pure helpers first — leaves the bloated stateful body untouched and produces little useful drain on the parent's LOC count.
+Reversing this — helpers first — leaves the bloated stateful body untouched and barely drains the parent's LOC.
 
 ## How to derive THIS project's specifics
 
-Before authoring the skill, look at how the user's project already decomposes when files stay healthy:
+Look at how the project already decomposes when files stay healthy, and mirror that convention rather than imposing a different one:
 
-1. **Find pairs of `<X>.tsx` + `useX.ts` files.** This signals the user already uses the hook-extraction pattern; the skill should follow that convention.
-2. **Find `lib/<domain>/operations/` or `lib/<domain>/helpers/` directories.** This signals pure-helper extraction is established; encode the path convention.
-3. **Find `types.ts` siblings.** This signals the user separates types when they grow; replicate.
-4. **Find sub-component directories** (e.g., `<Screen>/components/`). This signals the JSX-extraction convention.
+1. **`<X>.tsx` + `useX.ts` pairs** → the hook-extraction pattern is established; follow it.
+2. **`lib/<domain>/operations/` or `helpers/` directories** → pure-helper extraction is established; encode the path.
+3. **`types.ts` siblings** → the user separates types when they grow; replicate.
+4. **sub-component directories** (`<Screen>/components/`) → the JSX-extraction convention.
 
-The skill's extraction-pattern table should mirror the user's existing convention, not impose a different one. If the user puts pure helpers in `lib/utils/`, the skill says `lib/utils/`, not `lib/operations/`.
+If the user puts pure helpers in `lib/utils/`, the skill says `lib/utils/`, not `lib/operations/`.
 
 ## Authoring the skill
 
-The skill file (typically `.claude/skills/decompose-file/SKILL.md`) should orchestrate this workflow:
+The skill (typically `.claude/skills/decompose-file/SKILL.md`) is `disable-model-invocation: true` — user-invoked (`/decompose-file <path>`), not auto-loaded: the operation is structural, the user should opt in explicitly, and the Step 3 approval gate is part of the value. Its first action is always to verify the input file exists and is over the ceiling; if under, refuse — there's no work to do. It orchestrates:
 
-### Step 1 — Read and classify
+**Step 1 — Read and classify.** Read the whole file, identify which extraction-table patterns apply, note approximate LOC per chunk.
 
-The skill reads the whole file, identifies which patterns from the extraction table apply, and notes approximate LOC per identified chunk.
-
-### Step 2 — Propose the split (don't edit yet)
-
-The skill produces a plan in this shape:
+**Step 2 — Propose the split (don't edit yet).**
 
 ```
 File: <path> (<N> LOC)
 
 Proposed split:
 1. <hook 1> → <new path> (~<LOC> LOC)
-2. <hook 2> → <new path> (~<LOC> LOC)
-3. <subcomponent> → <new path> (~<LOC> LOC)
-4. <pure helpers> → <new path> (~<LOC> LOC)
+2. <subcomponent> → <new path> (~<LOC> LOC)
+3. <pure helpers> → <new path> (~<LOC> LOC)
 
 Resulting parent file: ~<LOC> LOC
 ```
 
-Sanity checks before presenting:
-- Each new file should land 100–500 LOC. Chunks < 30 LOC → fold back, don't create a tiny file.
-- The parent file should hold composition + JSX root + non-extractable wiring only.
-- If the parent stays > 80% of the ceiling after the split, the feature is genuinely two features — flag conceptually, ask whether to split into sibling features.
+Sanity checks before presenting: each new file lands 100-500 LOC (chunks < 30 LOC fold back, don't create a tiny file); the parent holds composition + JSX root + non-extractable wiring only; if the parent stays > 80% of the ceiling after the split, the feature is genuinely two features — flag it and ask whether to split into sibling features.
 
-### Step 3 — Get approval, then execute
+**Step 3 — Get approval, then execute.** Wait for confirmation or amendment. Then create new files one at a time; after each, run the line-count check on touched files; after all, run lint + tests on touched files; verify the parent is under the ceiling, iterate if not.
 
-Wait for the user to confirm or amend. After approval:
-
-1. Create new files one at a time.
-2. After each extraction, run the line-count check on the touched files.
-3. After all extractions, run lint + tests on the touched files.
-4. Verify the parent is under the ceiling; iterate if not.
-
-### Step 4 — Don't game the rule
-
-The skill should refuse to:
-- Add `// disable-next-line` over the file-size check.
-- Create barrel `index.ts` files re-exporting one bloated internal module.
-- Split a function across files arbitrarily to dodge the count.
-
-If any of these are tempting, the right answer is "this feature is two features" — split conceptually.
+**Step 4 — Don't game the rule.** Refuse to add a `// disable-next-line` over the file-size check, to create a barrel `index.ts` re-exporting one bloated module, or to split a function arbitrarily to dodge the count. If any of those tempts you, the honest answer is "this feature is two features" — split conceptually.
 
 ## When NOT to decompose
 
-The skill should refuse politely on certain inputs:
+Refuse politely, and say WHY (the user invoked the skill expecting work — if there's none, they need the reason), on: **auto-generated files** (`*.gen.ts`, `@generated` / `// AUTOGENERATED` headers — codegen would redo it), **test fixtures** with raw recorded data (tabular; line count is incidental), **snapshot files** (`__snapshots__/` — atomic by definition), and **files where every extraction candidate is < 30 LOC** (decomposition would produce useless micro-files; consolidate or accept the file is fine).
 
-- **Auto-generated files** (`database.types.ts`, `*.gen.ts`, anything with `// AUTOGENERATED` or `@generated` header). The decomposition would just be re-done on next codegen.
-- **Test fixtures** with raw recorded data. They're tabular; line count is incidental.
-- **Snapshot files** (`__snapshots__/`). Snapshots are atomic by definition.
-- **Files where every extraction candidate is < 30 LOC.** The "decomposition" would produce useless micro-files. The right action might be to consolidate, not split — or to accept that the file is fine.
+## Acceptance — mistakes in the skill you write
 
-If the user invokes the skill on one of these, the skill should point this out and not proceed.
-
-## Skill output shape
-
-A decomposition skill is a `disable-model-invocation: true` skill — it's user-invoked (`/decompose-file <path>` or similar), not auto-loaded. Why: the operation is structural, the user should explicitly opt in, and the approval gate at Step 3 is part of the value.
-
-The skill's first action is always to verify the input file exists and is over the ceiling. If under, refuse — there's no work to do.
+- **No plan before code moves** — the Step 3 approval gate is structural; skipping it produces churn and resentment.
+- **5+ files for one decomposition** — 2-4 sibling files is the sweet spot. Going higher means either the original was 3000+ LOC (the user should break it down conceptually first) or the skill is over-extracting.
+- **Skipping post-extraction verification** — lint + tests + line-count must run after; without them, broken imports and missing exports ship silently.
+- **Dogma over project convention** — insisting on `lib/operations/` when the project uses `lib/utils/` makes the user fight the skill.
 
 ## Cross-references
 
-- `file-discipline.md` — the rule this skill enforces. The ceiling number and the override convention live there.
-- `code-review.md` — should flag files near ceiling in any change touching them.
+- `file-discipline.md` — the rule this skill enforces; the ceiling number and override convention live there.
+- `code-review.md` — flags files near the ceiling in any change touching them.
 - `hook-templates/check-file-size.sh` — the edit-time hook that surfaces "needs decomposition" warnings.
-
-## Anti-patterns in the skill you write
-
-- **Decomposing without showing the plan first.** The user must see the proposed split before files move. The approval gate is structural; skipping it produces churn and resentment.
-
-- **5-file fragmentation.** Aiming for 2–4 sibling files is sweet spot. 5+ files for one decomposition means either the original was 3000+ LOC (in which case the user should manually break it down conceptually first), or the skill is over-extracting.
-
-- **Skipping the post-extraction verification.** Lint + tests + line-count must run after extraction completes. Without the verification, "decomposition done" is unverified and silent bugs (broken imports, missing exports) ship.
-
-- **Following extraction-pattern dogma over project convention.** If the user puts pure helpers in `lib/utils/` and the skill insists on `lib/operations/`, the user has to fight the skill. Mirror the project's existing convention.
-
-- **Not surfacing the "two features" diagnosis.** When the parent file stays bloated after every reasonable extraction, the skill should say "this is two features, not one — consider splitting conceptually" rather than fighting harder for a tighter cut.
-
-- **Refusing on exemption files silently.** When the skill won't proceed (auto-generated, snapshot, fixture), say WHY explicitly. The user invoked the skill because they thought work needed doing — if it doesn't, they need to know why.

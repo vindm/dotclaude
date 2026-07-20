@@ -1,133 +1,75 @@
 # task-classification — designing the routing table in CLAUDE.md for ANY project
 
-Teaching material for Claude Code. When you bootstrap a project's AI dev infrastructure, this doc teaches you HOW to author the task classification routing table — the 7-10 row matrix in `CLAUDE.md` that compresses dozens of *"how should I approach this"* decisions into a one-row lookup. Layer 3 of the v2 hierarchy.
+Teaching material for Claude Code. Teaches you how to author the task-classification routing table — the 7-10 row matrix in `CLAUDE.md` that compresses dozens of *"how should I approach this"* decisions into a one-row lookup.
 
-## When to ship one (applicability gate)
+## When to ship one
 
-Ship a task classification table when:
+Ship a routing table when the project has more than one task pattern (UI *and* backend *and* data, say) and uses validation agents, audit pipelines, or specialist subagents to route work to. The symptom it fixes: inconsistency between sessions — *"Monday I got an audit, Tuesday I didn't, same kind of task."*
 
-- The project has > 1 task pattern (UI work AND backend AND data, for example).
-- The project uses validation agents, audit pipelines, or specialist subagents. The table is what routes work to the right specialist.
-- The user has experienced inconsistency between sessions — *"this Monday I got an audit, this Tuesday I didn't, same kind of task."* That's the symptom.
-- The project's quality bar varies by task type. E.g. UI work needs ux-reviewer; bug fixes need reproduce-fix-test; data work needs migration + types regen.
+Skip when the project has exactly one task pattern (*"every change is a flag addition"*), when the table would have ≤ 3 rows (prose is fine below that), or when the user rejects table-driven routing. **Default: ship** — even a 5-row table beats ad-hoc routing, because routing becomes consistent across sessions, contributors, and tools. The table encodes *project-level* discipline, so the same logic holds whether the implementer is Claude Code, Cursor, Aider, or a human.
 
-Skip when:
+## Why it matters
 
-- The project has exactly one task pattern. *"This is a CLI tool; every change is a flag addition."* No routing needed.
-- The user prefers ad-hoc routing per task and rejects table-driven discipline.
-- The project is so small that the table would have ≤ 3 rows. Below 3 rows, prose is fine.
+Three failure modes recur without the table:
 
-The default bias is **ship**. Even a 5-row table outperforms ad-hoc routing because routing becomes *consistent* across sessions, contributors, and AI tools.
-
-## Why it matters — what this catches that nothing else does
-
-Without the task classification table, three failure modes recur:
-
-- **Re-derivation per session.** Every session opens with *"OK, this is a UI feature — should I dispatch the designer agent first? Or just implement and run ux-reviewer at the end? Hmm."* That's tokens + user time + decision drift, all preventable. With the table, the routing is a one-row lookup.
-
-- **Routing inconsistency.** Without the table, sessions route the same task differently — sometimes UI feature → product-designer → impl → audit; sometimes UI feature → straight to impl → no audit. The kit's quality bar floats. The user can't predict what they'll get.
-
-- **Silent scope decisions on ambiguous tasks.** Without an explicit *"Ambiguous"* row, sessions make scope calls the user wouldn't have approved. The user wanted a 1-screen polish; the session interpreted it as a full redesign. The Ambiguous row teaches Claude to ASK before acting.
-
-The table also makes **cross-tool transferability possible**. The same routing logic works whether the implementer is Claude Code, Cursor, Aider, or a human reviewer. The table encodes *project-level discipline*, not tool-level.
+- **Re-derivation per session** — every session reopens *"this is a UI feature — dispatch the designer first, or implement then audit?"* Tokens, user time, and drift, all preventable by a one-row lookup.
+- **Routing inconsistency** — the same task routed differently across sessions, so the kit's quality bar floats and the user can't predict what they'll get.
+- **Silent scope decisions on ambiguous tasks** — without an explicit *Ambiguous* row, a session reads "polish this screen" as "full redesign" and never asks. The Ambiguous row teaches Claude to ASK before acting.
 
 ## Core methodology — the routing table shape
 
-The table is in `CLAUDE.md` "How You Work" section. Two columns: Task type / Approach.
+The table lives in `CLAUDE.md` "How You Work." Two columns: Task type / Approach.
 
 ### Column 1 — Task types (the rows)
 
-Each row names a *task pattern*, not a *feature area*. The patterns are workflow-shaped:
+Each row names a *task pattern*, not a *feature area* — patterns are workflow-shaped: **UI feature / redesign**, **Backend / pipeline**, **Bug fix**, **Architecture change**, **Data / schema**, **Plan-backed**, **Ambiguous**. Project-specific rows extend the list where the pattern is real: **API addition**, **Dependency upgrade**, **Hotfix**, **Test-only change**, **Doc update**. Cap at ~8-10 — beyond that the table stops being scannable; combine adjacent patterns instead.
 
-- **UI feature / redesign** — multi-screen design + impl + audit work.
-- **Backend / pipeline** — server-side / data-pipeline / job-system work.
-- **Bug fix** — reproduce + fix + test.
-- **Architecture change** — multi-module refactor / boundary shift / new layer.
-- **Data / schema** — DB migration + type regeneration + integrity audit.
-- **Plan-backed** — spec-driven work with conformance matrix.
-- **Ambiguous** — request unclear; ask first.
+### Column 2 — Approaches (verb-led runbooks)
 
-Project-specific rows can extend the list. Examples:
+Each cell is a runbook, `<verb> → <verb> → <verb>`, where each verb names a specialist (agent / skill / hook by file path) or a concrete action. Three properties make a cell actually get used:
 
-- **API addition** (for backend-heavy projects)
-- **Documentation update** (for projects with substantive docs)
-- **Test-only change** (for projects with separate test ownership)
-- **Dependency upgrade** (for projects with significant lockfile discipline)
-- **Hotfix** (for projects with prod incidents)
-
-Cap at ~8-10 rows. More rows = the table stops being scannable. Combine adjacent patterns into one row if you're over the cap.
-
-### Column 2 — Approaches (verb-led sequences)
-
-Each cell is a *runbook*, not an abstract description. Format:
-
-```
-<verb> → <verb> → <verb>
-```
-
-Where each verb names a specialist (agent / skill / hook) or a concrete action. Example:
-
-```
-Interview → `product-designer` agent (research + design + spec) → implement → pipeline per `.claude/rules/design-audit-routing.md` (`design-token-auditor` → `interaction-audit` + `a11y-audit` in parallel → `ux-reviewer`)
-```
-
-Three properties make the cell actually used:
-
-1. **Verb-led**. Reads like a runbook. Not *"design phase, implementation phase, validation phase"* (too abstract); rather *"interview, dispatch agent X, implement, run audit Y"*.
-
-2. **Named specialists by file path**. *"Dispatch `product-designer`"* not *"dispatch a designer agent."* The named specialists exist as files in `.claude/agents/` — clickable links if rendered.
-
-3. **Terse**. 5-10 words per cell ideal; 15 words is the upper bound. The cell is a pointer, not a doc. The pointed-to specialist contains the depth.
+1. **Verb-led** — reads like a runbook (*"interview, dispatch `product-designer`, implement, run audit"*), not noun-led phases (*"design phase, implementation phase"*).
+2. **Named specialists by path** — *"dispatch `product-designer`"*, not *"dispatch a designer agent."* The names are files in `.claude/agents/` — clickable, and resolvable.
+3. **Terse** — 5-10 words per cell, 15 the ceiling. The cell is a pointer; the depth lives in the specialist it points to.
 
 ### The "Ambiguous" row is mandatory
-
-Every table has this row:
 
 ```
 | Ambiguous | Ask first. Summarize back in 3-5 bullets. Wait for confirmation. |
 ```
 
-Without this row, sessions silently make scope decisions on ambiguous requests. With it, Claude learns: *"I'm not sure which row applies — STOP, ask, summarize back, wait."* This row has prevented dozens of scope-drift incidents in mature projects.
+Without it, sessions silently scope-decide on unclear requests. With it, Claude learns: *not sure which row applies — stop, ask, summarize back, wait.*
 
 ## How to derive THIS project's specifics
 
-Before authoring the table, gather:
-
-1. **The dominant task patterns.** Ask: *"In a typical week, what kinds of tasks do you work on?"* List answers. Group into patterns. Common groupings: UI / backend / bug fix / data / planning / hotfix.
-
-2. **The validation agents the project has.** `ls .claude/agents/` if existing. Without agents, the Approach cells are simpler (just verb sequences). With agents, the cells reference them by file path.
-
-3. **The audit pipelines.** Does the project have a canonical pipeline (e.g. `design-token-auditor → interaction-audit + a11y-audit → ux-reviewer`)? Reference it in cells; don't restate.
-
-4. **The plan-driven threshold.** The "Plan-backed" row routes to the conformance-matrix workflow when the threshold is met.
-
-5. **The pre-flight gate.** Does the project use a `pre-flight` agent for risk assessment on complex changes? If yes, several rows route through pre-flight first.
-
-6. **Domain skills with auto-load by path.** `.claude/skills/` with `paths:` frontmatter. The Approach cells should reference *"Load domain skill X for this file path"* implicitly via the skill auto-load.
-
-7. **Hotfix / urgency patterns.** Does the project have prod incidents requiring fast-path workflows? If yes, add a "Hotfix" row with reduced ceremony.
-
-8. **The Ambiguous escalation policy.** When Claude asks, what does the user prefer? *"Summarize back in 3-5 bullets"* is the default; some users want a different shape.
+1. **The dominant task patterns.** Ask: *"in a typical week, what kinds of tasks do you work on?"* Group answers into patterns.
+2. **The validation agents the project has** (`ls .claude/agents/`). With agents, cells reference them by path; without, cells are plain verb sequences.
+3. **The audit pipelines.** If there's a canonical one (`design-token-audit → interaction-audit + a11y-audit → ux-audit`), reference it by name; don't restate its order in every row.
+4. **The plan-backed threshold** — when the conformance-matrix workflow kicks in.
+5. **The pre-flight gate** — which rows should route through `pre-flight` first for risk mapping.
+6. **Domain skills that auto-load by path** (`.claude/skills/*/SKILL.md` `paths:` frontmatter) — cells lean on the auto-load rather than naming the skill.
+7. **Hotfix / urgency patterns** — if prod incidents need a reduced-ceremony fast path, add a Hotfix row.
+8. **The Ambiguous escalation shape** — "summarize back in 3-5 bullets" is the default; some users want a different one.
 
 ## Authoring guidance — what to write into the final artifact
 
-The routing table lands in **one** place: `CLAUDE.md` "How You Work" section, *first-class navigation aid*, NOT buried in a sub-file. Format:
+The table lands in **`CLAUDE.md` "How You Work"** as a first-class navigation aid, NOT a sub-file: Claude reads `CLAUDE.md` every session, but reading sub-files is contingent — and this table governs the first decision of every session. (Only if `CLAUDE.md` is already > 800 LOC does the table move to a sub-file behind a strong pointer.)
 
 ```markdown
 **Task classification:**
 
 | Task | Approach |
 |------|----------|
-| UI feature/redesign | Interview → `product-designer` agent (research + design + spec) → implement → pipeline per `.claude/rules/design-audit-routing.md` (`design-token-auditor` → `interaction-audit` + `a11y-audit` in parallel → `ux-reviewer`) |
-| Backend / pipeline | Domain skill → `pre-flight` if complex → implement → `code-reviewer` → `tests-architect` |
+| UI feature/redesign | Interview → `product-designer` agent (research + design + spec) → implement → pipeline per `.claude/rules/design-audit-routing.md` (`design-token-audit` → `interaction-audit` + `a11y-audit` in parallel → `ux-audit`) |
+| Backend / pipeline | Domain skill → `pre-flight` if complex → implement → `code-review` → `test-architect` |
 | Bug fix | Reproduce → fix → test |
-| Architecture change | `pre-flight` → `product-compass` → plan → implement → `code-reviewer` |
-| Data / schema | `mcp__supabase__apply_migration` → `yarn db:types` → `data-auditor` |
-| Plan-backed (spec/design-doc + sub-plans) | Implement per sub-plan → produce `docs/audits/<plan-slug>-conformance.md` (§section × `matches/deviates/deferred` + per-surface screenshots) BEFORE claim shipped → resolve CRIT/MAJ → only THEN declare done. Subagent rollup ≠ matrix. |
+| Architecture change | `pre-flight` → plan → implement → `code-review` |
+| Data / schema | apply migration → regen types → `data-auditor` |
+| Plan-backed (spec/design-doc + sub-plans) | Implement per sub-plan → produce `docs/audits/<plan-slug>-conformance.md` (§section × `matches/deviates/deferred` + per-surface screenshots) BEFORE claiming shipped → resolve CRIT/MAJ → only THEN declare done. Subagent rollup ≠ matrix. |
 | Ambiguous | Ask first. Summarize back in 3-5 bullets. Wait for confirmation. |
 ```
 
-After the table, add the *Specialists* subsection:
+Then a *Specialists* subsection, so the named specialists are discoverable (without it, *"dispatch `product-designer`"* is a dangling reference):
 
 ```markdown
 **Specialists:**
@@ -136,118 +78,27 @@ After the table, add the *Specialists* subsection:
 - **User-invocable skills** (require explicit `/<name>`): <ENUMERATE>.
 ```
 
-This subsection makes the named specialists discoverable; without it, *"dispatch `product-designer`"* in the table is a dangling reference.
+Row labels stay stable across project types; only the Approach cells change (a CLI tool's UI row becomes a `--help` row, a docs site's becomes a link-check row). Derive the cells from the project's real agents and actions — don't paste a template from another project's shape.
 
-### Don't bury the table
+## Acceptance — what battle-tested looks like
 
-The table belongs in `CLAUDE.md`, NOT in a sub-file like `.claude/rules/task-classification.md`. Reason: Claude reads `CLAUDE.md` at the start of every session; reading sub-files is contingent on context. The table is what governs the *first decision of every session*, so it must be in the always-loaded surface.
+The authored table fails the bar if any of these is missing (each names the signature and the failure it prevents):
 
-If `CLAUDE.md` is already very large (> 800 LOC), the table can be in a sub-file with a strong pointer in `CLAUDE.md` ("see `.claude/rules/task-routing.md`"). But the default is in-CLAUDE.md.
+1. **5-10 rows.** Below 5 it isn't routing; above ~10-12 it's job classification, not task routing, and stops being scannable. Rows that lump 6 task types into one vague bucket can't route — split them.
+2. **Each row's Approach cell names specific agents / skills / hooks and is verb-led.** *"Dispatch `ux-audit` per `.claude/rules/design-audit-routing.md`"*, not *"do design review"* or *"design phase, implementation phase."* Generic abstract cells don't route; they describe.
+3. **Cells describe actions, not outcomes, and carry no conditional logic.** *"Interview → dispatch → implement,"* not *"produce a high-quality UI"* and not *"if complex dispatch X else Y."* The table is a routing surface; push conditionals and goals down into the dispatched specialist.
+4. **The "Ambiguous" row exists** with "ask first, summarize back." Without it, Claude silently scope-decides on unclear requests.
+5. **The table is in `CLAUDE.md`, not buried in a sub-file.** Test: `head -200 CLAUDE.md` shows it. Sessions that don't read sub-files miss a buried table entirely.
+6. **Cells reference the canonical audit-pipeline doc rather than restating it** — restated pipeline order drifts from its source. Same for the Plan-backed row referencing the conformance-matrix discipline inline.
+7. **Every named agent / skill / hook exists in `.claude/`.** Test: extract backtick names from `CLAUDE.md` and resolve them against `ls .claude/{agents,skills,hooks}/`. Names pointing at non-existent specialists are dead ends.
+8. **A Specialists subsection enumerates the key agents and skills**, so the table's named references are findable.
+9. **The table reflects current discipline** — updated same-PR as agents and process change, not left as a historical snapshot Claude routes against.
 
-## Depth signatures — what battle-tested looks like
-
-The authored task classification table fails the depth bar if it lacks any of these signals.
-
-1. **5-8 task classes minimum.** Below 5, the table isn't doing much routing. Above 10, the table stops being scannable.
-
-2. **Each class names specific agents/skills/hooks to invoke.** Not *"do design review"* but *"dispatch `ux-reviewer` per `.claude/rules/design-audit-routing.md`"*. Named specialists are clickable links to depth; vague language defeats the purpose.
-
-3. **"Ambiguous" row exists and includes "ask first, summarize back".** This row is mandatory. Without it, the table is incomplete.
-
-4. **Routing table is in CLAUDE.md, not buried in a sub-file.** Test: `head -200 CLAUDE.md` shows the table. If the table is in `.claude/rules/<X>.md`, sessions that don't read sub-files miss it entirely.
-
-5. **Each row's Approach cell is verb-led**, not noun-led. *"Interview → dispatch → implement"* not *"Design phase, implementation phase."* Verbs are actionable; nouns are abstract.
-
-6. **The table cross-references the audit pipeline doc** if one exists (e.g. `.claude/rules/design-audit-routing.md`). Without the cross-ref, the table restates pipeline order; the restatement drifts from the canonical source.
-
-7. **Plan-backed row references the conformance-matrix discipline** inline (*"produce `docs/audits/<plan-slug>-conformance.md`"*). Without this, the table doesn't enforce the conformance bar.
-
-8. **Each named agent / skill / hook exists in `.claude/`.** Test: `grep -oE '\\`[a-z-]+\\`' CLAUDE.md` (extracting backtick names) → `ls .claude/{agents,skills,hooks}/` should resolve them. Names referencing non-existent specialists are dead ends.
-
-9. **Specialists subsection enumerates the key agents and skills.** Without it, the table's named specialists are not discoverable.
-
-10. **The table is < 12 rows.** Bigger than 12 and the table is doing job classification, not task routing. Pare back.
-
-If the authored table lacks any of these, redo. The table is the most-read part of CLAUDE.md after identity; getting it right is high leverage.
-
-## Universal task patterns (cross-project)
-
-These patterns generalize across project types. The Approach cells differ; the row labels are stable.
-
-### For a CLI tool / library
-
-| Task | Approach |
-|---|---|
-| New flag / subcommand | Read CLI conventions → implement → add tests → update `--help` | 
-| Output format change | Reproduce existing → update → add golden-file test |
-| Bug fix | Reproduce → fix → test |
-| Refactor | `pre-flight` → plan → implement → review |
-| Doc update | Edit doc → render → spot-check |
-| Ambiguous | Ask first. Summarize back in 3-5 bullets. Wait for confirmation. |
-
-### For a B2B SaaS dashboard
-
-| Task | Approach |
-|---|---|
-| UI feature | `product-designer` agent → implement → `ux-reviewer` → `a11y-audit` |
-| API endpoint | Schema design → implement → `code-reviewer` → integration test |
-| DB migration | `apply_migration` → regen types → `data-auditor` |
-| Bug fix | Reproduce → fix → test |
-| Architecture change | `pre-flight` → plan → implement → `code-reviewer` |
-| Plan-backed | Conformance matrix at `docs/audits/<plan-slug>-conformance.md` |
-| Ambiguous | Ask first. Summarize back in 3-5 bullets. Wait for confirmation. |
-
-### For a docs site
-
-| Task | Approach |
-|---|---|
-| New tutorial | Outline → draft → render → link-check → ship |
-| API ref update | Find existing entry → edit → render → verify |
-| Site reorganization | `pre-flight` → plan → implement → link-check |
-| Bug fix | Reproduce → fix → verify rendered output |
-| Ambiguous | Ask first. Summarize back in 3-5 bullets. Wait for confirmation. |
-
-### For a research prototype
-
-| Task | Approach |
-|---|---|
-| Run experiment | Verify setup → run → capture results in notebook |
-| Add measurement | Implement → verify against baseline |
-| Refactor pipeline | `pre-flight` → plan → implement → re-run baseline |
-| Ambiguous | Ask first. Summarize back in 3-5 bullets. Wait for confirmation. |
-
-These are *starting points*. Adjust columns and rows to the actual project.
-
-## Anti-patterns to avoid
-
-- **Generic abstract cells.** *"Design phase, then implementation phase."* No agent named, no skill named, no hook named. The cell doesn't route — it just describes a generic workflow. Cells must reference specific specialists by name.
-
-- **Table buried in a sub-file.** *".claude/rules/task-routing.md exists."* Claude doesn't read sub-files unless prompted. The table must be in always-loaded surface (CLAUDE.md).
-
-- **No Ambiguous row.** Without it, Claude silently scope-decides on unclear requests. Adding the row is one minute of work; not having it costs hours per quarter in scope-drift incidents.
-
-- **Cells that restate audit pipelines instead of referencing them.** *"design-token-auditor → interaction-audit → a11y-audit → ux-reviewer"* expanded in every row. Reference the canonical doc (`.claude/rules/design-audit-routing.md`) once; cells use the canonical pipeline name.
-
-- **Rows too narrow.** 15-20 rows = the table is doing job classification. Pare to 7-10 actual task patterns.
-
-- **Rows too wide.** 3-4 rows that each lump 6 distinct task types together. The table can't route — every task fits in one of three buckets and the bucket name is vague. Split.
-
-- **Named specialists that don't exist.** *"Dispatch `product-strategist`"* but `.claude/agents/product-strategist.md` isn't there. Either ship the agent or stop referencing it.
-
-- **Cells with conditional logic.** *"If the change is complex, dispatch X; else dispatch Y."* The table is a *routing* surface, not a *decision-tree* surface. Push conditionals to the dispatched specialist's body; keep the table flat.
-
-- **Approach cells that describe outcomes instead of actions.** *"Produce a high-quality UI."* What does the implementer DO? The cell must name verbs (interview, dispatch, implement, audit), not goals.
-
-- **Table that doesn't reflect current discipline.** Strategy shifts; specialists change; the table doesn't update. The table becomes a historical snapshot, and Claude routes against stale process. Update the table same-PR as discipline changes.
-
-- **Specialists subsection missing.** The table references named agents but doesn't enumerate them. Future readers can't find the agent definitions. Always include the Specialists subsection.
-
-- **One table per task category.** *"UI tasks table, then backend tasks table, then data tasks table."* Three tables = three lookups = no scan. One table, more rows, one lookup.
+The table is the most-read part of `CLAUDE.md` after identity; getting it right is high leverage. Miss any signal and redo.
 
 ## Cross-references
 
-- `project-identity.md` — Layer 1. Identity is in CLAUDE.md above the routing table; identity grounds *what kinds of tasks even apply*.
-- `knowledge-graph.md` — Layer 5. Many Approach cells reference `docs/` paths (specs, plans, audits); the knowledge graph must exist for the references to resolve.
-- `pre-flight.md` — Layer 6, shipped consumed (no generator kit). The pre-flight agent is referenced in multiple rows (architecture change, complex backend); the row's runbook starts with pre-flight invocation.
-- `code-review.md` — Layer 6 coding kit. The code-reviewer agent is the terminal step in multiple rows.
-- `audit-routing.md` — Layer 6 design kit. The UI row references the audit pipeline doc; cells in the UI row don't restate the pipeline.
+- `project-identity.md` — identity sits above the table and grounds *what kinds of tasks even apply*.
+- `operating-principles.md` — the four principles sit *above* this table: they say how to work, the table routes which runbook applies.
+- `pre-flight.md` / `code-review.md` — the `pre-flight` agent starts several rows' runbooks; `code-review` is the terminal step in several.
+- `audit-routing.md` — the UI row references the audit pipeline doc; its cells don't restate the pipeline.
