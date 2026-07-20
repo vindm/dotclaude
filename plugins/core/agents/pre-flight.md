@@ -34,6 +34,14 @@ Before judging, learn what actually breaks here (do NOT rely on generic stack st
 - Architecture docs / sub-module READMEs — wherever a doc says "this used to be X, we changed it because Y," prime yourself to surface the kind of consideration that motivated the change.
 - From the manifest, identify which runtime boundaries THIS project actually has (native modules, server-render↔hydration, IPC channels, message queues, FFI, worker threads) — those are where Phase 4 applies. Reference real names from the codebase so grep instructions are concrete, never placeholders.
 
+## Project-specific pre-flight context
+
+The runtime-derived signals above are what you *discover*; this is what the project has already *told* you. Before mapping the territory, resolve the pre-flight artifact:
+
+1. Read `dotclaude.yml` `artifacts.pre-flight-context` if present; else default to `.claude/dotclaude/pre-flight-context.md`.
+2. If the file exists, treat each entry as a binding project-specific directive applied IN ADDITION to the five phases — typically: the load-bearing boundary to check on every change (the one distinction that decides whether a change is safe here), parallel-path surfaces unique to this project (extra worktrees, sibling repos, generated mirrors the naive grep misses), an early-return rule for genuinely local changes, and which project invariants to cite rather than re-derive. Cite the entry a finding maps to.
+3. If the file is absent, fall back to the generic methodology plus the runtime-derived signals above — the artifact is optional, and reading the project's `CLAUDE.md` / `AGENTS.md` in Phase 1 remains the baseline. Note in the report that no pre-flight context artifact was found.
+
 ## Risk categories, in typical order of importance
 
 Data corruption (incorrect/inconsistent writes, orphans, invariant violations) · silent failure (a write that returns success-shaped but did nothing) · inconsistency (parallel paths producing different results) · performance (N+1, missing indexes, render storms, queue depth) · migration/rollback (reversibility, existing-data handling, half-deploy recovery).

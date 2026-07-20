@@ -7,6 +7,7 @@ project. The consumed agent reads it at runtime. No agent is generated.
 |---|---|---|---|
 | coding | `.claude/dotclaude/code-anti-patterns.md` | coding elicitation | `code-review` agent |
 | testing | `.claude/dotclaude/test-risk-model.md` | testing elicitation | `test-architect` agent |
+| pre-flight | `.claude/dotclaude/pre-flight-context.md` | bootstrap / hand-authored¹ | `pre-flight` agent |
 
 Rules:
 - The artifact holds ONLY elicited human intent (bug classes, risk priorities,
@@ -16,6 +17,14 @@ Rules:
   project-specific check layered on top of the generic pass.
 - `dotclaude.yml` records the path under an `artifacts:` map so the agent can
   locate it without a hardcoded convention.
+
+¹ Unlike coding/testing, `pre-flight` has no dedicated elicitation skill yet —
+its context artifact is authored during `bootstrap` (or by hand during an
+integration) from the project's `CLAUDE.md` invariants and its parallel-path
+surfaces. The `pre-flight` agent already reads `CLAUDE.md` / `AGENTS.md` at run
+time, so the artifact is a *thin* set of pre-flight-specific directives (the
+load-bearing boundary, cross-worktree grep, an early-return rule), never a
+restatement of the project's docs. A dedicated elicitation may follow.
 
 Note — design's artifacts are NOT part of this map, by design. The
 `dotclaude-design` plugin's `/dotclaude:design` elicitation writes TWO thin
