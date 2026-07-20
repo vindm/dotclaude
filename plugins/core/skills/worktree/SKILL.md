@@ -1,5 +1,5 @@
 ---
-description: Set up worktree-per-feature discipline for a project where several AI sessions (or humans + agents) work concurrently and collide in one checkout. Authors a blocking main-checkout hook (from a tested template), its test harness, and a project-specific worktree lifecycle skill — calibrated by interview (which repo, what's exempt, how a fresh worktree gets configured) and PROVEN by a live smoke worktree before handoff. Invoke /dotclaude:worktree when parallel sessions are real or planned.
+description: Set up worktree-per-feature discipline for a project where several AI sessions (or humans + agents) work concurrently and collide in one checkout. Writes a thin `worktree:` config block that the plugin's CONSUMED main-checkout hook reads (no rendered per-project hook copy), plus a project-specific worktree lifecycle skill — calibrated by interview (which repo, what's exempt, how a fresh worktree gets configured) and PROVEN by a live smoke worktree before handoff. Invoke /dotclaude:worktree when parallel sessions are real or planned.
 ---
 
 # `/dotclaude:worktree` — parallel-session isolation kit
@@ -10,9 +10,16 @@ PreToolUse hook. Read `../../principles/worktree-discipline.md` FIRST — it
 carries the doctrine and the five hard-won lessons this flow encodes; this
 file is the procedure.
 
-The deliverable is not files — it is a **proven** install: the rendered hook
-passing its harness, a smoke worktree that built the project for real, and an
-explicit restart + live-fire handoff.
+**The hook is CONSUMED, not rendered.** The plugin ships one debugged
+`check-main-checkout-edit.sh` (in `hooks/scripts/`, wired always-on) that reads
+a `worktree:` block from the project's `dotclaude.yml` and NO-OPs when there is
+none. So this flow does NOT copy a hook into the project — it writes the config
+the consumed hook reads. No per-project hook copy, no drift, and a project
+tunes its policing in one data file.
+
+The deliverable is not files — it is a **proven** install: the `worktree:`
+config the consumed hook reads correctly, a smoke worktree that built the
+project for real, and an explicit restart + live-fire handoff.
 
 ## Phase 1 — Read the project's concurrency shape
 
@@ -58,32 +65,38 @@ list / markdown-as-code)** — it is a judgment call only the user can make.
 ## Phase 3 — Read the principle
 
 `../../principles/worktree-discipline.md` — in particular the
-universal/project-specific split (what you substitute vs what you author) and
-the five lessons (each maps to a concrete step below).
+universal/project-specific split (what the `worktree:` config carries vs what
+you author) and the five lessons (each maps to a concrete step below).
 
-## Phase 4 — Author the kit (in `.claude-staging/`)
+## Phase 4 — Author the config + the lifecycle skill
 
-### Hooks (render from `../../hook-templates/` — consume, don't rewrite)
+### Config (write the `worktree:` block to `dotclaude.yml`)
 
-- **`check-main-checkout-edit.sh`** — substitute:
-  - `{{worktree.policedRepo}}` — from Phase 1/interview (`.` when root=repo)
-  - `{{worktree.exemptCasePattern}}` — the interviewed exempt list as a joined
-    case-glob (e.g. `docs/*|README.md|LICENSE*`). NEVER include `*.md` unless
-    the user explicitly confirmed no markdown is executed.
-  - `{{worktree.namePrefix}}` — `<repo>-wt-` unless the user prefers otherwise
-  - `{{worktree.setupLines}}` — the fresh-worktree setup command(s) from the
-    per-machine-files recipe, as indented shell lines for the block message
-- **`test-check-main-checkout-edit.sh`** — substitute the case lists:
-  - `{{worktree.blockedCases}}` — at least: one source file; one
-    markdown-as-code file **if the project has any** (the regression case for
-    lesson 1); one path in each policed area the user named
-  - `{{worktree.allowedCases}}` — every exempt pattern gets a case; plus a
-    path in each sibling repo that must stay untouched
-  - `{{worktree.blockedSamplePath}}` — reuse one blocked path
-  - The template already ships a fixed **stray-worktree** case (lesson 5) built
-    from `{{worktree.namePrefix}}` — no authoring needed; just confirm the
-    prefix substituted so it reads e.g. `/tmp/<prefix>stray/...`.
-- Verify NO `{{` remains in either rendered file.
+The consumed hook reads these keys; you do NOT render or wire a hook. Write (or
+merge) a `worktree:` block into the project root's `dotclaude.yml`:
+
+```yaml
+worktree:
+  policedRepo: <repo path relative to the project root; "." when root IS the repo>
+  namePrefix:  <repo>-wt-        # unless the user prefers otherwise
+  exempt:                        # main-checkout paths that stay freely editable
+    - "docs/*"
+    - "README.md"
+    - "LICENSE*"
+  setup:                         # fresh-worktree recipe, shown in the block message
+    - "cp config/instance.example.yaml <wt>/config/instance.yaml"
+  skillPath: .claude/skills/worktree/SKILL.md
+```
+
+- **`exempt`** — the interviewed list, matched against the repo-relative path
+  (`*` spans directory separators). NEVER include `*.md` unless the user
+  explicitly confirmed no markdown is executed (markdown-as-code, lesson 1).
+- **`setup`** — the per-machine-files recipe (lesson 2), one line each; `<wt>`
+  stands for the worktree dir in the block message.
+- The stray-worktree guard (lesson 5) and the escape hatch are built into the
+  consumed hook — no per-project authoring.
+- Merge into an existing `dotclaude.yml` (from another elicitation) — never
+  clobber the `artifacts:` / `fileSize:` keys.
 
 ### Skill (in `.claude-staging/skills/worktree/SKILL.md`)
 
@@ -108,30 +121,12 @@ nature). Sections, each filled with THIS project's real commands:
 5. **Shared resources lease** (only if Phase 1/interview surfaced out-of-repo
    shared state): the narrowed lock protocol from the principle doc.
 
-### Wiring (in `.claude-staging/hooks/settings-fragment.json`)
+### No wiring step
 
-```json
-{
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Write|Edit|NotebookEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/check-main-checkout-edit.sh\"",
-            "timeout": 5,
-            "statusMessage": "Checking the edit targets a worktree, not the main checkout..."
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-Merge into the project's `.claude/settings.json` at approval time (create it
-if absent; merge the `hooks` key if it exists — never clobber).
+The consumed hook is wired once in the plugin's `hooks/hooks.json` (always-on,
+NO-OP without a `worktree:` block). Do NOT add a local hook to the project's
+`.claude/settings.json` — a project-level hook copy is exactly the drift this
+model removes. The `worktree:` block written in Phase 4 is the entire opt-in.
 
 ### CLAUDE.md section
 
@@ -142,16 +137,26 @@ resources + the merge window ONLY).
 
 ## Phase 5 — Prove it live (mandatory, before presenting)
 
-1. **Harness green**: run the rendered
-   `test-check-main-checkout-edit.sh` — every case `ok`. A failing or skipped
-   harness is a blocker, not a footnote.
+1. **Live-fire the consumed hook against the written config**: feed it a few
+   synthetic tool inputs and confirm the verdicts.
+   ```bash
+   H="$CLAUDE_PLUGIN_ROOT/hooks/scripts/check-main-checkout-edit.sh"
+   fire() { echo "{\"tool_input\":{\"file_path\":\"$1\"}}" | bash "$H"; echo "exit=$?"; }
+   fire "<policed-repo>/<a source file>"   # expect exit 2 (block)
+   fire "<a markdown-as-code file>"        # expect exit 2 if the project has any
+   fire "<an exempt path>"                 # expect exit 0
+   fire "<a real worktree>/<a file>"       # expect exit 0
+   ```
+   A wrong verdict means the `worktree:` block is off (wrong `policedRepo`, a bad
+   exempt glob) — fix the config, not a hook. The hook's own logic is tested in
+   the plugin; this proves THIS project's config drives it correctly.
 2. **Smoke worktree** (lesson 3): create a real worktree per the lifecycle
    skill, run the setup recipe, run the project's verify command inside it.
    - Record EVERY file `git status` shows dirty afterwards — these are the
      project's derived artifacts; write their exact paths into the lifecycle
      skill's "drop the noise" close step.
-   - Re-run the harness with the smoke worktree's path as the argument (the
-     worktree-allowed case).
+   - Re-run the Phase 5.1 live-fire with the smoke worktree's path (the
+     worktree-allowed case → expect exit 0).
    - Tear down per the close protocol (`worktree remove` must succeed WITHOUT
      `--force`).
 3. If the verify command fails in the worktree but works in main — a
@@ -162,7 +167,8 @@ resources + the merge window ONLY).
 
 Present per dotclaude staging convention (inventory, highlight reasoning, what
 was skipped and why). After approval, move `.claude-staging/` → `.claude/`,
-merge the settings fragment, commit.
+merge the `worktree:` block into `dotclaude.yml`, commit. (No settings-fragment
+merge — the hook is plugin-wired and reads the config.)
 
 Then the two lines every install ends with (lesson 4):
 
@@ -177,14 +183,17 @@ Then the two lines every install ends with (lesson 4):
    (W2) is mandatory. Projects whose markdown is the program (policies,
    prompts, agent kits) need those paths POLICED; a docs-are-free default
    silently unguards their behavioral layer.
-2. **Consume the hook template; substitute placeholders only.** The template
-   is debugged (nearest-existing-dir walk, worktree detection, other-repo
-   pass-through, missing-jq behavior). Rewriting it from prose per-install
-   reintroduces the bugs the template already paid for. If the project needs
-   logic the template lacks, that's a dotclaude PR, not a local fork.
-3. **The harness ships and runs, both.** Rendered-but-untested is unverified;
-   tested-once-then-deleted leaves future hook edits unguarded. The harness
-   lands in the project's `.claude/hooks/` next to the hook.
+2. **The hook is consumed, never copied.** The plugin ships one debugged
+   `check-main-checkout-edit.sh` (nearest-existing-dir walk, worktree detection,
+   other-repo pass-through, stray-worktree guard) that reads the `worktree:`
+   block. Write config, not a hook — never author a local hook copy or a
+   `.claude/settings.json` hook entry; that project-level copy is exactly the
+   drift this model kills. If the hook needs logic it lacks, that's a dotclaude
+   PR, not a local fork.
+3. **Prove the config drives the hook.** The hook's own logic is tested in the
+   plugin; this install's job is to live-fire the consumed hook against THIS
+   project's `worktree:` block (Phase 5.1). A green block / allow / exempt /
+   worktree set is the proof the config is right.
 4. **The smoke run is not optional.** Derived-artifact dirt and missing
    per-machine files are only discoverable by actually building in a fresh
    worktree. An install presented without a smoke run has unknown failure
