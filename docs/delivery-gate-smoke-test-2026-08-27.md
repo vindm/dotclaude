@@ -5,14 +5,16 @@ What was tested: the two hooks added in 3.1.0 — `check-delivery-claim.sh` (Sto
 project (a bookkeeping-engine audit zone: ~2 300 tracked files, a policed repo below
 the project root, live worktrees, a real remote) and against purpose-built fixtures.
 
-**Verdict: ready.** Two defects were found and fixed during the run, one of them by
-the live project rather than by the fixtures. Both now carry regression tests.
+**Verdict: ready.** Four defects were found and fixed during the run. Three of the
+four were surfaced by the live project rather than by the fixtures — the synthetic
+repo simply did not have the shapes that produced them. All four carry regression
+tests now.
 
 ## Harnesses
 
 | Harness | Cases | Result |
 |---|---|---|
-| `test-check-delivery-claim.sh` | 24 | pass=24 fail=0 |
+| `test-check-delivery-claim.sh` | 28 | pass=28 fail=0 |
 | `test-check-main-checkout-bash-write.sh` | 9 | pass=9 fail=0 |
 
 Every case moves real repository state — `git init --bare` as origin, a clone, real
@@ -66,6 +68,30 @@ Measured on a 200-file fixture:
 | `git add` | no | no |
 | `git commit` | no | no |
 | add an untracked file | yes | yes |
+
+### 3. The `verified` rung was unsatisfiable in the live project — found in LIVE use
+
+The project's JS lint gate skips on every run because `node_modules` is absent. Any
+claim of "gates are green" would therefore have been blocked forever, and the block
+message's own advice — *"say which, or run the full set"* — did not work, because a
+substring match fires on the narrowed wording too. **A gate nobody can satisfy gets
+switched off**, taking the discipline with it.
+
+Fixed by recognising a *skip acknowledgement* in the message: naming the skipped gate
+means the sentence has stopped asserting that everything passed, which is the
+legitimate "correct the wording" path, not a silencing of the check. English defaults
+ship with the hook; a project adds its own via `claimsSkipAck`.
+
+### 4. The per-branch breakdown invited a wrong sum
+
+The union total was correct, but the breakdown printed one count per branch and read
+as additive. On the live repo it showed `2`, `1`, `2` under a total of `2` — the
+feature branch and a neighbouring session's worktree branch both sat at main's tip,
+so each reported main's whole count as its own. A reader (this one) took the mismatch
+for a counting bug and went looking for it.
+
+The numbers were right; the sentence was not. Reworded to "reachable from … (these
+sets overlap; the total is the union)".
 
 ## Cost, measured
 
