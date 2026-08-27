@@ -157,13 +157,12 @@ remote_known=1
 if [ -z "$(git -C "$REPO" remote 2>/dev/null)" ]; then
   remote_known=0
 else
+  tips=""
   while IFS= read -r tip; do
     [ -z "$tip" ] && continue
+    tips="$tips $tip"
     c=$(git -C "$REPO" rev-list --count "$tip" --not --remotes 2>/dev/null || echo 0)
-    if [ "${c:-0}" -gt 0 ]; then
-      unpushed=$((unpushed + c))
-      unpushed_where+="    $tip — $c commit(s) on no remote"$'\n'
-    fi
+    [ "${c:-0}" -gt 0 ] && unpushed_where+="    reachable from $tip: $c"$'\n'
   done < <(
     {
       git -C "$REPO" rev-parse --verify --quiet "$MAIN" >/dev/null 2>&1 && printf '%s\n' "$MAIN"
@@ -171,6 +170,11 @@ else
         | awk '$1=="branch"{sub("refs/heads/","",$2); print $2}'
     } | sort -u          # main is usually BOTH the branch and a worktree branch
   )
+  # The TOTAL is the union, not the sum. Summing per-branch counts double-counts a
+  # commit that a feature branch and main both contain after a merge — which is the
+  # normal state at exactly the moment this hook runs.
+  # shellcheck disable=SC2086
+  [ -n "$tips" ] && unpushed=$(git -C "$REPO" rev-list --count $tips --not --remotes 2>/dev/null || echo 0)
 fi
 
 # ---- judge each claimed rung ------------------------------------------------
@@ -188,7 +192,11 @@ if claims merged && [ -n "$unmerged" ]; then
 fi
 
 if claims pushed && [ "$remote_known" = "1" ] && [ "${unpushed:-0}" -gt 0 ]; then
-  violations+="  CLAIMED \"$(phrase_for pushed)\" — but $unpushed commit(s) exist on no remote:"$'\n'
+  violations+="  CLAIMED \"$(phrase_for pushed)\" — but $unpushed commit(s) exist on no remote."$'\n'
+  # 🔴 These per-branch numbers OVERLAP — do not add them up. After a merge the
+  # feature branch and main contain the same commits, so a branch sitting at main's
+  # tip reports main's whole count as its own. The total above is the union.
+  violations+="  Where they are reachable from (these sets overlap; the total is the union):"$'\n'
   violations+="$unpushed_where"
   violations+="      git -C \"$REPO\" push $REMOTE $MAIN"$'\n'
 fi
@@ -224,8 +232,13 @@ if claims verified && { [ -n "$dirty_lines" ] || [ "${unpushed:-0}" -gt 0 ]; }; 
     RED)
       violations+="  CLAIMED \"$(phrase_for verified)\" — the last gate run was RED ($vdet failed)."$'\n' ;;
     SKIPPED)
-      violations+="  CLAIMED \"$(phrase_for verified)\" — the run was green but SKIPPED $vdet gate(s);"$'\n'
-      violations+="      that is not \"everything passed\". Say which, or run the full set."$'\n' ;;
+      # A message that says some gates were skipped is no longer claiming everything
+      # passed — that is the wording being corrected, not the check being silenced.
+      if ! claims _skipack; then
+        violations+="  CLAIMED \"$(phrase_for verified)\" — the run was green but SKIPPED $vdet gate(s)"$'\n'
+        violations+="      and the message does not say so. Either name the skipped gate(s) in"$'\n'
+        violations+="      the sentence, or run the full set."$'\n'
+      fi ;;
     *)
       violations+="  CLAIMED \"$(phrase_for verified)\" — the receipt could not be read ($receipt)."$'\n' ;;
   esac

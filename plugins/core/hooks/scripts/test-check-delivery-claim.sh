@@ -49,6 +49,8 @@ delivery:
     - "отправлено в origin"
   claimsVerified:
     - "гейты зелёные"
+  claimsSkipAck:
+    - "пропущ"
 YML
 }
 write_yml yes
@@ -81,6 +83,15 @@ t() {  # t <name> <message> <want-exit> [session-id]
   else fail=$((fail+1)); printf 'FAIL %s (want exit %s, got %s)\n' "$1" "$3" "$got"; fi
 }
 
+grep_stderr() {  # grep_stderr <name> <message> <regex-that-must-match>
+  local out
+  out=$(printf '{"last_assistant_message":%s,"cwd":"%s","session_id":"g-$RANDOM"}' \
+    "$(printf '%s' "$2" | python3 -c 'import json,sys; print(json.dumps(sys.stdin.read()))')" \
+    "$REPO" | bash "$HOOK" 2>&1 >/dev/null)
+  if printf '%s' "$out" | grep -qE "$3"; then pass=$((pass+1)); printf 'ok   %s\n' "$1"
+  else fail=$((fail+1)); printf 'FAIL %s (no match for /%s/ in:)\n%s\n' "$1" "$3" "$out"; fi
+}
+
 echo "--- no claim / not opted in ---"
 t no-claim-silent          "Looked at the code, three places need work."   0
 t empty-message-silent     ""                                             0
@@ -111,6 +122,19 @@ git -C "$FWT" push --quiet -u origin feat/parked 2>/dev/null
 t branch-pushed-claim-ok          "Done, pushed to origin."               0
 git -C "$REPO" worktree remove "$FWT" 2>/dev/null
 
+echo "--- unpushed count is the UNION, not the sum ---"
+# After a merge the feature branch and main both contain the same commit. Summing
+# per-branch counts reports it twice — the normal state at the moment this hook runs.
+MWT="$FIX/repo-wt-merged"
+git -C "$REPO" worktree add --quiet -b feat/merged "$MWT" 2>/dev/null
+echo four > "$MWT/d.txt"
+git -C "$MWT" add d.txt
+git -C "$MWT" commit --quiet -m "one shared commit"
+git -C "$REPO" merge --no-ff --quiet -m "merge feat/merged" feat/merged
+grep_stderr union-not-sum "Done, pushed to origin." "but 2 commit\\(s\\) exist on no remote"
+git -C "$REPO" push --quiet origin main 2>/dev/null
+git -C "$REPO" worktree remove "$MWT" 2>/dev/null
+
 echo "--- committed rung ---"
 t clean-committed-ok       "Committed."                                   0
 echo dirt >> "$REPO/a.txt"
@@ -133,6 +157,12 @@ write_receipt 0 0
 t verified-ru-claim-ok        "Гейты зелёные."                            0
 write_receipt 0 2
 t verified-ru-skipped-blocked "Гейты зелёные."                            2
+
+echo "--- a message that names the skip is not claiming everything passed ---"
+write_receipt 0 2
+t verified-skipped-ack-en-ok   "Gates are all green, except the JS lint which was skipped."  0
+t verified-skipped-ack-ru-ok   "Гейты зелёные, JS-линт пропущен."                            0
+t verified-skipped-noack-block "All gates green."                                           2
 
 echo "--- verified rung does NOT apply on a clean, pushed repo ---"
 git -C "$REPO" checkout --quiet -- a.txt

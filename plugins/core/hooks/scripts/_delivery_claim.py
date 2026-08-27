@@ -53,6 +53,13 @@ DEFAULT_PHRASES = {
                  "every gate passed"],
 }
 
+# Not a rung — a NARROWING of the "verified" claim. When the message itself says
+# some gates were skipped, "green" has stopped asserting "everything passed", which
+# is the legitimate "correct the wording" way past the gate. Without this the rung is
+# unsatisfiable wherever a gate is legitimately unavailable (no node toolchain, no
+# docker), and an unsatisfiable gate gets switched off.
+DEFAULT_SKIP_ACK = ["skipped", "skipping", "except", "apart from", "other than"]
+
 CONFIG_KEY = {
     # Flat keys on purpose — see the note in check-delivery-claim.sh. The bundled
     # minimal YAML parser (used when PyYAML is absent) reads exactly two levels.
@@ -104,6 +111,12 @@ def cmd_claims(yml_path):
             if _fold(p) in hay:
                 sys.stdout.write("%s\t%s\n" % (rung, p))
                 break
+
+    ack = list(DEFAULT_SKIP_ACK) + _as_list(ydr.lookup(cfg, "delivery.claimsSkipAck"))
+    for p in sorted(set(ack), key=len, reverse=True):
+        if _fold(p) in hay:
+            sys.stdout.write("_skipack\t%s\n" % p)
+            break
 
     if not found_any_phrase:
         # A delivery: block exists (the shell half checked) but not one phrase

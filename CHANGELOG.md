@@ -38,8 +38,13 @@ structurally could not see.
   the work; the four rungs; why the receipt instead of a re-run; why the fingerprint
   is the tree-as-it-would-be-committed rather than `HEAD` + dirty list; why there is
   no escape phrase; why the loop guard is not optional.
+- **`delivery.claimsSkipAck`** — phrases that narrow a "green" claim by naming the
+  skipped gate. Without it the `verified` rung is unsatisfiable wherever a gate is
+  legitimately unavailable (no node toolchain, no docker): the JS lint in the live
+  test project skips on every run, so no wording and no amount of re-running could
+  ever have cleared the claim. An unsatisfiable gate gets switched off.
 - **Test harnesses beside both hooks** (`test-check-delivery-claim.sh`,
-  `test-check-main-checkout-bash-write.sh`) — 24 and 9 cases against **real** fixture
+  `test-check-main-checkout-bash-write.sh`) — 28 and 9 cases against **real** fixture
   repositories with real remotes, worktrees, commits and pushes. Proven to bite by
   mutation: neutering the claim comparison turns 11 cases red, neutering only the
   staleness comparison turns exactly 1 red.
