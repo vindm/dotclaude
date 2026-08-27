@@ -14,9 +14,23 @@
 | `check-file-size` | PostToolUse · Write\|Edit | Blocks files over the LOC ceiling (1000; warns at 950). exit 2. |
 | `git-context-sessionstart` | SessionStart | Injects real git state (branch / commit / uncommitted / ahead-behind / worktrees) via `additionalContext` + a memory self-healing nudge. |
 | `warn-uncommitted-on-clear` | SessionEnd | Warns on uncommitted WIP before `/clear` / compaction. |
+| `check-main-checkout-bash-write` | PostToolUse · Bash | Reports files a SHELL command wrote into the policed main checkout — the hole `check-main-checkout-edit` cannot see (no `file_path` on `sed -i`, heredocs, `tee`). Outcome-anchored: diffs `git status` against this session's previous answer, so no write mechanism dodges it. Config-gated on `worktree:`; exit 2 (informational — PostToolUse cannot block). |
+| `check-delivery-claim` | Stop | Blocks a turn whose final message CLAIMS delivery the repo denies (committed / merged / pushed / gates-green). No claim, no sound. Config-gated on `delivery:`. exit 2 = block. |
+
+## Config-gated, not zero-config
+
+Three of these read the consuming project's `dotclaude.yml` and are a **silent
+no-op without their block** — `check-file-size` (`fileSize:`),
+`check-main-checkout-edit` + `check-main-checkout-bash-write` (`worktree:`), and
+`check-delivery-claim` (`delivery:`). That is what makes them safe to ship always-on
+without being universal: a project that never opted in never feels them.
 
 ## Notes
 
 - **`jq` dependency.** The scripts parse the hook payload with `jq` — consumers need it on PATH.
+- **Per-Bash latency.** `check-main-checkout-bash-write` runs on every Bash call.
+  Measured on a 2 300-file repo: **0.17 s** with a `worktree:` block, **0.01 s**
+  without one (it bails on a `test -f` before spawning anything). The unconfigured
+  case is the one most consumers pay, and it was deliberately made free.
 - **Per-edit latency.** Two PostToolUse Write/Edit hooks = two spawns per edit (plus the consumer's own). Both are fast deterministic guards. A future optimization is one consolidated dispatcher (per the `operating-discipline` lean guidance).
 - **Want a project-tunable guard** (design-token sweep, import-boundary, console-log, regen-on-migration)? Those live in `../hook-templates/` and are authored locally by the thin generator with the project's config — they're not safe-as-is in an arbitrary consumer.

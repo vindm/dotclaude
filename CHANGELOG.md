@@ -4,6 +4,61 @@ All notable changes to dotclaude are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project loosely follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) — minor versions for new layers / skills / principles, patches for fixes and doc corrections.
 
+## [3.1.0] - 2026-08-27 — the delivery gate
+
+"Merged into main", "pushed", "all gates green" describe the author's desk, not the
+recipient's machine — and said in a final message they read as fact while nothing
+ever revises them. This release adds the moment at which reality gets consulted: a
+**Stop** hook that reads the claim the final message actually makes and asserts
+exactly that rung against the repository. Plus the outcome-anchored detector for
+shell writes into a policed main checkout, a hole its `Write|Edit`-matched sibling
+structurally could not see.
+
+### Added
+- **`hooks/scripts/check-delivery-claim.sh`** (Stop) — blocks a turn whose final
+  message claims a rung of delivery the repo denies: *committed* (no uncommitted
+  changes in any worktree), *merged* (branch tip is an ancestor of the main branch),
+  *pushed* (no commit on a live branch is absent from every remote), *verified* (a
+  gates receipt matching this tree, 0 failed, 0 skipped). **No claim, no sound** — it
+  is deliberately not a check for unfinished work, because Stop fires after every
+  turn and a guard that nags about a dirty tree gets switched off within a day.
+  Config-gated on a `delivery:` block; silent no-op without one. Ships sensitive
+  English claim phrases; a project adds its own language via `claimsCommitted` /
+  `claimsMerged` / `claimsPushed` / `claimsVerified`.
+- **`hooks/scripts/check-main-checkout-bash-write.sh`** (PostToolUse · Bash) — reports
+  files a shell command wrote into the policed main checkout. `sed -i`, heredoc
+  redirects, `tee`, a python one-liner: none carry a `tool_input.file_path`, so all
+  of them walked past `check-main-checkout-edit`, and in one consuming project the
+  encoding rules actively *required* the shell route for the riskiest files. Anchored
+  on the **outcome** (`git status` diffed against the same session's previous answer),
+  not on command patterns, which a quoted path, a `cd`, a variable or any
+  not-yet-invented write mechanism defeats. Honest limit stated in its header: a
+  PostToolUse hook cannot block, so it detects and hands back an exact undo.
+- **`principles/delivery-discipline.md`** — the doctrine: gate the claim rather than
+  the work; the four rungs; why the receipt instead of a re-run; why the fingerprint
+  is the tree-as-it-would-be-committed rather than `HEAD` + dirty list; why there is
+  no escape phrase; why the loop guard is not optional.
+- **Test harnesses beside both hooks** (`test-check-delivery-claim.sh`,
+  `test-check-main-checkout-bash-write.sh`) — 24 and 9 cases against **real** fixture
+  repositories with real remotes, worktrees, commits and pushes. Proven to bite by
+  mutation: neutering the claim comparison turns 11 cases red, neutering only the
+  staleness comparison turns exactly 1 red.
+
+### Changed
+- **`hooks/scripts/_read_dotclaude_yml.py`** — the parse and lookup logic became
+  importable (`load()` / `lookup()`) so the new hooks reuse it instead of growing a
+  second YAML parser. CLI behaviour unchanged.
+- **`CONTRIBUTING.md`, "Add a hook"** — it described **two** homes, which had been
+  untrue since 2.1.0: the config-gated always-on shape (always shipped, reads
+  `dotclaude.yml` at runtime, no-op without its block) is now named as the third and
+  **preferred** home for anything project-tunable, since a rendered per-project copy
+  forks the logic and stops receiving fixes. Also records the two-level config-key
+  constraint, that `PostToolUse` exit 2 cannot block, and the fixture-plus-mutation
+  requirement for a hook's test.
+- **`hooks/README.md`** — the two new rows, a "config-gated, not zero-config" section
+  naming which hooks no-op without which block, and the measured per-Bash cost
+  (0.17 s configured / 0.01 s not).
+
 ## [3.0.0] - 2026-07-20 — split into two plugins + elicitation-not-generation
 
 The single `dotclaude` plugin splits into **`dotclaude`** (coding/testing/pre-flight/worktree base) and **`dotclaude-design`** (the design/UX/a11y audit layer) — install either independently or both together. Alongside the split, the domain generators (`/dotclaude:coding`, `/dotclaude:testing`) change shape: instead of authoring a project-local copy of an agent, they now elicit the project's own intent (anti-pattern lists, a risk model) into a **thin artifact** that the shipped, consumed agent reads at runtime — so the reviewer/architect logic lives in one place and stays current with the plugin instead of forking per project.
