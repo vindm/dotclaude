@@ -41,17 +41,23 @@ Cross-reference it from any skill that should read it.
 
 ### Add a hook
 
-Two homes, depending on the hook's nature:
+Three homes, depending on the hook's nature:
 
 - **Universal, always-on** (fires for every user with no config) → `plugins/core/hooks/scripts/<name>.sh`, wired in `plugins/core/hooks/hooks.json`.
-- **Config-needing** (needs a project path, a ceiling, an exempt list) → `plugins/<plugin>/hook-templates/<name>.sh` with Mustache placeholders (`{{ PROJECT_VAR }}`); a setup skill renders it into the target project.
+- **Config-gated, always-on** (needs project facts, but reads them at runtime) → same place, wired the same way, but it reads its block from the consuming project's `dotclaude.yml` via `hooks/scripts/_read_dotclaude_yml.py` and is a **silent no-op when the block is absent**. This is the preferred shape for anything project-tunable: one home for the logic, no rendered per-project copy to drift. `check-file-size`, `check-main-checkout-edit`, `check-main-checkout-bash-write` and `check-delivery-claim` are the current examples.
+- **Config-needing at INSTALL time** (the value cannot be read at runtime — a rendered path, a substituted command) → `plugins/<plugin>/hook-templates/<name>.sh` with Mustache placeholders (`{{ PROJECT_VAR }}`); a setup skill renders it into the target project.
+
+Prefer the second over the third. A rendered copy forks the logic per project and stops receiving fixes.
+
+Config keys must stay **two levels deep** (`delivery.claimsPushed`, not `delivery.claims.pushed`). `_read_dotclaude_yml.py` prefers PyYAML but falls back to a bundled minimal parser that reads exactly two levels; a nested key resolves to nothing there, so the hook goes silently dead on any machine without PyYAML.
 
 Either way, a hook must:
 
 1. Be project-agnostic in core logic — no hardcoded paths, names, or assumptions (config comes via Mustache substitution at install time).
 2. Be safe to run on every `Edit` / `Write` / `Bash` event with no side effects beyond logging or exit code.
-3. Exit `0` on pass, `2` on block, `1` on warn. Stderr is shown to Claude; stdout is silent.
+3. Exit `0` on pass, `2` on block, `1` on warn. Stderr is shown to Claude; stdout is silent. (`PostToolUse` cannot block — the tool already ran — so exit `2` there is informational. If a hook relies on that, say so in its header rather than implying prevention.)
 4. Carry a brief header comment naming the mistake classes it prevents.
+5. Ship a `test-<name>.sh` beside it that drives a **real fixture** (a `git init`'d temp repo, an actual write, an actual push) rather than restating the hook's own condition. Prove it bites: break the hook's core assertion on purpose and confirm the harness goes red.
 
 ### Add a skill
 

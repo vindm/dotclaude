@@ -59,37 +59,43 @@ def _minimal_parse(text):
     return data
 
 
-def main():
-    if len(sys.argv) < 3:
-        return 1
-    path, key = sys.argv[1], sys.argv[2]
-    default = sys.argv[3] if len(sys.argv) > 3 else ""
+def load(path):
+    """Parse a dotclaude.yml into a dict. Never raises — an unreadable or
+    unparseable file yields {} so every caller degrades to its own default."""
     if not os.path.isfile(path):
-        if default:
-            print(default)
-        return 0
+        return {}
     try:
         text = open(path, encoding="utf-8").read()
     except Exception:
-        if default:
-            print(default)
-        return 0
-    data = None
+        return {}
     try:
         import yaml  # optional; not a required dependency
-        data = yaml.safe_load(text) or {}
+        return yaml.safe_load(text) or {}
     except Exception:
-        try:
-            data = _minimal_parse(text)
-        except Exception:
-            data = {}
+        pass
+    try:
+        return _minimal_parse(text)
+    except Exception:
+        return {}
+
+
+def lookup(data, key):
+    """Walk a dotted key. Returns None when any segment is missing."""
     node = data
     for part in key.split("."):
         if isinstance(node, dict) and part in node:
             node = node[part]
         else:
-            node = None
-            break
+            return None
+    return node
+
+
+def main():
+    if len(sys.argv) < 3:
+        return 1
+    path, key = sys.argv[1], sys.argv[2]
+    default = sys.argv[3] if len(sys.argv) > 3 else ""
+    node = lookup(load(path), key)
     if node is None:
         if default:
             print(default)
