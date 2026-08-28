@@ -44,7 +44,7 @@ structurally could not see.
   test project skips on every run, so no wording and no amount of re-running could
   ever have cleared the claim. An unsatisfiable gate gets switched off.
 - **Test harnesses beside both hooks** (`test-check-delivery-claim.sh`,
-  `test-check-main-checkout-bash-write.sh`) — 28 and 9 cases against **real** fixture
+  `test-check-main-checkout-bash-write.sh`) — 30 and 9 cases against **real** fixture
   repositories with real remotes, worktrees, commits and pushes. Proven to bite by
   mutation: neutering the claim comparison turns 11 cases red, neutering only the
   staleness comparison turns exactly 1 red.

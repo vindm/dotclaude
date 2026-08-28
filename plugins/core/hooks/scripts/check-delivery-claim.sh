@@ -117,17 +117,44 @@ fi
 head_sha=$(git -C "$tgt" rev-parse HEAD 2>/dev/null || echo "")
 dirty_sha=$(git -C "$tgt" status --porcelain 2>/dev/null | _sha)
 
-# Uncommitted, across every worktree of the policed repo.
+# Uncommitted — in THIS session's worktree, not every worktree of the repo.
+#
+# 🔴 Scoped deliberately. Where several agent sessions share one repo through
+# worktrees (the setup the sibling worktree guard exists for), checking all of them
+# blocks "I committed" because a NEIGHBOURING session has work in progress. The
+# author can only speak for their own tree, and a guard that fires on someone else's
+# dirt is a false positive on day one — which is how a guard gets switched off.
+# Falls back to every worktree only when cwd is outside the repo, i.e. when there is
+# no "own" tree to point at; the message says which case it is.
 dirty_lines=""
-while IFS= read -r wt; do
-  [ -z "$wt" ] && continue
-  st=$(git -C "$wt" status --porcelain 2>/dev/null | head -8)
-  if [ -n "$st" ]; then
-    n=$(git -C "$wt" status --porcelain 2>/dev/null | wc -l | tr -d ' ')
-    dirty_lines+="    $wt — $n uncommitted:"$'\n'
-    dirty_lines+="$(printf '%s\n' "$st" | sed 's/^/      /')"$'\n'
-  fi
-done < <(git -C "$REPO" worktree list --porcelain 2>/dev/null | awk '$1=="worktree"{print $2}')
+dirty_scope="this worktree"
+scan_all=0
+if [ "$tgt" = "$REPO" ] && [ -n "$cwd" ]; then
+  cwd_common2=$(git -C "$cwd" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || echo "")
+  [ "$cwd_common2" = "$repo_common" ] || scan_all=1
+elif [ -z "$cwd" ]; then
+  scan_all=1
+fi
+if [ "$scan_all" = "1" ]; then
+  dirty_scope="every worktree (this turn ran outside the repo, so there is no own tree to scope to)"
+fi
+
+_scan_dirty() {  # <worktree path>
+  st=$(git -C "$1" status --porcelain 2>/dev/null | head -8)
+  [ -z "$st" ] && return
+  n=$(git -C "$1" status --porcelain 2>/dev/null | wc -l | tr -d ' ')
+  dirty_lines+="    $1 — $n uncommitted:"$'\n'
+  dirty_lines+="$(printf '%s\n' "$st" | sed 's/^/      /')"$'\n'
+}
+
+if [ "$scan_all" = "1" ]; then
+  while IFS= read -r wt; do
+    [ -z "$wt" ] && continue
+    _scan_dirty "$wt"
+  done < <(git -C "$REPO" worktree list --porcelain 2>/dev/null | awk '$1=="worktree"{print $2}')
+else
+  _scan_dirty "$tgt"
+fi
 
 # Unmerged feature branches.
 unmerged=""
@@ -182,7 +209,7 @@ fi
 violations=""
 
 if claims committed && [ -n "$dirty_lines" ]; then
-  violations+="  CLAIMED \"$(phrase_for committed)\" — but the tree is not clean:"$'\n'
+  violations+="  CLAIMED \"$(phrase_for committed)\" — but $dirty_scope is not clean:"$'\n'
   violations+="$dirty_lines"
 fi
 
