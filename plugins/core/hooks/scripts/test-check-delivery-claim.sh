@@ -140,6 +140,22 @@ t clean-committed-ok       "Committed."                                   0
 echo dirt >> "$REPO/a.txt"
 t dirty-committed-blocked  "Committed."                                   2
 
+echo "--- a NEIGHBOURING session's dirty worktree is not my problem ---"
+# The setup this guard ships into has several agent sessions sharing one repo through
+# worktrees. Blocking "I committed" because a sibling session has WIP is a false
+# positive on day one, and a guard that fires on someone else's dirt gets switched off.
+git -C "$REPO" checkout --quiet -- a.txt
+NWT="$FIX/repo-wt-neighbour"
+git -C "$REPO" worktree add --quiet -b feat/neighbour "$NWT" 2>/dev/null
+echo "someone else's WIP" >> "$NWT/a.txt"
+t neighbour-dirt-not-mine     "Committed."                                   0
+echo mine >> "$REPO/a.txt"
+t my-own-dirt-still-blocks    "Committed."                                   2
+git -C "$REPO" checkout --quiet -- a.txt
+git -C "$NWT" checkout --quiet -- a.txt
+git -C "$REPO" worktree remove "$NWT" 2>/dev/null
+echo dirt >> "$REPO/a.txt"
+
 echo "--- verified rung (tree is dirty, so the rung applies) ---"
 rm -f "$RECEIPT"
 t verified-no-receipt-blocked "All gates green."                          2

@@ -5,16 +5,16 @@ What was tested: the two hooks added in 3.1.0 — `check-delivery-claim.sh` (Sto
 project (a bookkeeping-engine audit zone: ~2 300 tracked files, a policed repo below
 the project root, live worktrees, a real remote) and against purpose-built fixtures.
 
-**Verdict: ready.** Four defects were found and fixed during the run. Three of the
-four were surfaced by the live project rather than by the fixtures — the synthetic
-repo simply did not have the shapes that produced them. All four carry regression
+**Verdict: ready.** Five defects were found and fixed during the run. Four of the
+five were surfaced by the live project rather than by the fixtures — the synthetic
+repo simply did not have the shapes that produced them. All five carry regression
 tests now.
 
 ## Harnesses
 
 | Harness | Cases | Result |
 |---|---|---|
-| `test-check-delivery-claim.sh` | 28 | pass=28 fail=0 |
+| `test-check-delivery-claim.sh` | 30 | pass=30 fail=0 |
 | `test-check-main-checkout-bash-write.sh` | 9 | pass=9 fail=0 |
 
 Every case moves real repository state — `git init --bare` as origin, a clone, real
@@ -92,6 +92,23 @@ for a counting bug and went looking for it.
 
 The numbers were right; the sentence was not. Reworded to "reachable from … (these
 sets overlap; the total is the union)".
+
+### 5. The `committed` rung fired on a NEIGHBOURING session's work
+
+Caught while handing the work over, before the hook had run live for a single turn.
+The rung scanned every worktree of the policed repo — but the setup this guard ships
+into exists *because* several agent sessions share one repo through worktrees. A
+sibling session with work in progress would have blocked "I committed" for an author
+whose own tree was spotless.
+
+A false positive on day one is how a guard gets switched off, taking the rungs that
+worked with it. Scoped to the session's own worktree, falling back to all of them only
+when the turn ran outside the repo — and the message now says which case it is.
+
+Note on evidence: the live repo could not demonstrate this, because the neighbouring
+worktree happened to be clean at the time. The fixture case
+`neighbour-dirt-not-mine` makes a sibling worktree dirty on purpose, paired with
+`my-own-dirt-still-blocks` so the fix cannot pass by simply never firing.
 
 ## Cost, measured
 
