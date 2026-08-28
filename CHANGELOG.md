@@ -4,6 +4,24 @@ All notable changes to dotclaude are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project loosely follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) — minor versions for new layers / skills / principles, patches for fixes and doc corrections.
 
+## [3.1.1] - 2026-08-28
+
+Version bump so 3.1.0's two follow-up fixes actually REACH an installed consumer.
+
+🔴 **The plugin cache is keyed by version.** After pushing the fixes to the
+marketplace source, `claude plugin marketplace update` succeeded and
+`claude plugin install` reported "already installed (scope: user)" — and the code in
+`~/.claude/plugins/cache/dotclaude/dotclaude/3.1.0/` was still the pre-fix copy. The
+harness proved it: 28 cases from the installed copy against 30 in the source. Three
+green-looking steps, nothing delivered.
+
+Fixing a shipped version in place therefore delivers nothing. Any change that must
+reach an installed consumer needs a version bump, and the check is to run the
+harness **from the cache directory**, not from the checkout.
+
+Fittingly, this is the exact failure the release itself is about: "pushed" described
+the desk, and the mechanism between desk and machine was version-keyed.
+
 ## [3.1.0] - 2026-08-27 — the delivery gate
 
 "Merged into main", "pushed", "all gates green" describe the author's desk, not the
