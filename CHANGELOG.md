@@ -4,6 +4,24 @@ All notable changes to dotclaude are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project loosely follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) — minor versions for new layers / skills / principles, patches for fixes and doc corrections.
 
+## [3.2.0] - 2026-09-03
+
+### Added
+
+- **`check-assistant-memory-write`** (PreToolUse · Write|Edit|NotebookEdit, config-gated on
+  `memory:`). Blocks a note of PROJECT knowledge written into the assistant's own memory
+  (`~/.claude/projects/<slug>/memory/`). That store is keyed by the machine's absolute project
+  path — move or hand over the project and it is gone, silently — and no runtime, other
+  checkout or teammate can read it. Measured on the project that asked for this: 570 memory
+  files, 76% about the engine, 0 of type `user`, and an index that had outgrown its load
+  window; the engine's own doctrine said "not in assistant memory" and was violated hundreds
+  of times because the rule had no trigger. A note passes only when it DECLARES why it may
+  live there — `type: user` (about the person) or `scope: universal` (a lesson that needs no
+  project); an undeclared note is project knowledge by default, the recoverable side. The
+  block message lists the project's own homes from `memory.homes`. Escape hatch:
+  `.claude/.runtime/allow-memory-write`. Test: `hooks/scripts/test-check-assistant-memory-write.sh`
+  (18 cases against a real fixture store).
+
 ## [3.1.1] - 2026-08-28
 
 Version bump so 3.1.0's two follow-up fixes actually REACH an installed consumer.
