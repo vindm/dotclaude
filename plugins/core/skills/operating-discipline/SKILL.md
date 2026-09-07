@@ -66,8 +66,71 @@ re-checks it. Six failures, each observed more than once.
 6. **Before deleting the original, open the destination.** Not the plan to move it, not the
    commit that says it moved — the receiving file, and the sentence in it.
 
+7. **Two numbers contradict each other only once they share a domain.** «Dashboard says 5,
+   report says 14» was presented as proof of a contradiction; it was one month against all
+   history. Before calling a difference a defect, state the period, the population and the
+   unit both sides are on.
+8. **A figure you cannot reproduce is proved unreachable, not merely different.** Enumerate the
+   admissible readings of someone else's number and show that none of them lands on it — then
+   the finding is «their figure follows no rule we can find», which is actionable, instead of
+   «we disagree», which is not.
+
 **The standing question:** every count needs its denominator and its blind spot stated with it.
 "N found" is silent about whether the corpus was clean or the search was blind.
+
+## Undoing is doing — a reversal writes, and so does a deletion
+
+The operations that feel like a return to a previous state are ordinary writes, and they get
+no review because nobody thinks of them as changes.
+
+1. **A revert needs its own check.** An inverse edit applied to undo an injected defect landed
+   on the wrong line and silently swapped two `return`s; every test stayed green and only a
+   file hash before and after caught it. Diff the reversal, or hash the file — do not trust
+   that undoing cannot break.
+2. **`git checkout HEAD <file>` restores the last COMMIT, not "how it was a minute ago".** Used
+   to compare a render against the base version, it erased an uncommitted edit of my own. Stash
+   or copy first; a comparison is not worth an unrecoverable write.
+3. **Filter what was already withdrawn before calling anything a duplicate.** Reading an event
+   list without excluding superseded rows produced "duplicates" twice in one day that were
+   nothing of the kind.
+4. **Open the destination before removing the original** — the receiving record, not the plan
+   that says it moved. Twenty-one entries survived a model collapse only because of a backup.
+
+## An explanation that satisfies stops the investigation
+
+A plausible account of a mismatch is the most expensive thing you can produce, because it ends
+the search. «It measures the whole box, we measure only the till» explained a cash discrepancy
+for weeks and was wrong; testing it took twenty minutes. Likewise: numbers a hundred times too
+large were declared corrupt data on a live client, while the header of that same file carried
+the unit that explained all of them.
+
+**The rule:** when an explanation arrives that makes the anomaly comfortable, write down what
+would have to be true for it to hold, and check that one thing before repeating it to anyone.
+
+## A fix has a blast radius — and the defect class outlives the call you fixed
+
+Five shapes, each met more than once, each cheap to check and expensive to miss.
+
+1. **The fix stayed in the panel you were looking at.** A neighbouring panel on the SAME page
+   carried the same defect and its mirror image — deficits diverged in both directions. Grep
+   the shape, not the file.
+2. **A partial fix leaves the class alive.** An atomic-write fix closed 2 call sites of 18; two
+   weeks later the same zero-byte file appeared on an aggregate page. When you fix an instance,
+   count the population of the class and say how much of it you covered.
+3. **The fix reproduces its own defect one layer up.** «An assertion with no mechanism» was
+   fixed in the code, then re-created in the plan, then in the test, then in the migration —
+   each time as a claim nothing enforced. After fixing, read your own plan/test/migration for
+   the very shape you just removed.
+4. **Two correct fixes make a defect at their seam.** Strengthening a check along one axis can
+   silently weaken it along another; three forms of this were caught in a single review. When
+   two changes land near each other, test the composition, not each half.
+5. **Removing a producer drops whatever it alone fed.** Before deleting a render, a panel or a
+   subtree, enumerate what it was the ONLY consumer or the ONLY carrier of — a moved subtree
+   takes with it the page-level contracts its old place held (overlay scope, ids that were
+   unique only there).
+
+**The tell:** a change that "worked" and left one caller, one panel or one layer behind is not
+a logic bug — it is a population you never counted.
 
 ## Subagent orchestration — dispatch safely, verify independently
 

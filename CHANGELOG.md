@@ -4,6 +4,27 @@ All notable changes to dotclaude are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project loosely follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) — minor versions for new layers / skills / principles, patches for fixes and doc corrections.
 
+## [3.4.0] - 2026-09-08
+
+### Added
+
+- **`operating-discipline`: three new sections, all paid for on a real project.**
+  *Undoing is doing* — a revert, a `git checkout HEAD <file>`, a deletion and a
+  «duplicate» are ordinary writes that get no review because nobody thinks of them as
+  changes (an inverse edit landed on the wrong line and silently swapped two `return`s
+  with every test green). *An explanation that satisfies stops the investigation* — a
+  plausible account of a mismatch is the most expensive thing you can produce, because
+  it ends the search; write down what would have to be true and check that one thing.
+  *A fix has a blast radius* — five shapes: the sibling panel, the partial fix that
+  leaves the class alive, the fix that reproduces its own defect one layer up (plan,
+  test, migration), the seam between two correct fixes, and the producer whose removal
+  drops whatever it alone fed.
+- **`operating-discipline` § Measurement: two more failures.** Two numbers contradict
+  each other only once they share a domain (a month was compared against all history and
+  presented as proof). And a figure you cannot reproduce is proved UNREACHABLE — enumerate
+  the admissible readings and show none of them lands on it — which is actionable, unlike
+  «we disagree».
+
 ## [3.3.0] - 2026-09-08
 
 ### Added
