@@ -6,7 +6,7 @@
     "url": "https://github.com/vindm"
   },
   "plugins": [
-    { "name": "dotclaude",        "source": "./plugins/core",   "description": "Code review, pre-flight, worktree isolation, delivery gating, guard hooks, and risk-weighted test coverage for Claude Code. Consumed as-is; /dotclaude:coding and /dotclaude:testing elicit your project's bar.", "version": "3.2.0", "license": "MIT", "homepage": "https://github.com/vindm/dotclaude", "tags": ["ai-dev-infrastructure","worktree","pre-flight","code-review","hooks","testing"] },
+    { "name": "dotclaude",        "source": "./plugins/core",   "description": "Code review, pre-flight, worktree isolation, delivery gating, guard hooks, and risk-weighted test coverage for Claude Code. Consumed as-is; /dotclaude:coding and /dotclaude:testing elicit your project's bar.", "version": "3.3.0", "license": "MIT", "homepage": "https://github.com/vindm/dotclaude", "tags": ["ai-dev-infrastructure","worktree","pre-flight","code-review","hooks","testing"] },
     { "name": "dotclaude-design", "source": "./plugins/design", "description": "A design/UX audit layer for Claude Code. /dotclaude:design elicits your design north-star; ux, flow, pages, a11y, interaction, and design-token audits grade every screen against it, plus a product-designer IA/flow spec.", "version": "3.0.0", "license": "MIT", "homepage": "https://github.com/vindm/dotclaude", "tags": ["design","ux-audit","a11y","design-tokens","ia","product-design"] }
   ]
 }

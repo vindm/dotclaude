@@ -4,6 +4,39 @@ All notable changes to dotclaude are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project loosely follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) — minor versions for new layers / skills / principles, patches for fixes and doc corrections.
 
+## [3.3.0] - 2026-09-08
+
+### Added
+
+- **`check-assistant-memory-bash-write`** (PostToolUse · Bash, config-gated on the same
+  `memory:` block). The sibling of `check-assistant-memory-write`, closing the door that one
+  cannot see: the pre-tool hook matches `Write|Edit|NotebookEdit` and reads
+  `tool_input.file_path`, so a heredoc, a `tee`, a `cat >` or a `python3 -c` walks straight
+  past it. For assistant memory that is not a corner case but the main road — notes are
+  routinely written by scripts, and a project whose encoding rule forbids the editor tools
+  points ALL its memory writes at the unguarded door. Measured on the project that asked for
+  the original hook: it shipped 2026-09-03 with the `memory:` block configured and the escape
+  hatch closed, and memory still grew by **90 notes over the following five days**
+  (10 / 10 / 13 / 35 / 22) — none declaring `scope`, every one carrying a `type` the block
+  forbids. One door of two was guarded and the traffic used the other. Like its main-checkout
+  counterpart the hook asks the filesystem what happened rather than grepping the command for
+  write verbs (an invariant a rename can dodge is anchored on the wrong thing): it snapshots
+  the memory dir and diffs it against the same session's previous answer, so no write
+  mechanism — including ones not yet invented — evades it. It is a detector with an exact undo,
+  not a preventer: PostToolUse runs after the command, and a stray note is fully reversible.
+  The escape hatch is checked AFTER the snapshot advances, so notes the user explicitly
+  sanctioned do not resurface as "new" once the hatch is removed. Proven by
+  `test-check-assistant-memory-bash-write.sh` — 11 cases against a real store written by real
+  shell commands.
+- **`operating-discipline` gains a measurement section.** Six failures, each observed more than
+  once, about mistaking an instrument's output for a fact: reading what a command printed
+  instead of what it was asked; two counts taken either side of your own fix; a filter that
+  removes the disagreeing rows along with the noise; a verdict on code reached by reading
+  rather than running; illustrating with a real value instead of the shape; and deleting an
+  original without opening the destination. Plus the standing question — every count needs its
+  denominator and its blind spot stated with it, because "N found" is silent about whether the
+  corpus was clean or the search was blind.
+
 ## [3.2.0] - 2026-09-03
 
 ### Added
