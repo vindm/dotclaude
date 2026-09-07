@@ -4,6 +4,14 @@ All notable changes to dotclaude are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project loosely follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) — minor versions for new layers / skills / principles, patches for fixes and doc corrections.
 
+## [3.4.1] - 2026-09-08
+
+### Fixed
+
+- **`operating-discipline` § Measurement said «six failures» while listing thirteen.** The
+  count in the lead sentence was not updated when the section grew — the very defect the
+  section is about, committed inside it.
+
 ## [3.4.0] - 2026-09-08
 
 ### Added

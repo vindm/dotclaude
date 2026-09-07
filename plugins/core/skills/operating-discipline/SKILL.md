@@ -44,7 +44,7 @@ A path can be **locally correct** (passes a single-file read and its own tests) 
 ## Measurement — the instrument's output is not the fact
 
 A wrong number reported confidently is worse than no number: it redirects the work and nobody
-re-checks it. Six failures, each observed more than once.
+re-checks it. Thirteen failures, each observed more than once.
 
 1. **Read what the command was actually asked, not what it printed.** Zero matches is not "the
    file is absent"; the first characters of an unrelated identifier are not a commit hash; a
