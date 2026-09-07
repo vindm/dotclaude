@@ -41,6 +41,34 @@ A path can be **locally correct** (passes a single-file read and its own tests) 
 
 **The tell:** a feature that "shipped + tests pass" but observably does nothing is almost never a logic bug — it's an unthreaded sibling, a shape mismatch, or a caller that never passes the new argument. Find the missing wiring before debugging the logic.
 
+## Measurement — the instrument's output is not the fact
+
+A wrong number reported confidently is worse than no number: it redirects the work and nobody
+re-checks it. Six failures, each observed more than once.
+
+1. **Read what the command was actually asked, not what it printed.** Zero matches is not "the
+   file is absent"; the first characters of an unrelated identifier are not a commit hash; a
+   one-level walk of a two-level structure reports orphans that do not exist. In one audit these
+   cost five separate over-statements in a single session, each three to five times larger than
+   the real figure. Before a number enters a sentence, say what the instrument could NOT see.
+2. **Two counts taken either side of your own fix describe a moment that never existed.** Each
+   is true; together they are a composite of two worlds. Name the tree a measurement was taken
+   on; comparing, take both sides on the same one.
+3. **Narrowing a comparison to remove noise can remove the answer.** Twice the rows dropped as
+   noise were the ones that disproved the conclusion. After every filter, ask which disagreeing
+   case it just made invisible.
+4. **A verdict about code comes from running it, not from reading it.** Reasoning over sources
+   produced a confident wrong answer twice; a thirty-second run of the real function on real
+   input settled it both times.
+5. **Measuring and illustrating are different genres, and the clipboard is one.** Real values
+   enter a document as proof the problem is real, and travel from there into a test docstring
+   and a public repository. Illustrate with the SHAPE, never the value.
+6. **Before deleting the original, open the destination.** Not the plan to move it, not the
+   commit that says it moved — the receiving file, and the sentence in it.
+
+**The standing question:** every count needs its denominator and its blind spot stated with it.
+"N found" is silent about whether the corpus was clean or the search was blind.
+
 ## Subagent orchestration — dispatch safely, verify independently
 
 1. **Pin the working directory.** An implementer subagent commits to the WRONG directory if not pinned. Open every file/git dispatch with a cd-and-verify gate the agent runs before any edit (`cd <dir> && pwd && git branch --show-current`) plus a STOP instruction if it's not the expected branch. The prompt gate alone isn't enough — also pass an explicit working-dir argument, use relative paths, and check for leaks after the dispatch returns.
