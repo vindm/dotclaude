@@ -103,6 +103,18 @@ See `docs/coding-real-smoke-test-2026-05-21.md` and `docs/design-real-smoke-test
 - Gaps classified P0 / P1 / P2.
 - Verdict: ready / ready-with-followups / not-ready.
 
+## A fix INSIDE an already-released version reaches nobody
+
+The plugin cache is keyed by version. Fixing two defects inside a released `x.y.z`, pushing
+them, then running `plugin marketplace update` and `plugin install` gives three cheerful
+successes — «Successfully updated», «Plugin is already installed» — and the installed copy is
+byte-for-byte the old one, because the version string did not move. Every consumer keeps
+running the broken code while every step reports success.
+
+So: **any change to shipped plugin content bumps the version**, in `plugin.json`, in
+`marketplace.json` and in the CHANGELOG, in the same commit. And verify delivery by reading a
+file out of the installed cache path, never by trusting the installer's output.
+
 ## Pull request checklist
 
 - [ ] Story / doc anonymized by hand — no real project, customer, or company names.

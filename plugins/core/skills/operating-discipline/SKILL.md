@@ -75,6 +75,41 @@ re-checks it. Six failures, each observed more than once.
    the finding is «their figure follows no rule we can find», which is actionable, instead of
    «we disagree», which is not.
 
+9. **Two populations fetched under DIFFERENT filters subtract only on paper.** A watch derived
+   «what went quiet» as full-set minus live-set, and took the third term from a helper whose
+   scope argument was left at its default — so the subtraction mixed a whole-corpus count with
+   a two-category one. When a figure comes from a difference, state the filter of every term
+   and make them identical, explicitly, even where the default happens to be right today.
+
+**A checklist for reading a document is also a FILTER.** A fork open for three weeks («capital
+or loan?») was answered by a statement that had been filed in the folder for three days: the
+reading checklist named the lines to extract, so the lines it did not name were not seen. When
+a document arrives, run the open questions against it as well as the checklist — and when you
+write such a checklist, say that it is a minimum, not the set.
+
+10. **An absent CARRIER is not an absent FACT.** A year of platform emails contained no payout
+    notices, and «there is no per-booking breakdown, only monthly totals» went into the task from
+    that. The breakdown was sitting in a neighbouring section of the portal already open in the
+    browser. The absence of the messenger says nothing about the message.
+11. **The sieve of a search is set by the QUESTION, not by what is convenient.** A filter of
+    «since March» was inherited from the earliest booking a stale snapshot happened to hold, and
+    it silently dropped January — nearly a third of the money. Whatever the filter, reconcile the
+    catch against the source's own total before concluding.
+12. **The unit of an arrival is the DELIVERY, not the line you managed to parse.** A watch built
+    on parsed statement rows would have reported zero for a day whose whole traffic arrived as a
+    PDF the parser skips. Measure arrivals by what came in, then say separately how much of it
+    you could read.
+13. **Two quantities compared must be stamped by ONE clock.** A file's own mtime compared against
+    an event date from a journal made a three-day-old model report as two days old, and the suite
+    went red at midnight on a branch that had not touched the code. Ask of every quantity whose
+    clock stamped it, and put both sides on one projector before comparing.
+
+**A lesson recorded in memory is a lesson NOWHERE.** A runtime's own self-report of twelve misses
+in a single morning matched, almost word for word, five lessons it had written into its memory on
+earlier mornings. Memory is read when someone chooses to read it; a door RUNS. When a lesson
+matters, it becomes a step in the procedure, a field the code consults, or a check that fails —
+and the note, at most, records where that door lives.
+
 **The standing question:** every count needs its denominator and its blind spot stated with it.
 "N found" is silent about whether the corpus was clean or the search was blind.
 
@@ -131,6 +166,19 @@ Five shapes, each met more than once, each cheap to check and expensive to miss.
 
 **The tell:** a change that "worked" and left one caller, one panel or one layer behind is not
 a logic bug — it is a population you never counted.
+
+## A parked list is a warehouse, not a queue
+
+«Known follow-ups needing a decision» is where work goes to die: no owner, no date, and — the
+part that actually matters — no condition under which an item LEAVES the list. One such entry
+sat untouched for a month and a half in a file everybody read. If you cannot name who acts on
+an item and what makes it done, do not park it; either do it, or write it as a task with an
+owner, or delete it and accept the loss out loud.
+
+**And a pile is not evidence of neglect until you measure its CONTENTS.** A media directory
+holding 165 files read as an unprocessed backlog; by content, 139 were filed, 26 were reviewed
+and deliberately not filed with a recorded reason, and zero were pending. A count measures the
+janitor, not the filing.
 
 ## Subagent orchestration — dispatch safely, verify independently
 

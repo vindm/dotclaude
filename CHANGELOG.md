@@ -19,6 +19,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   leaves the class alive, the fix that reproduces its own defect one layer up (plan,
   test, migration), the seam between two correct fixes, and the producer whose removal
   drops whatever it alone fed.
+- **`operating-discipline`: a parked list is a warehouse, not a queue** — «known follow-ups»
+  with no owner, no date and above all no condition for LEAVING the list is where work dies;
+  and a pile is not evidence of neglect until its contents are measured (165 files read as a
+  backlog; by content, zero were pending).
+- **`operating-discipline` § Measurement: six more failures** — an absent carrier is not an
+  absent fact; the sieve of a search is set by the question, not by convenience; the unit of an
+  arrival is the delivery, not the line you could parse; two quantities compared must be stamped
+  by one clock; two populations fetched under different filters subtract only on paper; and a
+  checklist for reading a document is also a filter. Closing the section: a lesson recorded in
+  memory is a lesson NOWHERE — memory is read when someone chooses to, a door RUNS.
+- **`CONTRIBUTING`: a fix INSIDE an already-released version reaches nobody** — the plugin cache
+  is keyed by version, so `marketplace update` and `install` both report success while the
+  installed copy stays byte-identical. Any change to shipped content bumps the version.
 - **`operating-discipline` § Measurement: two more failures.** Two numbers contradict
   each other only once they share a domain (a month was compared against all history and
   presented as proof). And a figure you cannot reproduce is proved UNREACHABLE — enumerate
